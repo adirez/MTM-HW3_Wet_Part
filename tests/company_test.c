@@ -4,7 +4,6 @@
 
 #include "test_utilities.h"
 #include "company.h"
-#include "reservation.h"
 #include <string.h>
 
 bool testCompanyCreate() {
@@ -32,7 +31,6 @@ bool testCompanyDestroy() {
     ASSERT_TEST(errorCode == COMPANY_SUCCESS);
     ASSERT_TEST(companyDestroy(company) == COMPANY_SUCCESS);
 
-    companyDestroy(company);
     return true;
 }
 
