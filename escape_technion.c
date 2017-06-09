@@ -107,6 +107,16 @@ static Room escapeSystemFindRoom(int room_id, TechnionFaculty Faculty,
  */
 static Escaper findEscaper(char *email, EscapeTechnion escapeTechnion);
 
+/**
+ * receives an escapeTechnion system and an email of an escaper and iterates
+ * through the system to erase all of the reservations listed with the escaper's
+ * email
+ * @param email - the email address of the escaper
+ * @param escapeTechnion - the system to iterate through
+ */
+static void destroyEscaperReservations(char *email,
+                                       EscapeTechnion escapeTechnion);
+
 EscapeTechnion escapeTechnionCreate(MtmErrorCode *EscapeTechnionError) {
     EscapeTechnion escapeTechnion = malloc(sizeof(*escapeTechnion));
     if (NULL == escapeTechnion) {
@@ -299,8 +309,8 @@ MtmErrorCode escapeTechnionAddEscaper(EscapeTechnion escapeTechnion,
     }
 
     SetResult SetError = setAdd(escapeTechnion->escapers, escaper);
+    escaperDestroy(escaper);
     if (SetError == SET_OUT_OF_MEMORY) {
-        escaperDestroy(escaper);
         return MTM_OUT_OF_MEMORY;
     }
     return MTM_SUCCESS;
@@ -317,8 +327,7 @@ MtmErrorCode escapeTechnionRemoveEscaper(char *email,
     Escaper escaper = findEscaper(email, escapeTechnion);
     assert(NULL != escaper);
 
-    //TODO destroy reservations
-
+    destroyEscaperReservations(email, escapeTechnion);
     setRemove(escapeTechnion->escapers, escaper);
     return MTM_SUCCESS;
 }
@@ -463,3 +472,24 @@ static Escaper findEscaper(char *email, EscapeTechnion escapeTechnion) {
     return NULL;
 }
 
+static void destroyEscaperReservations(char *email,
+                                       EscapeTechnion escapeTechnion) {
+    if (NULL == email || NULL == escapeTechnion) {
+        return;
+    }
+
+    Reservation reservation_iterator;
+    reservation_iterator = listGetFirst(escapeTechnion->reservations);
+
+    while (NULL != reservation_iterator) {
+        ReservationErrorCode ReservationError = RESERVATION_SUCCESS;
+        if (isReservationEscaperEmailEqual(reservation_iterator, email,
+                                           &ReservationError)) {
+
+            assert(ReservationError != RESERVATION_INVALID_PARAMETER);
+            listRemoveCurrent(escapeTechnion->reservations);
+        }
+        reservation_iterator = listGetNext(escapeTechnion->reservations);
+    }
+    return;
+}
