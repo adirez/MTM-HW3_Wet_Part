@@ -6,7 +6,7 @@
 #include <assert.h>
 
 #include "EscapeTechnion.h"
-#include "utility.h"
+#include "utils.h"
 
 struct EscapeTechnion_t {
     Set companies;

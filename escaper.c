@@ -3,7 +3,7 @@
 //
 
 #include "escaper.h"
-#include "utility.h"
+#include "utils.h"
 
 #include <stdlib.h>
 #include <assert.h>
