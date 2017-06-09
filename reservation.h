@@ -97,7 +97,7 @@ bool isReservationCompanyEmailEqual(Reservation reservation,
  * receives a reservation and an email address and checks if the email is listed
  * in the reservation as the escaper's email
  * @param reservation - the reservation to check
- * @param escaper_email - the email of the escaperto compare
+ * @param escaper_email - the email of the escaper to compare
  * @param ReservationError - a type to hold the result of the function
  * @return true - if the emails are equal
  *         false - if the emails are not equal
@@ -105,5 +105,17 @@ bool isReservationCompanyEmailEqual(Reservation reservation,
 bool isReservationEscaperEmailEqual(Reservation reservation,
                                     char *escaper_email,
                                     ReservationErrorCode *ReservationError);
+
+/**
+ * receives a reservation and a room id and checks if the id is listed
+ * in the reservation
+ * @param reservation - the reservation to check
+ * @param room_id - the id of the room to compare
+ * @param ReservationError - a type to hold the result of the function
+ * @return true - if the IDs are equal
+ *         false - if the IDs are not equal
+ */
+bool isReservationRoomIdEqual(Reservation reservation, int room_id,
+                              ReservationErrorCode *ReservationError);
 
 #endif //HW3_RESERVATION_H

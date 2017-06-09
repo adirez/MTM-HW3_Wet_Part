@@ -12,6 +12,8 @@
 #define INVALID_PARAMETER -1
 #define AT_SYMBOL '@'
 #define HYPHEN '-'
+#define MIN_DIFFICULTY_OR_SKILL 1
+#define MAX_DIFFICULTY_OR_SKILL 10
 #define MIN_NUMBER 48 //represents '0' in ASCII
 #define MAX_NUMBER 57 //represents '9' in ASCII
 #define MIN_HOUR 0
@@ -148,6 +150,26 @@ bool getDayAndHourFromStr(char* src_str, int *day, int *hour) {
         return false;
     }
 
+    return true;
+}
+
+bool isPriceMultiplyOfFour(int price) {
+    if (price <= 0) {
+        return false;
+    }
+
+    if (price % 4 == 0) {
+        return true;
+    }
+
+    return false;
+}
+
+bool isValidDifficultyOrSkill(int difficulty_or_skill) {
+    if (difficulty_or_skill < MIN_DIFFICULTY_OR_SKILL ||
+        difficulty_or_skill > MAX_DIFFICULTY_OR_SKILL) {
+        return false;
+    }
     return true;
 }
 

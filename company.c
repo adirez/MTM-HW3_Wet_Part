@@ -66,8 +66,7 @@ CompanyErrorCode companyAddRoom(Company company, int room_id, int price,
     }
     RoomErrorCode RoomError;
     Room room = roomCreate(company->email, room_id, price, num_ppl,
-                           opening_time,
-                           closing_time, difficulty, &RoomError);
+                           opening_time, closing_time, difficulty, &RoomError);
     if (RoomError == ROOM_INVALID_PARAMETER) {
         return COMPANY_INVALID_PARAMETER;
     } else if (RoomError == ROOM_OUT_OF_MEMORY) {

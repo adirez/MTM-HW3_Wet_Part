@@ -45,6 +45,24 @@ bool getHoursFromStr(char *hours_str, int *opening_time, int *closing_time);
 bool getDayAndHourFromStr(char *src_str, int *day, int *hour);
 
 /**
+ * receives the price per person of a certain room and makes sure it it's a
+ * multiply of 4
+ * @param price - the integer to be checked
+ * @return true - if it's a multiply of 4
+ *         false - if it's not a multiply of 4 or if it's not a positive number
+ */
+bool isPriceMultiplyOfFour (int price);
+
+/**
+ * receives a difficulty level of a room or a skill level of an escaper and
+ * checks if the value is valid
+ * @param difficulty_or_skill - the input value of the skill / difficulty
+ * @return true - if it's between the min level and the max level
+ *         false - if it's not in the scale
+ */
+bool isValidDifficultyOrSkill(int difficulty_or_skill);
+
+/**
  * receives an array and initializes the values to '0'
  * @param arr - the array to be reset
  * @param n - array length
