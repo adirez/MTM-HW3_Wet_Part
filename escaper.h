@@ -105,5 +105,6 @@ int escaperGetSkillLevel(Escaper escaper, EscaperErrorCode *EscaperError);
  * @return true - if the escaper's email equals 'email'
  *         false - if the emails are different
  */
-bool isEscaperWithEmail(Escaper escaper, char *email);
+bool isEscaperEmailEqual(Escaper escaper, char *email);
+
 #endif //HW3_ESCAPER_H
