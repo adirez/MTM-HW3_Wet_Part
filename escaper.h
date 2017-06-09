@@ -50,11 +50,9 @@ EscaperErrorCode escaperDestroy(Escaper escaper);
  * a comparison of two escapers by email
  * @param escaper_1 - the first escaper
  * @param escaper_2 - the second escaper
- * @return 0 - if both of the escapers' emails are identical
- * @return NEGATIVE NUMBER - if the first escaper's email is lexicographically
- *         smaller than the second escaper's email
- * @return POSITIVE NUMBER - if the first escaper's email is lexicographically
- *          bigger than the second escaper's email
+ * @return -1 - INVALID_PARAMETER
+ * @return 1 - emails are different
+ * @return 0 - emails are equal
  */
 int escaperCompareElements(SetElement escaper_1, SetElement escaper_2);
 
@@ -77,7 +75,7 @@ SetElement escaperCopyElement(SetElement src_escaper);
 
 /**
  * receives an escaper and returns the email listed in his profile
- * @param escaper - the requested escaper to be checked
+ * @param escaper - the ptr to the escaper
  * @param EscaperError - a type to get the result of the function
  * @return a pointer to the char* if the allocation worked and NULL if failed
  */
@@ -85,12 +83,19 @@ char *escaperGetEmail(Escaper escaper, EscaperErrorCode *EscaperError);
 
 /**
  * receives an escaper and returns the faculty he's listed in
- * @param escaper - the requested escaper to be checked
+ * @param escaper - the ptr to the escaper
  * @param EscaperError - a type to get the result of the function
  * @return the faculty of the escaper or UNKNOWN if an error was found
  */
 TechnionFaculty escaperGetFaculty(Escaper escaper,
                                   EscaperErrorCode *EscaperError);
+/**
+ * receives an escaper and returns his skill level
+ * @param escaper - the ptr to the escaper
+ * @param EscaperError - a type to get the result of the function
+ * @return the skill level of the escaper or -1 if received illegal param
+ */
+int escaperGetSkillLevel(Escaper escaper, EscaperErrorCode *EscaperError);
 
 /**
  * receives an escaper and checks if his email is equal to an email received
@@ -100,13 +105,5 @@ TechnionFaculty escaperGetFaculty(Escaper escaper,
  * @return true - if the escaper's email equals 'email'
  *         false - if the emails are different
  */
-int escaperGetSkillLevel(Escaper escaper, EscaperErrorCode *EscaperError);
-
-/**
- *
- * @param escaper
- * @param email
- * @return
- */
-bool isEscaperEmailEqual(Escaper escaper, char *email);
+bool isEscaperWithEmail(Escaper escaper, char *email);
 #endif //HW3_ESCAPER_H

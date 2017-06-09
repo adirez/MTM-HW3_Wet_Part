@@ -55,7 +55,7 @@ Room roomCreate(char *company_email, int room_id, int price, int num_ppl,
         return NULL;
     }
 
-    room->company_email = malloc((size_t) sizeof(char) * strlen(company_email));
+    room->company_email = malloc(strlen(company_email) + 1);
     if (NULL == room->company_email) {
         free(room);
         *RoomError = ROOM_OUT_OF_MEMORY;

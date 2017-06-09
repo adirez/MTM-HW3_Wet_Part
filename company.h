@@ -66,8 +66,8 @@ CompanyErrorCode companyDestroy(Company company);
  *         COMPANY_INVALID_PARAMETER - the function received an invalid
  *         parameter as an input
  *         COMPANY_MEMORY_PROBLEM - the room allocation was not successful
- *         COMPANY_RESERVATION_EXISTS - one of the rooms has an existing
- *         reservation
+ *         COMPANY_ROOM_ALREADY_EXISTS - room with same id under that company
+ *         already exists
  */
 CompanyErrorCode companyAddRoom(Company company, int room_id, int price,
                                 int num_ppl, int opening_time, int closing_time,
@@ -77,10 +77,9 @@ CompanyErrorCode companyAddRoom(Company company, int room_id, int price,
  * removes a room from the company set
  * @param company - the company from which the room needs to be removed
  * @param room - the room which needs to be removed from the company
- * @return COMPANY_SUCCESS - the room was removed successfuly
+ * @return COMPANY_SUCCESS - the room was removed successfully
  *         COMPANY_ROOM_DOES_NOT_EXIST - the room does not exist in the company
  *         COMPANY_INVALID_PARAMETER - one of the parameters was invalid
- *         COMPANY_RESERVATION_EXISTS - one of the rooms has an existing
  *         reservation
  */
 CompanyErrorCode companyRemoveRoom(Company company, Room room);
@@ -89,11 +88,9 @@ CompanyErrorCode companyRemoveRoom(Company company, Room room);
  * a comparison of two companies by email
  * @param company_1 - the first company
  * @param company_2 - the second company
- * @return 0 - if both of the companies emails are identical
- * @return NEGATIVE NUMBER - if the first company's email is lexicographically
- *         smaller than the second company's email
- * @return POSITIVE NUMBER - if the first company's email is lexicographically
- *          bigger than the second company's email
+ * @return -1 - INVALID_PARAMETER
+ * @return 1 - emails are different
+ * @return 0 - emails are equal
  */
 int companyCompareElements(SetElement company_1, SetElement company_2);
 
