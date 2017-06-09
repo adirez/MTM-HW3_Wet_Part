@@ -2,6 +2,8 @@
 // Created by Shahak on 06/06/2017.
 //
 
+#include "mtm_ex3.h"
+
 /**
  * receives an email and checks if it's valid
  * @param email - the email address to be checked
@@ -40,7 +42,7 @@ bool getHoursFromStr(char *hours_str, int *opening_time, int *closing_time);
  *         false - if the string contains illegal chars, too short / long or if
  *         it is NULL
  */
-bool GetDayAndHourFromStr(char *src_str, int *day, int *hour);
+bool getDayAndHourFromStr(char *src_str, int *day, int *hour);
 
 /**
  * receives an array and initializes the values to '0'
