@@ -50,11 +50,9 @@ EscaperErrorCode escaperDestroy(Escaper escaper);
  * a comparison of two escapers by email
  * @param escaper_1 - the first escaper
  * @param escaper_2 - the second escaper
- * @return 0 - if both of the escapers' emails are identical
- * @return NEGATIVE NUMBER - if the first escaper's email is lexicographically
- *         smaller than the second escaper's email
- * @return POSITIVE NUMBER - if the first escaper's email is lexicographically
- *          bigger than the second escaper's email
+ * @return -1 - INVALID_PARAMETER
+ * @return 1 - emails are different
+ * @return 0 - emails are equal
  */
 int escaperCompareElements(SetElement escaper_1, SetElement escaper_2);
 

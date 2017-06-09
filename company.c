@@ -26,13 +26,13 @@ Company companyCreate(char *company_email, TechnionFaculty Faculty,
         return NULL;
     }
 
-    Company company = malloc((size_t) sizeof(*company));
+    Company company = malloc(sizeof(*company));
     if (NULL == company) {
         *CompanyError = COMPANY_OUT_OF_MEMORY;
         return NULL;
     }
 
-    company->email = malloc((size_t) sizeof(char) * strlen(company_email));
+    company->email = malloc(strlen(company_email) + 1);
     if (NULL == company->email) {
         free(company);
         *CompanyError = COMPANY_OUT_OF_MEMORY;
@@ -57,13 +57,16 @@ CompanyErrorCode companyDestroy(Company company) {
     return COMPANY_SUCCESS;
 }
 
-CompanyErrorCode companyAddRoom(Company company, char *company_email,
-                                int room_id, int price, int num_ppl,
-                                int opening_time, int closing_time,
+CompanyErrorCode companyAddRoom(Company company, int room_id, int price,
+                                int num_ppl, int opening_time, int closing_time,
                                 int difficulty) {
     assert(NULL != company && NULL != company_email && NULL != working_hrs);
+    if (company == NULL) {
+        return COMPANY_INVALID_PARAMETER;
+    }
     RoomErrorCode RoomError;
-    Room room = roomCreate(company_email, room_id, price, num_ppl, opening_time,
+    Room room = roomCreate(company->email, room_id, price, num_ppl,
+                           opening_time,
                            closing_time, difficulty, &RoomError);
     if (RoomError == ROOM_INVALID_PARAMETER) {
         return COMPANY_INVALID_PARAMETER;
@@ -92,6 +95,8 @@ CompanyErrorCode companyRemoveRoom(Company company, Room room) {
     SetResult RemoveResult = setRemove(company->company_rooms, room);
     if (RemoveResult == SET_NULL_ARGUMENT) {
         return COMPANY_INVALID_PARAMETER;
+    } else if (RemoveResult == SET_ITEM_DOES_NOT_EXIST) {
+        return COMPANY_ROOM_DOES_NOT_EXIST;
     }
     return COMPANY_SUCCESS;
 }
@@ -99,10 +104,15 @@ CompanyErrorCode companyRemoveRoom(Company company, Room room) {
 int companyCompareElements(SetElement company_1, SetElement company_2) {
     if (NULL == company_1 || NULL == company_2) {
         return INVALID_PARAMETER;
-        //TODO gotta make sure that -1 won't be a problem
     }
     Company ptr1 = company_1, ptr2 = company_2;
-    return (strcmp(ptr1->email, ptr2->email) );
+
+    int tmp_cmp = strcmp(ptr1->email, ptr2->email);
+    if (tmp_cmp == 0) {
+        return 0;
+    } else {
+        return 1;
+    }
 }
 
 void companyFreeElement(SetElement company) {
@@ -127,7 +137,7 @@ SetElement companyCopyElement(SetElement src_company) {
     return company;
 }
 
-char* companyGetEmail (Company company, CompanyErrorCode *CompanyError) {
+char *companyGetEmail(Company company, CompanyErrorCode *CompanyError) {
     if (NULL == company) {
         *CompanyError = COMPANY_INVALID_PARAMETER;
         return NULL;
@@ -154,7 +164,7 @@ TechnionFaculty companyGetFaculty(Company company,
 }
 
 Room companyFindRoom(Company company, int room_id,
-                    CompanyErrorCode *CompanyError) {
+                     CompanyErrorCode *CompanyError) {
     if (NULL == company || room_id <= 0) {
         *CompanyError = COMPANY_INVALID_PARAMETER;
         return NULL;

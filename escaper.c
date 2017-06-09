@@ -26,8 +26,8 @@ struct Escaper_t {
  * @return true - all of the arguments are valid
  *         false - not all of the arguments are valid
  */
-static bool checkEscaperArgs (char *escaper_email, int skill_level,
-                              TechnionFaculty FacultyOfEscaper);
+static bool checkEscaperArgs(char *escaper_email, int skill_level,
+                             TechnionFaculty FacultyOfEscaper);
 
 Escaper escaperCreate(char *escaper_email, TechnionFaculty FacultyOfEscaper,
                       int skill_level, EscaperErrorCode *EscaperError) {
@@ -38,13 +38,13 @@ Escaper escaperCreate(char *escaper_email, TechnionFaculty FacultyOfEscaper,
         return NULL;
     }
 
-    Escaper escaper = malloc((size_t)sizeof(*escaper));
+    Escaper escaper = malloc(sizeof(*escaper));
     if (NULL == escaper) {
         *EscaperError = ESCAPER_OUT_OF_MEMORY;
         return NULL;
     }
 
-    escaper->escaper_email = malloc((size_t)sizeof(char)*strlen(escaper_email));
+    escaper->escaper_email = malloc(strlen(escaper_email) + 1);
     if (NULL == escaper->escaper_email) {
         free(escaper);
         *EscaperError = ESCAPER_OUT_OF_MEMORY;
@@ -71,10 +71,14 @@ EscaperErrorCode escaperDestroy(Escaper escaper) {
 int escaperCompareElements(SetElement escaper_1, SetElement escaper_2) {
     if (NULL == escaper_1 || NULL == escaper_2) {
         return INVALID_PARAMETER;
-        //TODO gotta make sure that -1 won't be a problem
     }
     Escaper ptr1 = escaper_1, ptr2 = escaper_2;
-    return (strcmp(ptr1->escaper_email, ptr2->escaper_email) );
+    int tmp_cmp = strcmp(ptr1->escaper_email, ptr2->escaper_email);
+    if (tmp_cmp == 0) {
+        return 0;
+    } else {
+        return 1;
+    }
 }
 
 
@@ -148,9 +152,8 @@ bool isEscaperWithEmail(Escaper escaper, char *email) {
 }
 
 
-
-static bool checkEscaperArgs (char *escaper_email, int skill_level,
-                              TechnionFaculty FacultyOfEscaper) {
+static bool checkEscaperArgs(char *escaper_email, int skill_level,
+                             TechnionFaculty FacultyOfEscaper) {
     if (!isEmailValid(escaper_email)) {
         return false;
     }
