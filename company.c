@@ -57,14 +57,13 @@ CompanyErrorCode companyDestroy(Company company) {
     return COMPANY_SUCCESS;
 }
 
-CompanyErrorCode companyAddRoom(Company company, char *company_email,
-                                int room_id, int price, int num_ppl,
-                                int opening_time, int closing_time,
+CompanyErrorCode companyAddRoom(Company company, int room_id, int price,
+                                int num_ppl, int opening_time, int closing_time,
                                 int difficulty) {
     assert(NULL != company && NULL != company_email && NULL != working_hrs);
     RoomErrorCode RoomError;
-    Room room = roomCreate(company_email, room_id, price, num_ppl, opening_time,
-                           closing_time, difficulty, &RoomError);
+    Room room = roomCreate(company->email, room_id, price, num_ppl,
+                           opening_time, closing_time, difficulty, &RoomError);
     if (RoomError == ROOM_INVALID_PARAMETER) {
         return COMPANY_INVALID_PARAMETER;
     } else if (RoomError == ROOM_OUT_OF_MEMORY) {

@@ -37,15 +37,6 @@ struct Room_t {
 static bool checkRoomArgs(char *company_email, int room_id, int price,
                           int num_ppl, int opening_time, int closing_time,
                           int difficulty);
-/**
- * receives the price per person of a certain room and makes sure it it's a
- * multiply of 4
- * @param price - the integer to be checked
- * @return true - if it's a multiply of 4
- *         false - if it's not a multiply of 4 or if it's not a positive number
- */
-static bool isMultiplyOfFour(int price);
-
 
 Room roomCreate(char *company_email, int room_id, int price, int num_ppl,
                 int opening_time, int closing_time, int difficulty,
@@ -219,24 +210,14 @@ static bool checkRoomArgs(char *company_email, int room_id, int price,
     if (!isEmailValid(company_email)) {
         return false;
     }
-    if (!isMultiplyOfFour(price)) {
+    if (!isPriceMultiplyOfFour(price)) {
         return false;
     }
-    if (room_id <= 0 || num_ppl <= 0 || difficulty <= 0 || difficulty > 10 ) {
+    if (!isValidDifficultyOrSkill(difficulty)) {
+        return false;
+    }
+    if (room_id <= 0 || num_ppl <= 0) {
         return false;
     }
     return true;
 }
-
-static bool isMultiplyOfFour (int price) {
-    if (price <= 0) {
-        return false;
-    }
-
-    if (price % 4 == 0) {
-        return true;
-    }
-
-    return false;
-}
-

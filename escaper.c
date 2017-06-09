@@ -157,7 +157,7 @@ static bool checkEscaperArgs (char *escaper_email, int skill_level,
     if (!isFacultyValid(FacultyOfEscaper)) {
         return false;
     }
-    if (skill_level <= 0 || skill_level > 10) {
+    if (!isValidDifficultyOrSkill(skill_level)) {
         return false;
     }
     return true;

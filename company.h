@@ -57,8 +57,6 @@ CompanyErrorCode companyDestroy(Company company);
  * the relevant result code. calculates the working hours of the room and if
  * found valid, calls roomCreate to add the room to the set.
  * @param company - the company to which the room needs to be added
- * @param company_email - the email of the company the rooms will be listed
- *        under
  * @param room_id - the id of the room
  * @param price - entry price per person (must be a multiple of 4)
  * @param num_ppl - recommended number of people for this specific room
@@ -71,9 +69,8 @@ CompanyErrorCode companyDestroy(Company company);
  *         COMPANY_RESERVATION_EXISTS - one of the rooms has an existing
  *         reservation
  */
-CompanyErrorCode companyAddRoom(Company company, char *company_email,
-                                int room_id, int price, int num_ppl,
-                                int opening_time, int closing_time,
+CompanyErrorCode companyAddRoom(Company company, int room_id, int price,
+                                int num_ppl, int opening_time, int closing_time,
                                 int difficulty);
 
 /**

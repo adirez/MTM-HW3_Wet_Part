@@ -175,6 +175,20 @@ bool isReservationEscaperEmailEqual(Reservation reservation,
     return false;
 }
 
+bool isReservationRoomIdEqual(Reservation reservation, int room_id,
+                              ReservationErrorCode *ReservationError) {
+    if (NULL == reservation || room_id <= 0) {
+        *ReservationError = RESERVATION_INVALID_PARAMETER;
+        return false;
+    }
+    *ReservationError = RESERVATION_SUCCESS;
+
+    if (reservation->room_id == room_id) {
+        return true;
+    }
+    return false;
+}
+
 static bool checkReservationArgs(char *escaper_email, char *company_email,
                                  TechnionFaculty FacultyOfEscaper,
                                  TechnionFaculty FacultyOfRoom, int room_id,
@@ -187,8 +201,10 @@ static bool checkReservationArgs(char *escaper_email, char *company_email,
     if (!isFacultyValid(FacultyOfEscaper) || !isFacultyValid(FacultyOfRoom)) {
         return false;
     }
-    if (room_id <= 0 || num_ppl <= 0 || total_cost < 0 || escaper_skill <= 0 ||
-        escaper_skill > 10) {
+    if (!isValidDifficultyOrSkill(escaper_skill)) {
+        return false;
+    }
+    if (room_id <= 0 || num_ppl <= 0 || total_cost < 0) {
         return false;
     }
     return true;
