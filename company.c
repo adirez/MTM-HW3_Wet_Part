@@ -74,14 +74,12 @@ CompanyErrorCode companyAddRoom(Company company, int room_id, int price,
     }
 
     SetResult AddResult = setAdd(company->company_rooms, room);
+    roomDestroy(room);
     if (AddResult == SET_NULL_ARGUMENT) {
-        roomDestroy(room);
         return COMPANY_INVALID_PARAMETER;
     } else if (AddResult == SET_ITEM_ALREADY_EXISTS) {
-        roomDestroy(room);
         return COMPANY_ROOM_ALREADY_EXISTS;
     } else if (AddResult == SET_OUT_OF_MEMORY) {
-        roomDestroy(room);
         return COMPANY_OUT_OF_MEMORY;
     }
     return COMPANY_SUCCESS;

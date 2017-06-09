@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "EscapeTechnion.h"
+#include "escape_technion.h"
 #include "utils.h"
 
 struct EscapeTechnion_t {
@@ -108,13 +108,13 @@ static Room escapeSystemFindRoom(int room_id, TechnionFaculty Faculty,
 static Escaper findEscaper(char *email, EscapeTechnion escapeTechnion);
 
 EscapeTechnion escapeTechnionCreate(MtmErrorCode *EscapeTechnionError) {
-    EscapeTechnion escapeTechnion = malloc((size_t) sizeof(*escapeTechnion));
+    EscapeTechnion escapeTechnion = malloc(sizeof(*escapeTechnion));
     if (NULL == escapeTechnion) {
         *EscapeTechnionError = MTM_OUT_OF_MEMORY;
         return NULL;
     }
 
-    escapeTechnion->faculties_earnings = malloc((size_t) sizeof(int) * UNKNOWN);
+    escapeTechnion->faculties_earnings = malloc(sizeof(int) * UNKNOWN);
     if (NULL == escapeTechnion->faculties_earnings) {
         *EscapeTechnionError = MTM_OUT_OF_MEMORY;
         free(escapeTechnion);
@@ -188,10 +188,10 @@ MtmErrorCode escapeTechnionAddCompany(EscapeTechnion escapeTechnion,
         return MTM_OUT_OF_MEMORY;
     }
     SetResult SetError = setAdd(escapeTechnion->companies, company);
+    companyDestroy(company);
     assert(SetError != SET_ITEM_ALREADY_EXISTS &&
            SetError != SET_NULL_ARGUMENT);
     if (SetError == SET_OUT_OF_MEMORY) {
-        companyDestroy(company);
         return MTM_OUT_OF_MEMORY;
     }
     return MTM_SUCCESS;
@@ -259,7 +259,7 @@ MtmErrorCode escapeTechnionAddRoom(EscapeTechnion escapeTechnion,
 
 MtmErrorCode escapeTechnionRemoveRoom(EscapeTechnion escapeTechnion,
                                       int room_id, TechnionFaculty Faculty) {
-    if (NULL == escapeTechnion || !isFacultyValid(Faculty)) {
+    if (NULL == escapeTechnion || !isFacultyValid(Faculty) || room_id <= 0) {
         return MTM_INVALID_PARAMETER;
     }
     if (isReservationForRoom(room_id, escapeTechnion)) {
