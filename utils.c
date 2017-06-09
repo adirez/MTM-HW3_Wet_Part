@@ -68,7 +68,7 @@ bool getHoursFromStr(char *hours_str, int *opening_time, int *closing_time) {
     tmp_opening += atoi(&tmp_char);
 
     tmp_char = hours_str[2];
-    if (tmp_char != '-') {
+    if (tmp_char != HYPHEN) {
         return false;
     }
 

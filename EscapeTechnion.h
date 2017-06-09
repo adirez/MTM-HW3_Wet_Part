@@ -100,6 +100,35 @@ MtmErrorCode escapeTechnionAddRoom(EscapeTechnion escapeTechnion,
 MtmErrorCode escapeTechnionRemoveRoom(EscapeTechnion escapeTechnion,
                                       int room_id, TechnionFaculty Faculty);
 
+/**
+ * receives an escapeTechnion system and escaper's details and adds the escaper
+ * to the list.
+ * @param escapeTechnion - the system to iterate through
+ * @param escaper_email - the email of the escaper to be added
+ * @param skill_level - the skill level of the escaper
+ * @param FacultyOfEscaper - the faculty of the escaper
+ * @return MTM_SUCCESS - if the function succeeded
+ *         MTM_INVALID_PARAMETER - if one of the parameters was incompatible
+ *         MTM_EMAIL_ALREADY_EXISTS- if the escaper's email is  already in use
+ *         in the system
+ *         MTM_OUT_OF_MEMORY - if one of the allocations failed
+ */
+MtmErrorCode escapeTechnionAddEscaper(EscapeTechnion escapeTechnion,
+                                      char *escaper_email, int skill_level,
+                                      TechnionFaculty FacultyOfEscaper);
 
+/**
+ * receives an escapeTechnion system and an email of an escaper and iterates
+ * through the system to find an escaper witht the specific email and remove
+ * from the system
+ * @param email - the email of the escaper
+ * @param escapeTechnion - the system to iterate through
+ * @return MTM_SUCCESS - if the function succeeded
+ *         MTM_CLIENT_EMAIL_DOES_NOT_EXIST - if the email wasn't found in the
+ *         system
+ *         MTM_INVALID_PARAMETER - if one of the parameteres was incorrect
+ */
+MtmErrorCode escapeTechnionRemoveEscaper(char *email,
+                                         EscapeTechnion escapeTechnion);
 
 #endif //HW3_ESCAPETECHNION_H

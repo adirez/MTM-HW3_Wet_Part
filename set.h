@@ -186,7 +186,7 @@ SetResult setAdd(Set set, SetElement element);
 *   Iterator's value is undefined after this operation.
 *
 * @param set -
-* 	The set to remove the element from.
+* The set to remove the element from.
 * @param element
 * 	The element to remove from the set. The element will be freed using the
 * 	free function given at initialization.

@@ -55,10 +55,29 @@ static bool isReservationForRoom(int room_id, EscapeTechnion escapeTechnion);
  * @param escapeTechnion - the system to iterate through
  * @return true - if the email exists
  *         false - if the email doesn't exist in the system
- */ /*
+ */
+
+/**
+ * receives an escapeTechnion system and an email address and checks if the
+ * email is listed as an escaper's email in the escapers list
+ * @param email - email of a client to look for
+ * @param escapeTechnion - the system to iterate through
+ * @return true - if the email exists in the system
+ *         false - if the email doesn't exist in the system
+ */
+static bool isEscaperWithEmail(char *email, EscapeTechnion escapeTechnion);
+
+/**
+ * receives an email of an escaper and an escapeTechnion system and checks if
+ * there's a reservation with the escaper's email in the system
+ * @param email - the email of the escaper
+ * @param escapeTechnion - the system to iterate through
+ * @return true - if the email was found in the system
+ *         false - if the email wasn't found in the system
+ */
 static bool isReservationForEscaper(char *email,
                                     EscapeTechnion escapeTechnion);
-*/
+
 /**
  * receives an email and an escapeTechnion system and checks if the email is
  * listed as a company's email in the system
@@ -78,6 +97,15 @@ static Company findCompany(char *email, EscapeTechnion escapeTechnion);
 static Room escapeSystemFindRoom(int room_id, TechnionFaculty Faculty,
                                  EscapeTechnion escapeTechnion,
                                  Company *company_of_room);
+
+/**
+ * receives an escapeTechnion system room and an email of an escaper, iterates
+ * through the system to find an escaper with the specific email
+ * @param email - the email we're looking for
+ * @param escapeTechnion - the system to iterate through
+ * @return the escaper with the requested email or NULL if not found
+ */
+static Escaper findEscaper(char *email, EscapeTechnion escapeTechnion);
 
 EscapeTechnion escapeTechnionCreate(MtmErrorCode *EscapeTechnionError) {
     EscapeTechnion escapeTechnion = malloc((size_t) sizeof(*escapeTechnion));
@@ -231,7 +259,7 @@ MtmErrorCode escapeTechnionAddRoom(EscapeTechnion escapeTechnion,
 
 MtmErrorCode escapeTechnionRemoveRoom(EscapeTechnion escapeTechnion,
                                       int room_id, TechnionFaculty Faculty) {
-    if (NULL == escapeTechnion) {
+    if (NULL == escapeTechnion || !isFacultyValid(Faculty)) {
         return MTM_INVALID_PARAMETER;
     }
     if (isReservationForRoom(room_id, escapeTechnion)) {
@@ -245,6 +273,53 @@ MtmErrorCode escapeTechnionRemoveRoom(EscapeTechnion escapeTechnion,
     }
 
     companyRemoveRoom(company, room);
+    return MTM_SUCCESS;
+}
+
+MtmErrorCode escapeTechnionAddEscaper(EscapeTechnion escapeTechnion,
+                                      char *escaper_email, int skill_level,
+                                      TechnionFaculty FacultyOfEscaper) {
+    if (NULL == escapeTechnion || NULL == escaper_email ||
+        !isEmailValid(escaper_email) ||
+        !isValidDifficultyOrSkill(skill_level) ||
+        !isFacultyValid(FacultyOfEscaper)) {
+        return MTM_INVALID_PARAMETER;
+    }
+
+    if (isEscaperWithEmail(escaper_email, escapeTechnion)) {
+        return MTM_EMAIL_ALREADY_EXISTS;
+    }
+
+    EscaperErrorCode EscaperError;
+    Escaper escaper = escaperCreate(escaper_email, FacultyOfEscaper,
+                                    skill_level, &EscaperError);
+    assert(EscaperError != ESCAPER_INVALID_PARAMETER);
+    if (EscaperError == ESCAPER_OUT_OF_MEMORY) {
+        return MTM_OUT_OF_MEMORY;
+    }
+
+    SetResult SetError = setAdd(escapeTechnion->escapers, escaper);
+    if (SetError == SET_OUT_OF_MEMORY) {
+        escaperDestroy(escaper);
+        return MTM_OUT_OF_MEMORY;
+    }
+    return MTM_SUCCESS;
+}
+
+MtmErrorCode escapeTechnionRemoveEscaper(char *email,
+                                         EscapeTechnion escapeTechnion) {
+    if (NULL == email || NULL == escapeTechnion || !isEmailValid(email)) {
+        return MTM_INVALID_PARAMETER;
+    }
+    if (!isReservationForEscaper(email, escapeTechnion)) {
+        return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
+    }
+    Escaper escaper = findEscaper(email, escapeTechnion);
+    assert(NULL != escaper);
+
+    //TODO destroy reservations
+
+    setRemove(escapeTechnion->escapers, escaper);
     return MTM_SUCCESS;
 }
 
@@ -302,7 +377,20 @@ static bool isReservationForRoom(int room_id, EscapeTechnion escapeTechnion) {
     return false;
 }
 
-/*
+static bool isEscaperWithEmail(char *email, EscapeTechnion escapeTechnion) {
+    if (NULL == email || NULL == escapeTechnion) {
+        return false;
+    }
+    Escaper escaper_iterator = setGetFirst(escapeTechnion->escapers);
+    while (NULL != escaper_iterator) {
+        if (isEscaperEmailEqual(escaper_iterator, email)) {
+            return true;
+        }
+        escaper_iterator = setGetNext(escapeTechnion->escapers);
+    }
+    return false;
+}
+
 static bool isReservationForEscaper(char *email,
                                     EscapeTechnion escapeTechnion) {
     if (NULL == email || NULL == escapeTechnion) {
@@ -321,9 +409,9 @@ static bool isReservationForEscaper(char *email,
     }
     return false;
 }
-*/
+
 static Company findCompany(char *email, EscapeTechnion escapeTechnion) {
-    if (NULL == escapeTechnion || NULL == email) {
+    if (NULL == escapeTechnion || NULL == email || !isEmailValid(email)) {
         return NULL;
     }
     Company company_iterator = setGetFirst(escapeTechnion->companies);
@@ -359,3 +447,19 @@ static Room escapeSystemFindRoom(int room_id, TechnionFaculty Faculty,
 
     return NULL;
 }
+
+static Escaper findEscaper(char *email, EscapeTechnion escapeTechnion) {
+    if (NULL == escapeTechnion || NULL == email || !isEmailValid(email)) {
+        return NULL;
+    }
+
+    Escaper escaper_iterator = setGetFirst(escapeTechnion->escapers);
+    while (NULL != escaper_iterator) {
+        if (isEscaperEmailEqual(escaper_iterator, email)) {
+            return escaper_iterator;
+        }
+        escaper_iterator = setGetNext(escapeTechnion->escapers);
+    }
+    return NULL;
+}
+
