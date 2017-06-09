@@ -137,7 +137,7 @@ int escaperGetSkillLevel(Escaper escaper, EscaperErrorCode *EscaperError) {
     return escaper->skill_level;
 }
 
-bool isEscaperWithEmail(Escaper escaper, char *email) {
+bool isEscaperEmailEqual(Escaper escaper, char *email) {
     if (NULL == escaper || NULL == email) {
         return false;
     }
