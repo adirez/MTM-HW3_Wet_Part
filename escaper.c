@@ -109,8 +109,7 @@ char *escaperGetEmail(Escaper escaper, EscaperErrorCode *EscaperError) {
         *EscaperError = ESCAPER_INVALID_PARAMETER;
         return NULL;
     }
-    char *output = malloc(
-            (size_t) sizeof(char) * strlen(escaper->escaper_email));
+    char *output = malloc(strlen(escaper->escaper_email) + 1);
     if (NULL == output) {
         *EscaperError = ESCAPER_OUT_OF_MEMORY;
         return NULL;

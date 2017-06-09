@@ -141,7 +141,7 @@ char *companyGetEmail(Company company, CompanyErrorCode *CompanyError) {
         *CompanyError = COMPANY_INVALID_PARAMETER;
         return NULL;
     }
-    char *output = malloc((size_t) sizeof(char) * strlen(company->email));
+    char *output = malloc(strlen(company->email) + 1);
     if (NULL == output) {
         *CompanyError = COMPANY_OUT_OF_MEMORY;
         return NULL;

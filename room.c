@@ -49,7 +49,7 @@ Room roomCreate(char *company_email, int room_id, int price, int num_ppl,
         return NULL;
     }
 
-    Room room = malloc((size_t)sizeof(*room));
+    Room room = malloc((size_t) sizeof(*room));
     if (NULL == room) {
         *RoomError = ROOM_OUT_OF_MEMORY;
         return NULL;
@@ -90,7 +90,7 @@ int roomCompareElements(SetElement room_1, SetElement room_2) {
     }
     Room ptr1 = room_1, ptr2 = room_2;
     int cmp_id = (ptr1->room_id) - (ptr2->room_id);
-    if (cmp_id != 0){
+    if (cmp_id != 0) {
         return cmp_id;
     }
 
@@ -111,7 +111,7 @@ SetElement roomCopyElement(SetElement src_room) {
     }
     Room ptr = src_room; //to make the code clearer
     RoomErrorCode CopyResult;
-    Room room = roomCreate(ptr->company_email, ptr->room_id ,ptr->room_price,
+    Room room = roomCreate(ptr->company_email, ptr->room_id, ptr->room_price,
                            ptr->num_ppl, ptr->opening_time, ptr->closing_time,
                            ptr->difficulty, &CopyResult);
     if (CopyResult == ROOM_OUT_OF_MEMORY ||
@@ -126,7 +126,7 @@ char *roomGetCompanyEmail(Room room, RoomErrorCode *RoomError) {
         *RoomError = ROOM_INVALID_PARAMETER;
         return NULL;
     }
-    char *output = malloc((size_t) sizeof(char) * strlen(room->company_email));
+    char *output = malloc(strlen(room->company_email) + 1);
     if (NULL == output) {
         *RoomError = ROOM_OUT_OF_MEMORY;
         return NULL;
@@ -210,8 +210,8 @@ bool isRoomID(Room room, int id, RoomErrorCode *RoomError) {
 }
 
 static bool checkRoomArgs(char *company_email, int room_id, int price,
-                           int num_ppl, int opening_time, int closing_time,
-                           int difficulty) {
+                          int num_ppl, int opening_time, int closing_time,
+                          int difficulty) {
     if (!isEmailValid(company_email)) {
         return false;
     }
