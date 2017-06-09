@@ -98,7 +98,12 @@ int roomCompareElements(SetElement room_1, SetElement room_2) {
         //TODO gotta make sure that -1 won't be a problem
     }
     Room ptr1 = room_1, ptr2 = room_2;
-    return ( (ptr1->room_id) - (ptr2->room_id) );
+    int cmp_id = (ptr1->room_id) - (ptr2->room_id);
+    if (cmp_id != 0){
+        return cmp_id;
+    }
+
+    return strcmp(ptr1->company_email, ptr2->company_email);
 }
 
 
