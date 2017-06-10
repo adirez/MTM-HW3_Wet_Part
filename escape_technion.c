@@ -494,10 +494,16 @@ MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
     Company company_iterator, most_recommended_company = NULL;
     company_iterator = setGetFirst(escapeTechnion->companies);
     while (company_iterator != NULL){
-        cur_recommended_room = mostRecommendedRoom
-                (company_iterator, escapersFaculty, num_ppl,
-                 escaper_skill_level, &cur_result, &cur_faculty_diff, &cur_room_id);
-        if (NULL == cur_recommended_room) continue;
+        cur_recommended_room = mostRecommendedRoom(company_iterator,
+                                                   escapersFaculty, num_ppl,
+                                                   escaper_skill_level,
+                                                   &cur_result,
+                                                   &cur_faculty_diff,
+                                                   &cur_room_id);
+        if (NULL == cur_recommended_room) {
+            company_iterator = setGetNext(escapeTechnion->companies);
+            continue;
+        }
 
         if(cur_result < min_result || min_result == INVALID_PARAMETER){
             most_recommended_company = company_iterator;
