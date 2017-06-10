@@ -135,14 +135,14 @@ MtmErrorCode escapeTechnionRemoveEscaper(char *email,
  *
  * @param escaper_email
  * @param room_id
- * @param FacultyOfEscaper
+ * @param FacultyOfRoom
  * @param time
  * @param num_ppl
  * @param escapeTechnion
  * @return
  */
 MtmErrorCode escapeTechnionAddReservation(char *escaper_email, int room_id,
-                                          TechnionFaculty FacultyOfEscaper,
+                                          TechnionFaculty FacultyOfRoom,
                                           char *time, int num_ppl,
                                           EscapeTechnion escapeTechnion);
 

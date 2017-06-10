@@ -25,7 +25,7 @@ struct Reservation_t {
 };
 
 Reservation reservationCreate(Escaper escaper, Company company, Room room,
-                              int num_ppl, int days_to_reservation,
+                              int num_ppl, int reservation_day,
                               int reservation_hour, int total_cost,
                               ReservationErrorCode *ReservationError) {
 
@@ -47,7 +47,7 @@ Reservation reservationCreate(Escaper escaper, Company company, Room room,
     reservation->reservation_room = room;
 
     reservation->num_ppl = num_ppl;
-    reservation->reservation_day = days_to_reservation;
+    reservation->reservation_day = reservation_day;
     reservation->reservation_hour = reservation_hour;
     reservation->total_cost = total_cost;
     *ReservationError = RESERVATION_SUCCESS;

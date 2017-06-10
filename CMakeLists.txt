@@ -9,7 +9,7 @@ SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
 set(SOURCE_FILES list.h mtm_ex3.h set.h company.h room.h escaper.h company.c
         room.c escaper.c reservation.h reservation.c escape_technion.h
         escape_technion.c utils.c utils.h
-        test_utilities.h reservation_test.c)
+        test_utilities.h escape_technion_test.c)
 add_executable(Wet_Part ${SOURCE_FILES})
 
 target_link_libraries(Wet_Part ${CMAKE_SOURCE_DIR}/libmtm.a)
