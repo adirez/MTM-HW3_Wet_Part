@@ -131,4 +131,19 @@ MtmErrorCode escapeTechnionAddEscaper(EscapeTechnion escapeTechnion,
 MtmErrorCode escapeTechnionRemoveEscaper(char *email,
                                          EscapeTechnion escapeTechnion);
 
+/**
+ *
+ * @param escaper_email
+ * @param room_id
+ * @param FacultyOfEscaper
+ * @param time
+ * @param num_ppl
+ * @param escapeTechnion
+ * @return
+ */
+MtmErrorCode escapeTechnionAddReservation(char *escaper_email, int room_id,
+                                          TechnionFaculty FacultyOfEscaper,
+                                          char *time, int num_ppl,
+                                          EscapeTechnion escapeTechnion);
+
 #endif //HW3_ESCAPETECHNION_H
