@@ -155,9 +155,63 @@ bool testEscapeTechnionRemoveRoom() {
 }
 
 bool testEscapeTechnionAddEscaper() {
+    MtmErrorCode EscapeTechnionError;
+    EscapeTechnion escapeTechnion = escapeTechnionCreate(&EscapeTechnionError);
 
+    ASSERT_TEST(escapeTechnionAddEscaper(NULL, "adi@", 5, PHYSICS) ==
+                MTM_INVALID_PARAMETER);
+    ASSERT_TEST(escapeTechnionAddEscaper(escapeTechnion, "", 5, PHYSICS) ==
+                MTM_INVALID_PARAMETER);
+    ASSERT_TEST(escapeTechnionAddEscaper(escapeTechnion, "adi@@", 5, PHYSICS) ==
+                MTM_INVALID_PARAMETER);
+    ASSERT_TEST(escapeTechnionAddEscaper(escapeTechnion, "adi@", 11, PHYSICS) ==
+                MTM_INVALID_PARAMETER);
+    ASSERT_TEST(escapeTechnionAddEscaper(escapeTechnion, "adi@", -1, PHYSICS) ==
+                MTM_INVALID_PARAMETER);
+    ASSERT_TEST(escapeTechnionAddEscaper(escapeTechnion, "adi@", 5, UNKNOWN) ==
+                MTM_INVALID_PARAMETER);
+
+    ASSERT_TEST(escapeTechnionAddEscaper(escapeTechnion, "adi@", 5, PHYSICS) ==
+                MTM_SUCCESS);
+
+    ASSERT_TEST(escapeTechnionAddEscaper(escapeTechnion, "adi@", 10, BIOLOGY) ==
+                MTM_EMAIL_ALREADY_EXISTS);
+
+    escapeTechnionRemoveEscaper("adi@", escapeTechnion);
+    escapeTechnionDestroy(escapeTechnion);
     return true;
 }
+
+bool testEscapeTechnionRemoveEscaper(){
+    MtmErrorCode EscapeTechnionError;
+    EscapeTechnion escapeTechnion = escapeTechnionCreate(&EscapeTechnionError);
+
+    ASSERT_TEST(escapeTechnionRemoveEscaper("adi@", NULL) ==
+                MTM_INVALID_PARAMETER);
+    ASSERT_TEST(escapeTechnionRemoveEscaper("@ad@i@", escapeTechnion) ==
+                MTM_INVALID_PARAMETER);
+    ASSERT_TEST(escapeTechnionRemoveEscaper("@adi@", escapeTechnion) ==
+                MTM_INVALID_PARAMETER);
+    ASSERT_TEST(escapeTechnionRemoveEscaper("", escapeTechnion) ==
+                MTM_INVALID_PARAMETER);
+
+    ASSERT_TEST(escapeTechnionRemoveEscaper("@", escapeTechnion) ==
+                MTM_CLIENT_EMAIL_DOES_NOT_EXIST);
+    ASSERT_TEST(escapeTechnionRemoveEscaper("adi@", escapeTechnion) ==
+                MTM_CLIENT_EMAIL_DOES_NOT_EXIST);
+
+
+    escapeTechnionAddEscaper(escapeTechnion, "adi@", 5, PHYSICS);
+
+    ASSERT_TEST(escapeTechnionRemoveEscaper("adi@", escapeTechnion) ==
+                MTM_SUCCESS);
+    ASSERT_TEST(escapeTechnionRemoveEscaper("adi@", escapeTechnion) ==
+                MTM_CLIENT_EMAIL_DOES_NOT_EXIST);
+
+    escapeTechnionDestroy(escapeTechnion);
+    return true;
+}
+
 
 int main(int argv, char **arc) {
     RUN_TEST(testEscapeTechnionDestroy);
@@ -166,6 +220,7 @@ int main(int argv, char **arc) {
     RUN_TEST(testEscapeTechnionAddRoom);
     RUN_TEST(testEscapeTechnionRemoveRoom);
     RUN_TEST(testEscapeTechnionAddEscaper);
+    RUN_TEST(testEscapeTechnionRemoveEscaper);
 
     return 0;
 }

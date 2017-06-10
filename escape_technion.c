@@ -75,10 +75,10 @@ static bool isEscaperWithEmail(char *email, EscapeTechnion escapeTechnion);
  * @return true - if the email was found in the system
  *         false - if the email wasn't found in the system
  */
-static bool isReservationForEscaper(char *email,
+/*static bool isReservationForEscaper(char *email,
                                     EscapeTechnion escapeTechnion);
 
-/**
+*//**
  * receives an email and an escapeTechnion system and checks if the email is
  * listed as a company's email in the system
  * @param email - the email to be checked
@@ -321,12 +321,10 @@ MtmErrorCode escapeTechnionRemoveEscaper(char *email,
     if (NULL == email || NULL == escapeTechnion || !isEmailValid(email)) {
         return MTM_INVALID_PARAMETER;
     }
-    if (!isReservationForEscaper(email, escapeTechnion)) {
+    Escaper escaper = findEscaper(email, escapeTechnion);
+    if (escaper == NULL){
         return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
     }
-    Escaper escaper = findEscaper(email, escapeTechnion);
-    assert(NULL != escaper);
-
     destroyEscaperReservations(email, escapeTechnion);
     setRemove(escapeTechnion->escapers, escaper);
     return MTM_SUCCESS;
@@ -399,7 +397,7 @@ static bool isEscaperWithEmail(char *email, EscapeTechnion escapeTechnion) {
     }
     return false;
 }
-
+/*
 static bool isReservationForEscaper(char *email,
                                     EscapeTechnion escapeTechnion) {
     if (NULL == email || NULL == escapeTechnion) {
@@ -418,7 +416,7 @@ static bool isReservationForEscaper(char *email,
     }
     return false;
 }
-
+*/
 static Company findCompany(char *email, EscapeTechnion escapeTechnion) {
     if (NULL == escapeTechnion || NULL == email || !isEmailValid(email)) {
         return NULL;
