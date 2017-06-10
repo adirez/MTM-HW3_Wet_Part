@@ -120,7 +120,7 @@ Room reservationGetRoom(Reservation reservation, ReservationErrorCode *error) {
 }
 
 ReservationErrorCode reservationGetDay(Reservation reservation, int *day) {
-    if (NULL == reservation || NULL == *day) {
+    if (NULL == reservation || NULL == day) {
         *day = INVALID_PARAMETER;
         return RESERVATION_INVALID_PARAMETER;
     }
@@ -129,7 +129,7 @@ ReservationErrorCode reservationGetDay(Reservation reservation, int *day) {
 }
 
 ReservationErrorCode reservationGetHour(Reservation reservation, int *hour) {
-    if (NULL == reservation || NULL == *hour) {
+    if (NULL == reservation || NULL == hour) {
         *hour = INVALID_PARAMETER;
         return RESERVATION_INVALID_PARAMETER;
     }

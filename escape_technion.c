@@ -117,7 +117,7 @@ static void destroyEscaperReservations(Escaper escaper,
  * @return MTM_SUCCESS - if the email is not in use
  *         MTM_EMAIL_ALREADY_IN_USE - if the email is in use
  */
-//static MtmErrorCode isEmailInUse(EscapeTechnion escapeTechnion, char* email);
+static MtmErrorCode isEmailInUse(EscapeTechnion escapeTechnion, char* email);
 
 /**
  * receives the company room and escaper and calculates the final price after
@@ -582,7 +582,7 @@ static bool isReservationInOpeningHours(Reservation reservation,
     reservationGet
 }
 
-/*
+
 static MtmErrorCode isEmailInUse(EscapeTechnion escapeTechnion, char* email) {
     assert(NULL != escapeTechnion && NULL != email);
 
@@ -593,19 +593,7 @@ static MtmErrorCode isEmailInUse(EscapeTechnion escapeTechnion, char* email) {
 
     return MTM_SUCCESS;
 }
-*/
 
-static bool isDiscountAllowed(Escaper escaper, Company company) {
-    assert(NULL != escaper && NULL != company);
-    EscaperErrorCode EscaperError;
-    CompanyErrorCode CompanyError;
-    if (escaperGetFaculty(escaper, &EscaperError) ==
-        companyGetFaculty(company, &CompanyError)) {
-        return true;
-    }
-
-    return false;
-}
 
 static bool isEscaperReservationAtTime(EscapeTechnion escapeTechnion,
                                        Escaper escaper, int day, int hour) {
