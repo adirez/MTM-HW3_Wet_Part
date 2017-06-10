@@ -577,12 +577,6 @@ static int calculatePricePerPerson(Company company, Room room,
     return original_price;
 }
 
-static bool isReservationInOpeningHours(Reservation reservation,
-                                        int reservation_hour){
-    reservationGet
-}
-
-
 static MtmErrorCode isEmailInUse(EscapeTechnion escapeTechnion, char* email) {
     assert(NULL != escapeTechnion && NULL != email);
 
@@ -594,10 +588,9 @@ static MtmErrorCode isEmailInUse(EscapeTechnion escapeTechnion, char* email) {
     return MTM_SUCCESS;
 }
 
-
-static bool isEscaperReservationAtTime(EscapeTechnion escapeTechnion,
+static bool isEscaperAvailable(EscapeTechnion escapeTechnion,
                                        Escaper escaper, int day, int hour) {
-    assert(NULL != escapeTechnion);
+    assert(NULL != escapeTechnion && NULL != escaper);
     Reservation reservation_iterator;
     reservation_iterator = listGetFirst(escapeTechnion->reservations);
     while (NULL != reservation_iterator) {
@@ -619,13 +612,33 @@ static bool isEscaperReservationAtTime(EscapeTechnion escapeTechnion,
     return false;
 }
 
-static bool isRoomReservationAtTime(EscapeTechnion escapeTechnion, Room room,
-                                    int day, int hour) {
-    assert(NULL != escapeTechnion);
+static bool isRoomAvailable(EscapeTechnion escapeTechnion, Room room,
+                                    int reservation_day, int reservation_hour) {
+    assert(NULL != escapeTechnion && NULL != room);
+
+    RoomErrorCode RoomError;
+    if (reservation_hour < roomGetOpeningTime(room, &RoomError) ||
+        reservation_hour >= roomGetClosingTime(room, &RoomError)) {
+        return false;
+    }
+
     Reservation reservation_iterator;
     reservation_iterator = listGetFirst(escapeTechnion->reservations);
     while (NULL != reservation_iterator) {
         ReservationErrorCode ReservationError;
         Room tmp_room =
+                reservationGetRoom(reservation_iterator, &ReservationError);
+        assert(ReservationError != RESERVATION_INVALID_PARAMETER);
+
+        if (tmp_room == room) {
+            int tmp_day, tmp_hour;
+            reservationGetHour(reservation_iterator, &tmp_hour);
+            reservationGetDay(reservation_iterator, &tmp_day);
+            if (tmp_day == reservation_day && tmp_hour == reservation_hour) {
+                return true;
+            }
+        }
+        reservation_iterator = listGetNext(escapeTechnion->reservations);
     }
+    return false;
 }
