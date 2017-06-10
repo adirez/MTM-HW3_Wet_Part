@@ -318,7 +318,6 @@ MtmErrorCode escapeTechnionAddRoom(EscapeTechnion escapeTechnion,
         return MTM_ID_DOES_NOT_EXIST;
     }
 
-
     CompanyError = companyAddRoom(company, room_id, price, num_ppl,
                                   opening_time, closing_time, difficulty);
     assert(CompanyError != COMPANY_INVALID_PARAMETER &&
@@ -393,10 +392,10 @@ MtmErrorCode escapeTechnionRemoveEscaper(char *email,
     return MTM_SUCCESS;
 }
 
-MtmErrorCode escapeTechnionAddReservation(char *escaper_email, int room_id,
-                                          TechnionFaculty FacultyOfRoom,
-                                          char *time, int num_ppl,
-                                          EscapeTechnion escapeTechnion) {
+MtmErrorCode escapeTechnionReservationReceived(char *escaper_email, int room_id,
+                                               TechnionFaculty FacultyOfRoom,
+                                               char *time, int num_ppl,
+                                               EscapeTechnion escapeTechnion) {
     if (NULL == escaper_email || NULL == time || NULL == escapeTechnion ||
         !isFacultyValid(FacultyOfRoom) || !isEmailValid(escaper_email) ||
         room_id <= 0 || num_ppl <= 0) {

@@ -159,11 +159,16 @@ MtmErrorCode escapeTechnionAddReservation(char *escaper_email, int room_id,
 /**
  *
  * @param escaper_email
+ * @param room_id
+ * @param FacultyOfRoom
+ * @param time
  * @param num_ppl
  * @param escapeTechnion
  * @return
  */
-MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
-                                           EscapeTechnion escapeTechnion);
+MtmErrorCode escapeTechnionReservationReceived(char *escaper_email, int room_id,
+                                               TechnionFaculty FacultyOfRoom,
+                                               char *time, int num_ppl,
+                                               EscapeTechnion escapeTechnion);
 
 #endif //HW3_ESCAPETECHNION_H
