@@ -15,7 +15,7 @@ bool testEscapeTechnionDestroy() {
 
     return true;
 }
-
+//TODO: add tests for company and escaper same mail
 bool testEscapeTechnionAddCompany() {
     MtmErrorCode EscapeTechnionError;
     EscapeTechnion escapeTechnion = escapeTechnionCreate(&EscapeTechnionError);
@@ -153,7 +153,7 @@ bool testEscapeTechnionRemoveRoom() {
     escapeTechnionDestroy(escapeTechnion);
     return true;
 }
-
+//TODO: add tests for company and escaper same mail
 bool testEscapeTechnionAddEscaper() {
     MtmErrorCode EscapeTechnionError;
     EscapeTechnion escapeTechnion = escapeTechnionCreate(&EscapeTechnionError);

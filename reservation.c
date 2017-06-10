@@ -18,7 +18,6 @@ struct Reservation_t {
     Company reservation_company;
     Room reservation_room;
 
-    int escaper_skill;
     int reservation_day;
     int reservation_hour;
     int num_ppl;
@@ -42,20 +41,14 @@ struct Reservation_t {
  * @return true - all fields are valid
  *         false - not all fields are valid
  */
-static bool checkReservationArgs(int num_ppl, int escaper_skill,
-                                 int days_to_reservation, int reservation_hour,
-                                 int total_cost);
-
 Reservation reservationCreate(Escaper escaper, Company company, Room room,
-                              int num_ppl, int escaper_skill,
-                              int days_to_reservation, int reservation_hour,
-                              int total_cost,
+                              int num_ppl, int days_to_reservation,
+                              int reservation_hour, int total_cost,
                               ReservationErrorCode *ReservationError) {
 
     assert(escaper != NULL && company != NULL && room != NULL);
-    if (escaper == NULL || company == NULL || room != NULL ||
-        !checkReservationArgs(num_ppl, escaper_skill, days_to_reservation,
-                              reservation_hour, total_cost)) {
+    if (escaper == NULL || company == NULL || room == NULL || num_ppl <= 0 ||
+            total_cost < 0) {
         *ReservationError = RESERVATION_INVALID_PARAMETER;
         return NULL;
     }
@@ -71,7 +64,6 @@ Reservation reservationCreate(Escaper escaper, Company company, Room room,
     reservation->reservation_room = room;
 
     reservation->num_ppl = num_ppl;
-    reservation->escaper_skill = escaper_skill;
     reservation->reservation_day = days_to_reservation;
     reservation->reservation_hour = reservation_hour;
     reservation->total_cost = total_cost;
@@ -101,10 +93,10 @@ ListElement reservationCopyElement(ListElement src_reservation) {
     }
     Reservation ptr = src_reservation; //to make the code clearer
     ReservationErrorCode CopyResult;
-    Reservation reservation = reservationCreate(ptr->escaper_email,
-                                                ptr->company_email,
-                                                ptr->room_id, ptr->num_ppl,
-                                                ptr->escaper_skill,
+    Reservation reservation = reservationCreate(ptr->reservation_escaper,
+                                                ptr->reservation_company,
+                                                ptr->reservation_room,
+                                                ptr->num_ppl,
                                                 ptr->reservation_day,
                                                 ptr->reservation_hour,
                                                 ptr->total_cost, &CopyResult);
@@ -113,21 +105,6 @@ ListElement reservationCopyElement(ListElement src_reservation) {
         return NULL;
     }
     return reservation;
-}
-
-static bool checkReservationArgs(int num_ppl, int escaper_skill,
-                                 int days_to_reservation, int reservation_hour,
-                                 int total_cost) {
-    if (!isEmailValid(escaper_email) || !isEmailValid(company_email)) {
-        return false;
-    }
-    if (!isValidDifficultyOrSkill(escaper_skill)) {
-        return false;
-    }
-    if (room_id <= 0 || num_ppl <= 0 || total_cost < 0) {
-        return false;
-    }
-    return true;
 }
 
 Escaper reservationGetEscaper(Reservation reservation,

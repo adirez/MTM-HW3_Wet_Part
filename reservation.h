@@ -28,14 +28,12 @@ typedef enum {
 /**
  * creates a new reservation according to the relevant input parameters and
  * returns the relevant result code.
- * @param escaper_email - the email of the escaper
- * @param company_email - the email of the company the room is listed in
- * @param FacultyOfEscaper - the faculty the escaper is listed in
- * @param FacultyOfRoom - the faculty the room is listed in
- * @param room_id - the id of the asked room
+ * @param escaper - ptr to the escaper who made the reservation
+ * @param company - ptr to the company in which the room that the reservation
+ *        was made for
+ * @param room - ptr to the room that the reservation was made for
  * @param num_ppl - number of escapers for the reservation
- * @param escaper_skill - the expertise level of the escaper
- * @param days_to_reservation - number of days for the reservation to take place
+ * @param reservation_day - the day of the reservation since beginning of time
  * @param reservation_hour - the hour the room is reserved for
  * @param total_cost - the total amount to pay
  * @return Reservation - a pointer to the successful reservation if everything
@@ -43,9 +41,8 @@ typedef enum {
            NULL - if the allocation was not successful
  */
 Reservation reservationCreate(Escaper escaper, Company company, Room room,
-                              int num_ppl, int escaper_skill,
-                              int days_to_reservation, int reservation_hour,
-                              int total_cost,
+                              int num_ppl, int days_to_reservation,
+                              int reservation_hour, int total_cost,
                               ReservationErrorCode *ReservationError);
 
 /**
@@ -55,7 +52,6 @@ Reservation reservationCreate(Escaper escaper, Company company, Room room,
  *         RESERVATION_INVALID_PARAMETER - one of the parameters was invalid
  */
 ReservationErrorCode reservationDestroy(Reservation reservation);
-
 
 /**
  * compares between two reservations received as an input
@@ -82,17 +78,29 @@ void reservationFreeElement(ListElement reservation);
 ListElement reservationCopyElement(ListElement src_reservation);
 
 /**
- *
- * @param reservation
- * @param error
- * @return
+ * receives a reservation type and returns a ptr to the escaper whom reserved it
+ * @param reservation - ptr to the reservation
+ * @param error - a type to get the result of the function
+ * @return ptr to the escaper
  */
 Escaper reservationGetEscaper(Reservation reservation,
                               ReservationErrorCode *error);
-
+/**
+ * receives a reservation type and returns a ptr to the company that controls
+ * the room for which the reservation is for
+ * @param reservation - ptr to the reservation
+ * @param error - a type to get the result of the function
+ * @return ptr to the company
+ */
 Company reservationGetCompany(Reservation reservation,
                               ReservationErrorCode *error);
-
+/**
+ * receives a reservation type and returns a ptr to the room that the
+ * reservation is for
+ * @param reservation - ptr to the reservation
+ * @param error - a type to get the result of the function
+ * @return ptr to the room
+ */
 Room reservationGetRoom(Reservation reservation, ReservationErrorCode *error);
 
 #endif //HW3_RESERVATION_H

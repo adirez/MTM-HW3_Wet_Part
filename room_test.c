@@ -8,7 +8,6 @@
 
 
 bool testRoomCreate() {
-
     RoomErrorCode errorCode;
 
     ASSERT_TEST(roomCreate(NULL, 123, 4, 20, 1, 2, 1, &errorCode) == NULL);
@@ -28,7 +27,6 @@ bool testRoomCreate() {
 }
 
 bool testRoomDestroy() {
-
     ASSERT_TEST(roomDestroy(NULL) == ROOM_INVALID_PARAMETER);
 
     RoomErrorCode errorCode;
