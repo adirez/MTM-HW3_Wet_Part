@@ -171,6 +171,9 @@ static MtmErrorCode reserveRoom(EscapeTechnion escapeTechnion, Escaper escaper,
                                 Company company, Room room, int num_ppl,
                                 int day, int hour);
 
+static MtmErrorCode findClosestTime(EscapeTechnion escapeTechnion, Room room,
+                                    Escaper escaper, int *day, int *hour);
+
 /**---------------------------------------------------------------------------*/
 
 
@@ -466,6 +469,7 @@ static MtmErrorCode reserveRoom(EscapeTechnion escapeTechnion, Escaper escaper,
     reservationDestroy(reservation);
     return MTM_SUCCESS;
 }
+
 MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
                                            EscapeTechnion escapeTechnion){
     if (NULL == escaper_email || !isEmailValid(escaper_email) || num_ppl <= 0 ||
@@ -538,7 +542,9 @@ MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
         return MTM_NO_ROOMS_AVAILABLE;
     }
 
-    int day, hour; //TODO
+    int day, hour;
+    findClosestTime(escapeTechnion, most_recommended_room, escaper, &day, &hour);
+
     return reserveRoom(escapeTechnion, escaper, most_recommended_company,
                        most_recommended_room, num_ppl, day, hour);
 }
@@ -837,4 +843,27 @@ static bool isRoomSameIdInFaculty(EscapeTechnion escapeTechnion, int room_id,
         company_iterator = setGetNext(escapeTechnion->companies);
     }
     return false;
+}
+
+static MtmErrorCode findClosestTime(EscapeTechnion escapeTechnion, Room room,
+                            Escaper escaper, int *day, int *hour) {
+
+    ListResult listResult = listSort(escapeTechnion->reservations,
+                                     reservationCompareElements);
+    if (listResult != LIST_SUCCESS) {
+        return MTM_OUT_OF_MEMORY;
+    }
+
+    int tmp_day = 0;
+    while (1) {
+        for (int tmp_hour = 0; tmp_hour < 24; tmp_hour++) {
+            if (isEscaperAvailable(escapeTechnion, escaper, tmp_day, tmp_hour)
+                && isRoomAvailable(escapeTechnion, room, tmp_day, tmp_hour)) {
+                *day = tmp_day;
+                *hour = tmp_hour;
+                return MTM_SUCCESS;
+            }
+
+        }
+    }
 }

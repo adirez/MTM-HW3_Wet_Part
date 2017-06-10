@@ -137,6 +137,25 @@ ReservationErrorCode reservationGetHour(Reservation reservation, int *hour) {
     return RESERVATION_SUCCESS;
 }
 
+int reservationCompareElements(ListElement reservation_1,
+                               ListElement reservation_2) {
+
+    Reservation ptr1 = reservation_1, ptr2 = reservation_2;
+    if (ptr1->reservation_day < ptr2->reservation_day) {
+        return -1;
+    } else if (ptr1->reservation_day > ptr2->reservation_day) {
+        return 1;
+    }
+
+    if (ptr1->reservation_hour < ptr2->reservation_hour) {
+        return -1;
+    } else if (ptr1->reservation_hour > ptr2->reservation_hour) {
+        return 1;
+    }
+
+    return 0;
+}
+
 static bool isReservationDueDate(ListElement element, ListFilterKey cur_day) {
     Reservation reservation = element;
     if (reservation->reservation_day == (int) cur_day) {
