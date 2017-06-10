@@ -226,3 +226,4 @@ static bool checkRoomArgs(char *company_email, int room_id, int price,
     }
     return true;
 }
+

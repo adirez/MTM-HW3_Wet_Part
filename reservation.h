@@ -103,4 +103,27 @@ Company reservationGetCompany(Reservation reservation,
  */
 Room reservationGetRoom(Reservation reservation, ReservationErrorCode *error);
 
+/**
+ * receives a reservation and a pointer to an integer and returns through it the
+ * day listed in the reservation
+ * @param reservation - the reservation to check
+ * @param day - the integer pointer to update with the day value
+ * @return RESERVATION_SUCCESS - if the function worked
+ *         RESERVATION_INVALID_PARAMETERS - if one of the parameteres was
+ *         invalid
+ */
+ReservationErrorCode reservationGetDay(Reservation reservation, int *day);
+
+/**
+ * receives a reservation and a pointer to an integer and returns through it the
+ * hour listed in the reservation
+ * @param reservation - the reservation to check
+ * @param hour - the integer pointer to update with the hour value
+ * @return RESERVATION_SUCCESS - if the function worked
+ *         RESERVATION_INVALID_PARAMETERS - if one of the parameteres was
+ *         invalid
+ */
+ReservationErrorCode reservationGetHour(Reservation reservation, int *hour);
+
+
 #endif //HW3_RESERVATION_H

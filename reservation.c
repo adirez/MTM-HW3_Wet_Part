@@ -24,23 +24,6 @@ struct Reservation_t {
     int total_cost;
 };
 
-
-/**
- * receives all the arguments to create a reservation and checks if they're all
- * valid
- * @param escaper_email - the email of the escaper
- * @param company_email - the email of the company the room is listed in
- * @param FacultyOfEscaper - the faculty the escaper is listed in
- * @param FacultyOfRoom - the faculty the room is listed in
- * @param room_id - the id of the asked room
- * @param num_ppl - number of escapers for the reservation
- * @param escaper_skill - the expertise level of the escaper
- * @param days_to_reservation - number of days for the reservation to take place
- * @param reservation_hour - the hour the room is reserved for
- * @param total_cost - the total amount to pay
- * @return true - all fields are valid
- *         false - not all fields are valid
- */
 Reservation reservationCreate(Escaper escaper, Company company, Room room,
                               int num_ppl, int days_to_reservation,
                               int reservation_hour, int total_cost,
@@ -134,4 +117,22 @@ Room reservationGetRoom(Reservation reservation, ReservationErrorCode *error) {
     }
     *error = RESERVATION_SUCCESS;
     return reservation->reservation_room;
+}
+
+ReservationErrorCode reservationGetDay(Reservation reservation, int *day) {
+    if (NULL == reservation || NULL == *day) {
+        *day = INVALID_PARAMETER;
+        return RESERVATION_INVALID_PARAMETER;
+    }
+    *day = reservation->reservation_day;
+    return RESERVATION_SUCCESS;
+}
+
+ReservationErrorCode reservationGetHour(Reservation reservation, int *hour) {
+    if (NULL == reservation || NULL == *hour) {
+        *hour = INVALID_PARAMETER;
+        return RESERVATION_INVALID_PARAMETER;
+    }
+    *hour = reservation->reservation_hour;
+    return RESERVATION_SUCCESS;
 }
