@@ -115,7 +115,7 @@ static void destroyEscaperReservations(Escaper escaper,
  * @return MTM_SUCCESS - if the email is not in use
  *         MTM_EMAIL_ALREADY_IN_USE - if the email is in use
  */
-static MtmErrorCode isEmailInUse(EscapeTechnion escapeTechnion, char* email);
+//static MtmErrorCode isEmailInUse(EscapeTechnion escapeTechnion, char* email);
 
 EscapeTechnion escapeTechnionCreate(MtmErrorCode *EscapeTechnionError) {
     EscapeTechnion escapeTechnion = malloc(sizeof(*escapeTechnion));
@@ -331,7 +331,7 @@ MtmErrorCode escapeTechnionRemoveEscaper(char *email,
     return MTM_SUCCESS;
 }
 
-MtmErrorCode escapeTechnionAddReservation(char *escaper_email, int room_id,
+/*MtmErrorCode escapeTechnionAddReservation(char *escaper_email, int room_id,
                                           TechnionFaculty FacultyOfEscaper,
                                           char *time, int num_ppl,
                                           EscapeTechnion escapeTechnion) {
@@ -343,7 +343,7 @@ MtmErrorCode escapeTechnionAddReservation(char *escaper_email, int room_id,
     }
 
 
-}
+}*/
 
 static bool isCompanyWithEmail(char *email, EscapeTechnion escapeTechnion) {
     if (NULL == email || NULL == escapeTechnion) {
@@ -411,7 +411,7 @@ static bool isEscaperWithEmail(char *email, EscapeTechnion escapeTechnion) {
     return false;
 }
 
-static bool isReservationForEscaper(Escaper escaper,
+/*static bool isReservationForEscaper(Escaper escaper,
                                     EscapeTechnion escapeTechnion) {
     if (NULL == escaper || NULL == escapeTechnion) {
         return false;
@@ -427,7 +427,7 @@ static bool isReservationForEscaper(Escaper escaper,
         reservation_iterator = listGetNext(escapeTechnion->reservations);
     }
     return false;
-}
+}*/
 
 static Company findCompany(char *email, EscapeTechnion escapeTechnion) {
     if (NULL == escapeTechnion || NULL == email || !isEmailValid(email)) {
@@ -503,6 +503,7 @@ static void destroyEscaperReservations(Escaper escaper,
     return;
 }
 
+/*
 static MtmErrorCode isEmailInUse(EscapeTechnion escapeTechnion, char* email) {
     assert(NULL != escapeTechnion && NULL != email);
     Company company = findCompany(email, escapeTechnion);
@@ -517,3 +518,4 @@ static MtmErrorCode isEmailInUse(EscapeTechnion escapeTechnion, char* email) {
 
     return MTM_SUCCESS;
 }
+*/

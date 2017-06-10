@@ -57,6 +57,8 @@ bool testRoomCompareElements() {
 }
 
 bool testRoomCopyElement() {
+    ASSERT_TEST(roomCopyElement(NULL) == NULL);
+
     RoomErrorCode errorCode;
     Room room1 = roomCreate("adi@gmail", 123, 12, 20, 1, 2, 1, &errorCode);
     Room room2 = roomCopyElement(room1);
@@ -65,7 +67,6 @@ bool testRoomCopyElement() {
 
     roomDestroy(room1);
     roomDestroy(room2);
-
     return true;
 }
 
