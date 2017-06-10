@@ -350,10 +350,10 @@ MtmErrorCode escapeTechnionRemoveEscaper(char *email,
     return MTM_SUCCESS;
 }
 
-MtmErrorCode escapeTechnionAddReservation(char *escaper_email, int room_id,
-                                          TechnionFaculty FacultyOfRoom,
-                                          char *time, int num_ppl,
-                                          EscapeTechnion escapeTechnion) {
+MtmErrorCode escapeTechnionReservationReceived(char *escaper_email, int room_id,
+                                               TechnionFaculty FacultyOfRoom,
+                                               char *time, int num_ppl,
+                                               EscapeTechnion escapeTechnion) {
     if (NULL == escaper_email || NULL == time || NULL == escapeTechnion ||
         !isFacultyValid(FacultyOfRoom) || !isEmailValid(escaper_email) ||
         room_id <= 0 || num_ppl <= 0) {
@@ -617,12 +617,12 @@ static bool isEscaperAvailable(EscapeTechnion escapeTechnion,
             reservationGetHour(reservation_iterator, &tmp_hour);
             reservationGetDay(reservation_iterator, &tmp_day);
             if (tmp_day == day && tmp_hour == hour) {
-                return true;
+                return false;
             }
         }
         reservation_iterator = listGetNext(escapeTechnion->reservations);
     }
-    return false;
+    return true;
 }
 
 static bool isRoomAvailable(EscapeTechnion escapeTechnion, Room room,
@@ -648,10 +648,10 @@ static bool isRoomAvailable(EscapeTechnion escapeTechnion, Room room,
             reservationGetHour(reservation_iterator, &tmp_hour);
             reservationGetDay(reservation_iterator, &tmp_day);
             if (tmp_day == reservation_day && tmp_hour == reservation_hour) {
-                return true;
+                return false;
             }
         }
         reservation_iterator = listGetNext(escapeTechnion->reservations);
     }
-    return false;
+    return true;
 }
