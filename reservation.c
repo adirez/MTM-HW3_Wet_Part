@@ -31,7 +31,7 @@ Reservation reservationCreate(Escaper escaper, Company company, Room room,
 
     assert(escaper != NULL && company != NULL && room != NULL);
     if (escaper == NULL || company == NULL || room == NULL || num_ppl <= 0 ||
-            total_cost < 0) {
+        total_cost < 0) {
         *ReservationError = RESERVATION_INVALID_PARAMETER;
         return NULL;
     }

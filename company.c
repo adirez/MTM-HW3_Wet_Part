@@ -201,6 +201,7 @@ bool isCompanyEmailEqual(Company company, char *email,
     }
     return false;
 }
+
 bool isRoomIdInCompany(Company company, int room_id) {
     if (NULL == company || room_id <= 0) {
         return false;

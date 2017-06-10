@@ -171,8 +171,19 @@ MtmErrorCode escapeTechnionReservationReceived(char *escaper_email, int room_id,
                                                char *time, int num_ppl,
                                                EscapeTechnion escapeTechnion);
 
+/**
+ *
+ * @param company
+ * @param EscaperFaculty
+ * @param reservation_num_ppl
+ * @param escaper_skill_level
+ * @param result
+ * @param faculty_difference
+ * @param room_id
+ * @return
+ */
 Room mostRecommendedRoom(Company company, TechnionFaculty EscaperFaculty,
                          int reservation_num_ppl, int escaper_skill_level,
-                         int *result);
+                         int *result, int *faculty_difference, int *room_id);
 
 #endif //HW3_ESCAPETECHNION_H
