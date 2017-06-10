@@ -7,6 +7,9 @@
 
 #include "mtm_ex3.h"
 #include "list.h"
+#include "escaper.h"
+#include "company.h"
+#include "room.h"
 
 /**
  * Reservation will be implemented in this file as a linked list
@@ -39,9 +42,7 @@ typedef enum {
  *         went ok
            NULL - if the allocation was not successful
  */
-Reservation reservationCreate(char *escaper_email, char *company_email,
-                              TechnionFaculty FacultyOfEscaper,
-                              TechnionFaculty FacultyOfRoom, int room_id,
+Reservation reservationCreate(Escaper escaper, Company company, Room room,
                               int num_ppl, int escaper_skill,
                               int days_to_reservation, int reservation_hour,
                               int total_cost,
@@ -81,41 +82,17 @@ void reservationFreeElement(ListElement reservation);
 ListElement reservationCopyElement(ListElement src_reservation);
 
 /**
- * receives a reservation and an email address and checks if the email is listed
- * in the reservation as the company's email
- * @param reservation - the reservation to check
- * @param company_email - the email of the company to compare
- * @param ReservationError - a type to hold the result of the function
- * @return true - if the emails are equal
- *         false - if the emails are not equal
+ *
+ * @param reservation
+ * @param error
+ * @return
  */
-bool isReservationCompanyEmailEqual(Reservation reservation,
-                                    char *company_email,
-                                    ReservationErrorCode *ReservationError);
+Escaper reservationGetEscaper(Reservation reservation,
+                              ReservationErrorCode *error);
 
-/**
- * receives a reservation and an email address and checks if the email is listed
- * in the reservation as the escaper's email
- * @param reservation - the reservation to check
- * @param escaper_email - the email of the escaper to compare
- * @param ReservationError - a type to hold the result of the function
- * @return true - if the emails are equal
- *         false - if the emails are not equal
- */
-bool isReservationEscaperEmailEqual(Reservation reservation,
-                                    char *escaper_email,
-                                    ReservationErrorCode *ReservationError);
+Company reservationGetCompany(Reservation reservation,
+                              ReservationErrorCode *error);
 
-/**
- * receives a reservation and a room id and checks if the id is listed
- * in the reservation
- * @param reservation - the reservation to check
- * @param room_id - the id of the room to compare
- * @param ReservationError - a type to hold the result of the function
- * @return true - if the IDs are equal
- *         false - if the IDs are not equal
- */
-bool isReservationRoomIdEqual(Reservation reservation, int room_id,
-                              ReservationErrorCode *ReservationError);
+Room reservationGetRoom(Reservation reservation, ReservationErrorCode *error);
 
 #endif //HW3_RESERVATION_H

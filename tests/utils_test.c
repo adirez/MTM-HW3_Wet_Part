@@ -63,9 +63,9 @@ bool testGetDayAndHourFromStr(){
     int day, hour;
     ASSERT_TEST(getDayAndHourFromStr("10-14", &day, &hour) == true);
     ASSERT_TEST(day == 10 && hour == 14);
-    ASSERT_TEST(getDayAndHourFromStr("00-02", &day, &hour) == true);
+    ASSERT_TEST(getDayAndHourFromStr("00 -  02", &day, &hour) == true);
     ASSERT_TEST(day == 0 && hour == 2);
-    ASSERT_TEST(getDayAndHourFromStr("00-23", &day, &hour) == true);
+    ASSERT_TEST(getDayAndHourFromStr("00\t-23", &day, &hour) == true);
     ASSERT_TEST(day == 0 && hour == 23);
     ASSERT_TEST(getDayAndHourFromStr("50-10", &day, &hour) == true);
     ASSERT_TEST(day == 50 && hour == 10);

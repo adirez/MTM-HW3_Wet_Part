@@ -5,6 +5,7 @@
 #include "reservation.h"
 #include "utils.h"
 #include "escaper.h"
+#include "company.h"
 
 #include <stdlib.h>
 #include <assert.h>
@@ -13,14 +14,12 @@
 #define INVALID_PARAMETER -1
 
 struct Reservation_t {
-    char *escaper_email;
-    char *company_email;
-    TechnionFaculty FacultyOfEscaper;
-    TechnionFaculty FacultyOfRoom;
+    Escaper reservation_escaper;
+    Company reservation_company;
+    Room reservation_room;
 
-    int room_id;
     int escaper_skill;
-    int days_to_reservation;
+    int reservation_day;
     int reservation_hour;
     int num_ppl;
     int total_cost;
@@ -43,62 +42,37 @@ struct Reservation_t {
  * @return true - all fields are valid
  *         false - not all fields are valid
  */
-static bool checkReservationArgs(char *escaper_email, char *company_email,
-                                 TechnionFaculty FacultyOfEscaper,
-                                 TechnionFaculty FacultyOfRoom, int room_id,
-                                 int num_ppl, int escaper_skill,
+static bool checkReservationArgs(int num_ppl, int escaper_skill,
                                  int days_to_reservation, int reservation_hour,
                                  int total_cost);
 
-Reservation reservationCreate(char *escaper_email, char *company_email,
-                              TechnionFaculty FacultyOfEscaper,
-                              TechnionFaculty FacultyOfRoom, int room_id,
+Reservation reservationCreate(Escaper escaper, Company company, Room room,
                               int num_ppl, int escaper_skill,
                               int days_to_reservation, int reservation_hour,
                               int total_cost,
                               ReservationErrorCode *ReservationError) {
 
-    assert(NULL != escaper_email && NULL != company_email);
-    if (NULL == escaper_email || NULL == company_email ||
-        !checkReservationArgs(escaper_email, company_email, FacultyOfEscaper,
-                              FacultyOfRoom, room_id, num_ppl, escaper_skill,
-                              days_to_reservation, reservation_hour,
-                              total_cost)) {
+    assert(escaper != NULL && company != NULL && room != NULL);
+    if (escaper == NULL || company == NULL || room != NULL ||
+        !checkReservationArgs(num_ppl, escaper_skill, days_to_reservation,
+                              reservation_hour, total_cost)) {
         *ReservationError = RESERVATION_INVALID_PARAMETER;
         return NULL;
     }
 
-    Reservation reservation = malloc((size_t) sizeof(*reservation));
+    Reservation reservation = malloc(sizeof(*reservation));
     if (NULL == reservation) {
         *ReservationError = RESERVATION_OUT_OF_MEMORY;
         return NULL;
     }
 
-    reservation->escaper_email = malloc(
-            (size_t) sizeof(char) * strlen(escaper_email));
-    if (NULL == reservation->escaper_email) {
-        free(reservation);
-        *ReservationError = RESERVATION_OUT_OF_MEMORY;
-        return NULL;
-    }
-    strcpy(reservation->escaper_email, escaper_email);
+    reservation->reservation_escaper = escaper;
+    reservation->reservation_company = company;
+    reservation->reservation_room = room;
 
-    reservation->company_email = malloc(
-            (size_t) sizeof(char) * strlen(company_email));
-    if (NULL == reservation->company_email) {
-        free(reservation->escaper_email);
-        free(reservation);
-        *ReservationError = RESERVATION_OUT_OF_MEMORY;
-        return NULL;
-    }
-    strcpy(reservation->company_email, company_email);
-
-    reservation->FacultyOfEscaper = FacultyOfEscaper;
-    reservation->FacultyOfRoom = FacultyOfRoom;
-    reservation->room_id = room_id;
     reservation->num_ppl = num_ppl;
     reservation->escaper_skill = escaper_skill;
-    reservation->days_to_reservation = days_to_reservation;
+    reservation->reservation_day = days_to_reservation;
     reservation->reservation_hour = reservation_hour;
     reservation->total_cost = total_cost;
     *ReservationError = RESERVATION_SUCCESS;
@@ -110,8 +84,6 @@ ReservationErrorCode reservationDestroy(Reservation reservation) {
     if (NULL == reservation) {
         return RESERVATION_INVALID_PARAMETER;
     }
-    free(reservation->escaper_email);
-    free(reservation->company_email);
     free(reservation);
     return RESERVATION_SUCCESS;
 }
@@ -131,11 +103,9 @@ ListElement reservationCopyElement(ListElement src_reservation) {
     ReservationErrorCode CopyResult;
     Reservation reservation = reservationCreate(ptr->escaper_email,
                                                 ptr->company_email,
-                                                ptr->FacultyOfEscaper,
-                                                ptr->FacultyOfRoom,
                                                 ptr->room_id, ptr->num_ppl,
                                                 ptr->escaper_skill,
-                                                ptr->days_to_reservation,
+                                                ptr->reservation_day,
                                                 ptr->reservation_hour,
                                                 ptr->total_cost, &CopyResult);
     if (CopyResult == RESERVATION_OUT_OF_MEMORY ||
@@ -145,60 +115,10 @@ ListElement reservationCopyElement(ListElement src_reservation) {
     return reservation;
 }
 
-bool isReservationCompanyEmailEqual(Reservation reservation,
-                                    char *company_email,
-                                    ReservationErrorCode *ReservationError) {
-    if (NULL == reservation || NULL == company_email) {
-        *ReservationError = RESERVATION_INVALID_PARAMETER;
-        return false;
-    }
-    *ReservationError = RESERVATION_SUCCESS;
-
-    if (strcmp(reservation->company_email, company_email) == 0) {
-        return true;
-    }
-    return false;
-}
-
-bool isReservationEscaperEmailEqual(Reservation reservation,
-                                    char *escaper_email,
-                                    ReservationErrorCode *ReservationError) {
-    if (NULL == reservation || NULL == escaper_email) {
-        *ReservationError = RESERVATION_INVALID_PARAMETER;
-        return false;
-    }
-    *ReservationError = RESERVATION_SUCCESS;
-
-    if (strcmp(reservation->escaper_email, escaper_email) == 0) {
-        return true;
-    }
-    return false;
-}
-
-bool isReservationRoomIdEqual(Reservation reservation, int room_id,
-                              ReservationErrorCode *ReservationError) {
-    if (NULL == reservation || room_id <= 0) {
-        *ReservationError = RESERVATION_INVALID_PARAMETER;
-        return false;
-    }
-    *ReservationError = RESERVATION_SUCCESS;
-
-    if (reservation->room_id == room_id) {
-        return true;
-    }
-    return false;
-}
-
-static bool checkReservationArgs(char *escaper_email, char *company_email,
-                                 TechnionFaculty FacultyOfEscaper,
-                                 TechnionFaculty FacultyOfRoom, int room_id,
-                                 int num_ppl, int escaper_skill,
+static bool checkReservationArgs(int num_ppl, int escaper_skill,
                                  int days_to_reservation, int reservation_hour,
                                  int total_cost) {
     if (!isEmailValid(escaper_email) || !isEmailValid(company_email)) {
-        return false;
-    }
-    if (!isFacultyValid(FacultyOfEscaper) || !isFacultyValid(FacultyOfRoom)) {
         return false;
     }
     if (!isValidDifficultyOrSkill(escaper_skill)) {
@@ -208,4 +128,33 @@ static bool checkReservationArgs(char *escaper_email, char *company_email,
         return false;
     }
     return true;
+}
+
+Escaper reservationGetEscaper(Reservation reservation,
+                           ReservationErrorCode *error) {
+    if (NULL == reservation) {
+        *error = RESERVATION_INVALID_PARAMETER;
+        return NULL;
+    }
+    *error = RESERVATION_SUCCESS;
+    return reservation->reservation_escaper;
+}
+
+Company reservationGetCompany(Reservation reservation,
+                           ReservationErrorCode *error) {
+    if (NULL == reservation) {
+        *error = RESERVATION_INVALID_PARAMETER;
+        return NULL;
+    }
+    *error = RESERVATION_SUCCESS;
+    return reservation->reservation_company;
+}
+
+Room reservationGetRoom(Reservation reservation, ReservationErrorCode *error) {
+    if (NULL == reservation) {
+        *error = RESERVATION_INVALID_PARAMETER;
+        return NULL;
+    }
+    *error = RESERVATION_SUCCESS;
+    return reservation->reservation_room;
 }

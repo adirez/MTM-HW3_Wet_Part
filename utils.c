@@ -115,6 +115,7 @@ static bool isThereHyphen(char *src_str) {
 
 static bool isLegalDayHourInput(char *src_str) {
     for (int i = 0; src_str[i] != '\0'; ++i) {
+        //TODO: check if space and tabs and stuff are legal
         if ((src_str[i] < MIN_NUMBER || src_str[i] > MAX_NUMBER) &&
             src_str[i] != HYPHEN) {
             return false;
