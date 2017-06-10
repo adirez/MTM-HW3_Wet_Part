@@ -156,4 +156,8 @@ bool isCompanyEmailEqual(Company company, char *email,
  */
 bool isRoomIdInCompany(Company company, int room_id);
 
+Room mostRecommendedRoom(Company company, TechnionFaculty EscaperFaculty,
+                         int reservation_num_ppl, int escaper_skill_level,
+                         int *result, int *faculty_difference, int *room_id);
+
 #endif //ESCAPETECHNION_COMPANY_H
