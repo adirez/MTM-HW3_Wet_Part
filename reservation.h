@@ -41,7 +41,7 @@ typedef enum {
            NULL - if the allocation was not successful
  */
 Reservation reservationCreate(Escaper escaper, Company company, Room room,
-                              int num_ppl, int days_to_reservation,
+                              int num_ppl, int reservation_day,
                               int reservation_hour, int total_cost,
                               ReservationErrorCode *ReservationError);
 
