@@ -440,7 +440,7 @@ MtmErrorCode escapeTechnionReservationReceived(char *escaper_email, int room_id,
     return MTM_SUCCESS;
 }
 
-/*MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
+MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
                                            EscapeTechnion escapeTechnion){
     if(escaper_email == NULL || !isEmailValid(escaper_email) || num_ppl <= 0
        || escapeTechnion == NULL){
@@ -487,16 +487,8 @@ MtmErrorCode escapeTechnionReservationReceived(char *escaper_email, int room_id,
         company_iterator = setGetNext(escapeTechnion->companies);
     }
 
-}*/
+}
 
-/*static int facultyDistance(TechnionFaculty faculty1, TechnionFaculty faculty2){
-    int distance;
-    distance = (int)faculty1 - (int)faculty2;
-    if(distance < 0){
-        return -1*distance;
-    }
-    return distance;
-}*/
 
 static bool isCompanyWithEmail(char *email, EscapeTechnion escapeTechnion) {
     if (NULL == email || NULL == escapeTechnion) {
