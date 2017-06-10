@@ -136,3 +136,11 @@ ReservationErrorCode reservationGetHour(Reservation reservation, int *hour) {
     *hour = reservation->reservation_hour;
     return RESERVATION_SUCCESS;
 }
+
+static bool isReservationDueDate(ListElement element, ListFilterKey cur_day) {
+    Reservation reservation = element;
+    if (reservation->reservation_day == (int) cur_day) {
+        return true;
+    }
+    return false;
+}

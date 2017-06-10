@@ -125,5 +125,13 @@ ReservationErrorCode reservationGetDay(Reservation reservation, int *day);
  */
 ReservationErrorCode reservationGetHour(Reservation reservation, int *hour);
 
+/**
+ *
+ * @param element
+ * @param cur_day
+ * @return
+ */
+static bool isReservationDueDate(ListElement element, ListFilterKey cur_day)
+
 
 #endif //HW3_RESERVATION_H

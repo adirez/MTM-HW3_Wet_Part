@@ -466,7 +466,6 @@ static MtmErrorCode reserveRoom(EscapeTechnion escapeTechnion, Escaper escaper,
     reservationDestroy(reservation);
     return MTM_SUCCESS;
 }
-/*
 MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
                                            EscapeTechnion escapeTechnion){
     if (NULL == escaper_email || !isEmailValid(escaper_email) || num_ppl <= 0 ||
@@ -474,6 +473,9 @@ MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
         return MTM_INVALID_PARAMETER;
     }
     Escaper escaper = findEscaper(escaper_email, escapeTechnion);
+    if(escaper == NULL){
+        return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
+    }
     EscaperErrorCode escaperErrorCode;
     int escaper_skill_level = escaperGetSkillLevel(escaper, &escaperErrorCode);
 
@@ -540,7 +542,31 @@ MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
     return reserveRoom(escapeTechnion, escaper, most_recommended_company,
                        most_recommended_room, num_ppl, day, hour);
 }
-*/
+
+MtmErrorCode escapeTechnionReportDay(EscapeTechnion escapeTechnion){
+    if (escapeTechnion == NULL){
+        return MTM_INVALID_PARAMETER;
+    }
+    int system_day = escapeTechnion->current_day;
+    List ended_reservations = listFilter(escapeTechnion->reservations,
+                                         isReservationDueDate, &system_day);
+
+
+/*    int num_events = 0;
+    //TODO add sort by time
+    Reservation reservation_iterator;
+    reservation_iterator = listGetFirst(escapeTechnion->reservations);
+    int reservation_day, system_day = escapeTechnion->current_day;
+    reservationGetDay(reservation_iterator, &reservation_day);
+    while (system_day - reservation_day == 0){
+        num_events++;
+
+        reservation_iterator = listGetNext(escapeTechnion->reservations);
+        reservationGetDay(reservation_iterator, &reservation_day);
+    }
+    mtmPrintDayHeader(_OUT_TO_DEFAULT, system_day, num_events);*/
+}
+
 static bool isCompanyWithEmail(char *email, EscapeTechnion escapeTechnion) {
     if (NULL == email || NULL == escapeTechnion) {
         return false;
