@@ -218,30 +218,29 @@ bool isRoomIdInCompany(Company company, int room_id) {
     }
     return false;
 }
-/*
-Room mostRecommendedRoom(Company company, TechnionFaculty EscaperFaculty,
-                         int reservation_num_ppl, int escaper_skill_level,
-                         int *result, int faculty_difference, int room_id) {
-    Room room_iterator = setGetFirst(company->company_rooms);
-    if (NULL == room_iterator) {
-        return NULL;
-    }
 
-    Room best_room = NULL;
-    int best_result = INVALID_PARAMETER;
-
-    while (NULL != room_iterator) {
-        RoomErrorCode RoomError;
-        int room_num_ppl = roomGetNumPpl(room_iterator, &RoomError);
-        int room_difficulty = roomGetDifficulty(room_iterator, &RoomError);
-        int tmp_result = calcRoomMatch(room_num_ppl, reservation_num_ppl,
-                                       room_difficulty, escaper_skill_level);
-        if (best_result == INVALID_PARAMETER || tmp_result < best_result) {
-
-        }
-        if (tmp_result == best_result ) {
-            if ()
-        }
-    }
-}
-*/
+//Room mostRecommendedRoom(Company company, TechnionFaculty EscaperFaculty,
+//                         int reservation_num_ppl, int escaper_skill_level,
+//                         int *result, int faculty_difference, int room_id) {
+//    Room room_iterator = setGetFirst(company->company_rooms);
+//    if (NULL == room_iterator) {
+//        return NULL;
+//    }
+//
+//    Room best_room = NULL;
+//    int best_result = INVALID_PARAMETER;
+//
+//    while (NULL != room_iterator) {
+//        RoomErrorCode RoomError;
+//        int room_num_ppl = roomGetNumPpl(room_iterator, &RoomError);
+//        int room_difficulty = roomGetDifficulty(room_iterator, &RoomError);
+//        int tmp_result = calcRoomMatch(room_num_ppl, reservation_num_ppl,
+//                                       room_difficulty, escaper_skill_level);
+//        if (best_result == INVALID_PARAMETER || tmp_result < best_result) {
+//
+//        }
+//        if (tmp_result == best_result ) {
+//            if ()
+//        }
+//    }
+//}

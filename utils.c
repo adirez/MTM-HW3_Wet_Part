@@ -147,7 +147,7 @@ bool getDayAndHourFromStr(char* src_str, int *day, int *hour) {
     if(*day < 0){
         return false;
     }
-    if(*hour < MIN_HOUR || *hour > MAX_HOUR){
+    if(*hour < MIN_HOUR || *hour >= MAX_HOUR){
         return false;
     }
 
