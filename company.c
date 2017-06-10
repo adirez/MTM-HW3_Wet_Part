@@ -218,10 +218,10 @@ bool isRoomIdInCompany(Company company, int room_id) {
     }
     return false;
 }
-/*
+
 Room mostRecommendedRoom(Company company, TechnionFaculty EscaperFaculty,
                          int reservation_num_ppl, int escaper_skill_level,
-                         int *result, int faculty_difference, int room_id) {
+                         int *result, int *faculty_difference, int *room_id) {
     Room room_iterator = setGetFirst(company->company_rooms);
     if (NULL == room_iterator) {
         return NULL;
@@ -229,6 +229,9 @@ Room mostRecommendedRoom(Company company, TechnionFaculty EscaperFaculty,
 
     Room best_room = NULL;
     int best_result = INVALID_PARAMETER;
+    int best_id = INVALID_PARAMETER;
+    int best_difference =
+            abs((int)EscaperFaculty - (int)(company->FacultyOfCompany));
 
     while (NULL != room_iterator) {
         RoomErrorCode RoomError;
@@ -237,11 +240,22 @@ Room mostRecommendedRoom(Company company, TechnionFaculty EscaperFaculty,
         int tmp_result = calcRoomMatch(room_num_ppl, reservation_num_ppl,
                                        room_difficulty, escaper_skill_level);
         if (best_result == INVALID_PARAMETER || tmp_result < best_result) {
-
+            best_room = room_iterator;
+            best_result = tmp_result;
+            best_id = roomGetID(room_iterator, &RoomError);
         }
         if (tmp_result == best_result ) {
-            if ()
+            int temp_id = roomGetID(room_iterator, &RoomError);
+            if (temp_id < best_id) {
+                best_room = room_iterator;
+                best_result = tmp_result;
+                best_id = temp_id;
+            }
         }
+        room_iterator = setGetNext(company->company_rooms);
     }
+    *result = best_result;
+    *faculty_difference = best_difference;
+    *room_id = best_id;
+    return best_room;
 }
-*/
