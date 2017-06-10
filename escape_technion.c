@@ -130,11 +130,45 @@ static bool isEmailInUse(EscapeTechnion escapeTechnion, char *email);
  */
 static int calculatePricePerPerson(Company company, Room room, Escaper escaper);
 
+
+/**
+ * receives an escapeTechnion system, a room and reservation time and checks if
+ * the room is available at the given time
+ * @param escapeTechnion - the system to which the room belongs
+ * @param room - the room in the reservation
+ * @param reservation_day - the day of the reservation
+ * @param reservation_hour - the hour of the reservation
+ * @return true - if the room is available at the specified time
+ *         false - if the room is taken at the specified time
+ */
 static bool isRoomAvailable(EscapeTechnion escapeTechnion, Room room,
                             int reservation_day, int reservation_hour);
 
+/**
+ * receives an escapeTechnion system, an escaper and reservation time and checks
+ * if the room is available at the given time
+ * @param escapeTechnion - the system to which the room belongs
+ * @param escaper - the escaper in the reservation
+ * @param reservation_day - the day of the reservation
+ * @param reservation_hour - the hour of the reservation
+ * @return true - if the escaper is available at the specified time
+ *         false - if the escaper is taken at the specified time
+ */
 static bool isEscaperAvailable(EscapeTechnion escapeTechnion,
                                Escaper escaper, int day, int hour);
+
+/**
+ *
+ * @param escapeTechnion
+ * @param room_id
+ * @param Faculty
+ * @return
+ */
+static bool isRoomSameIdInFaculty(EscapeTechnion escapeTechnion, int room_id,
+                                  TechnionFaculty Faculty);
+
+/**---------------------------------------------------------------------------*/
+
 
 EscapeTechnion escapeTechnionCreate(MtmErrorCode *EscapeTechnionError) {
     EscapeTechnion escapeTechnion = malloc(sizeof(*escapeTechnion));
@@ -271,10 +305,19 @@ MtmErrorCode escapeTechnionAddRoom(EscapeTechnion escapeTechnion,
     }
 
     CompanyErrorCode CompanyError;
+    /*
     Room room = companyFindRoom(company, room_id, &CompanyError);
     if (NULL != room) {
         return MTM_ID_ALREADY_EXIST;
+    }*/
+    //TODO ^remove if works^
+
+
+    TechnionFaculty CompanyFaculty = companyGetFaculty(company, &CompanyError);
+    if (isRoomSameIdInFaculty(escapeTechnion, room_id, CompanyFaculty)) {
+        return MTM_ID_DOES_NOT_EXIST;
     }
+
 
     CompanyError = companyAddRoom(company, room_id, price, num_ppl,
                                   opening_time, closing_time, difficulty);
@@ -617,12 +660,12 @@ static bool isEscaperAvailable(EscapeTechnion escapeTechnion,
             reservationGetHour(reservation_iterator, &tmp_hour);
             reservationGetDay(reservation_iterator, &tmp_day);
             if (tmp_day == day && tmp_hour == hour) {
-                return true;
+                return false;
             }
         }
         reservation_iterator = listGetNext(escapeTechnion->reservations);
     }
-    return false;
+    return true;
 }
 
 static bool isRoomAvailable(EscapeTechnion escapeTechnion, Room room,
@@ -648,10 +691,31 @@ static bool isRoomAvailable(EscapeTechnion escapeTechnion, Room room,
             reservationGetHour(reservation_iterator, &tmp_hour);
             reservationGetDay(reservation_iterator, &tmp_day);
             if (tmp_day == reservation_day && tmp_hour == reservation_hour) {
-                return true;
+                return false;
             }
         }
         reservation_iterator = listGetNext(escapeTechnion->reservations);
+    }
+    return true;
+}
+
+static bool isRoomSameIdInFaculty(EscapeTechnion escapeTechnion, int room_id,
+                                  TechnionFaculty Faculty) {
+    if (NULL == escapeTechnion || !isFacultyValid(Faculty) || room_id <= 0) {
+        return false;
+    }
+    Company company_iterator = setGetFirst(escapeTechnion->companies);
+    if (NULL == company_iterator) {
+        return false;
+    }
+    while (NULL != company_iterator) {
+        CompanyErrorCode CompanyError;
+        if (companyGetFaculty(company_iterator, &CompanyError) == Faculty) {
+            if (isRoomIdInCompany(company_iterator, room_id)) {
+                return true;
+            }
+        }
+        company_iterator = setGetNext(escapeTechnion->companies);
     }
     return false;
 }

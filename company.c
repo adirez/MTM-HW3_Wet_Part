@@ -4,6 +4,7 @@
 
 #include "company.h"
 #include "utils.h"
+#include "set.h"
 
 #include <stdlib.h>
 #include <assert.h>
@@ -200,20 +201,47 @@ bool isCompanyEmailEqual(Company company, char *email,
     }
     return false;
 }
+bool isRoomIdInCompany(Company company, int room_id) {
+    if (NULL == company || room_id <= 0) {
+        return false;
+    }
+    Room room_iterator = setGetFirst(company->company_rooms);
+    if (NULL == room_iterator) {
+        return false;
+    }
+    while (NULL != room_iterator) {
+        RoomErrorCode RoomError;
+        if (roomGetID(room_iterator, &RoomError) == room_id) {
+            return true;
+        }
+        room_iterator = setGetNext(company->company_rooms);
+    }
+    return false;
+}
+/*
+Room mostRecommendedRoom(Company company, TechnionFaculty EscaperFaculty,
+                         int reservation_num_ppl, int escaper_skill_level,
+                         int *result, int faculty_difference, int room_id) {
+    Room room_iterator = setGetFirst(company->company_rooms);
+    if (NULL == room_iterator) {
+        return NULL;
+    }
 
+    Room best_room = NULL;
+    int best_result = INVALID_PARAMETER;
 
+    while (NULL != room_iterator) {
+        RoomErrorCode RoomError;
+        int room_num_ppl = roomGetNumPpl(room_iterator, &RoomError);
+        int room_difficulty = roomGetDifficulty(room_iterator, &RoomError);
+        int tmp_result = calcRoomMatch(room_num_ppl, reservation_num_ppl,
+                                       room_difficulty, escaper_skill_level);
+        if (best_result == INVALID_PARAMETER || tmp_result < best_result) {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        }
+        if (tmp_result == best_result ) {
+            if ()
+        }
+    }
+}
+*/

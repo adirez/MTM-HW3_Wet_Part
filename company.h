@@ -148,4 +148,12 @@ Room companyFindRoom(Company company, int room_id,
 bool isCompanyEmailEqual(Company company, char *email,
                          CompanyErrorCode *CompanyError);
 
+/**
+ *
+ * @param company
+ * @param room_id
+ * @return
+ */
+bool isRoomIdInCompany(Company company, int room_id);
+
 #endif //ESCAPETECHNION_COMPANY_H

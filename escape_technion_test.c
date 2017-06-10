@@ -257,6 +257,7 @@ bool testEscapeTechnionAddReservation(){
 }
 
 int main(int argv, char **arc) {
+
     RUN_TEST(testEscapeTechnionDestroy);
     RUN_TEST(testEscapeTechnionAddCompany);
     RUN_TEST(testEscapeTechnionRemoveCompany);

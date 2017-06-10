@@ -68,3 +68,16 @@ bool isValidDifficultyOrSkill(int difficulty_or_skill);
  * @param n - array length
  */
 void initializeArr(int *arr, int n);
+
+/**
+ * receives room's difficulty and recommended number of people, escaper's skill
+ * level and number of people for the reservation and returns a calculation of
+ * the formula to find the best room
+ * @param room_num_ppl - the recommended number of people for the room
+ * @param reservation_num_ppl - the number of people in the reservation
+ * @param room_difficulty - the difficulty level of the room
+ * @param escaper_skill_level - the skill level of the escaper
+ * @return an integer representing the result of the calculation formula
+ */
+int calcRoomMatch(int room_num_ppl, int reservation_num_ppl,
+                  int room_difficulty, int escaper_skill_level);

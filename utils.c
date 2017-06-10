@@ -180,3 +180,16 @@ void initializeArr(int *arr, int n) {
     }
     return;
 }
+
+int calcRoomMatch(int room_num_ppl, int reservation_num_ppl,
+                  int room_difficulty, int escaper_skill_level) {
+
+    int tmp_calc_1 = room_num_ppl - reservation_num_ppl;
+    tmp_calc_1 *= tmp_calc_1;
+
+    int tmp_calc_2 = room_difficulty - escaper_skill_level;
+    tmp_calc_2 *= tmp_calc_2;
+
+    return tmp_calc_1 + tmp_calc_2;
+}
+
