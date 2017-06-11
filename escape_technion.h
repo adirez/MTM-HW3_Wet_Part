@@ -28,8 +28,7 @@ typedef struct EscapeTechnion_t *EscapeTechnion;
  * @param EscapeTechnionError - a type to hold the result of the function
  * @return a pointer to the allocated system or NULL if an error was found
  */
-EscapeTechnion escapeTechnionCreate(MtmErrorCode *EscapeTechnionError,
-                                    FILE* inputChannel, FILE* outputChannel);
+EscapeTechnion escapeTechnionCreate(FILE* inputChannel, FILE* outputChannel);
 
 /**
  * receives an escapeTechnion type and destroys it, including releasing all
@@ -38,7 +37,7 @@ EscapeTechnion escapeTechnionCreate(MtmErrorCode *EscapeTechnionError,
  * @return MTM_SUCCESS - if the function worked ok
  *         MTM_NULL_PARAMETER - if the argument was NULL
  */
-MtmErrorCode escapeTechnionDestroy(EscapeTechnion escapeTechnion);
+void escapeTechnionDestroy(EscapeTechnion escapeTechnion);
 
 /**
  * receives an escapeTechnion type system and details of a company and creates

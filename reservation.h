@@ -39,17 +39,16 @@ typedef enum {
  *        was made for
  * @param room - ptr to the room that the reservation was made for
  * @param num_ppl - number of escapers for the reservation
- * @param reservation_day - the day of the reservation since beginning of time
- * @param reservation_hour - the hour the room is reserved for
- * @param total_cost - the total amount to pay
+ * @param day - the day of the reservation since beginning of time
+ * @param hour - the hour the room is reserved for
+ * @param price - the total amount to pay
  * @return Reservation - a pointer to the successful reservation if everything
  *         went ok
            NULL - if the allocation was not successful
  */
 Reservation reservationCreate(Escaper escaper, Company company, Room room,
-                              int num_ppl, int reservation_day,
-                              int reservation_hour, int total_cost,
-                              ReservationErrorCode *ReservationError);
+                              int num_ppl, int day,
+                              int hour, int price);
 
 /**
  * destroys a reservation and and releases all relevant allocated memory.
@@ -57,7 +56,9 @@ Reservation reservationCreate(Escaper escaper, Company company, Room room,
  * @return RESERVATION_SUCCESS - the reservation was removed successfully
  *         RESERVATION_INVALID_PARAMETER - one of the parameters was invalid
  */
-ReservationErrorCode reservationDestroy(Reservation reservation);
+void reservationDestroy(ListElement reservation);
+
+//TODO: check if we need this:
 
 /**
  * compares between two reservations received as an input
@@ -66,13 +67,6 @@ ReservationErrorCode reservationDestroy(Reservation reservation);
  * @return 0 - if the reservations are identical (by all fields)
  */
 
-/**
- * frees all relevant allocated memory of a specific escaper element
- * @param escaper - the escaper to be freed
- * @return RESERVATION_SUCCESS - the function went with no errors
- *         RESERVATION_INVALID_PARAMETER - one of the parameters was invalid
- */
-void reservationFreeElement(ListElement reservation);
 
 /**
  * receives a source reservation element and copies it's data into a newly
@@ -81,7 +75,7 @@ void reservationFreeElement(ListElement reservation);
  * @return pointer to the new allocated reservation or NULL if the allocation
  * failed
  */
-ListElement reservationCopyElement(ListElement src_reservation);
+Reservation reservationCopyElement(Reservation src_reservation);
 
 /**
  * receives a reservation type and returns a ptr to the escaper whom reserved it
@@ -89,8 +83,7 @@ ListElement reservationCopyElement(ListElement src_reservation);
  * @param error - a type to get the result of the function
  * @return ptr to the escaper
  */
-Escaper reservationGetEscaper(Reservation reservation,
-                              ReservationErrorCode *error);
+Escaper reservationGetEscaper(Reservation reservation);
 /**
  * receives a reservation type and returns a ptr to the company that controls
  * the room for which the reservation is for
@@ -98,8 +91,7 @@ Escaper reservationGetEscaper(Reservation reservation,
  * @param error - a type to get the result of the function
  * @return ptr to the company
  */
-Company reservationGetCompany(Reservation reservation,
-                              ReservationErrorCode *error);
+Company reservationGetCompany(Reservation reservation);
 /**
  * receives a reservation type and returns a ptr to the room that the
  * reservation is for
@@ -107,7 +99,7 @@ Company reservationGetCompany(Reservation reservation,
  * @param error - a type to get the result of the function
  * @return ptr to the room
  */
-Room reservationGetRoom(Reservation reservation, ReservationErrorCode *error);
+Room reservationGetRoom(Reservation reservation);
 
 /**
  * receives a reservation and a pointer to an integer and returns through it the
@@ -118,7 +110,7 @@ Room reservationGetRoom(Reservation reservation, ReservationErrorCode *error);
  *         RESERVATION_INVALID_PARAMETERS - if one of the parameteres was
  *         invalid
  */
-ReservationErrorCode reservationGetDay(Reservation reservation, int *day);
+int reservationGetDay(Reservation reservation);
 
 /**
  * receives a reservation and a pointer to an integer and returns through it the
@@ -129,11 +121,11 @@ ReservationErrorCode reservationGetDay(Reservation reservation, int *day);
  *         RESERVATION_INVALID_PARAMETERS - if one of the parameteres was
  *         invalid
  */
-ReservationErrorCode reservationGetHour(Reservation reservation, int *hour);
+int reservationGetHour(Reservation reservation);
+//TODO: add comments
+int reservationGetNumPpl(Reservation reservation);
 
-ReservationErrorCode reservationGetNumPpl(Reservation reservation,int *num_ppl);
-
-ReservationErrorCode reservationGetPrice(Reservation reservation, int *price);
+int reservationGetPrice(Reservation reservation);
 
 int reservationCompareHourAndId(ListElement element1, ListElement element2);
 

@@ -21,39 +21,68 @@
 #define HOURS_STR_LEN 5 //according to the format "HH-HH"
 #define DAY_HOUR_MIN_LEN 3 //according to the format "D-H"
 
+/**
+ * receives the price per person of a certain room and makes sure it it's a
+ * multiply of 4
+ * @param price - the integer to be checked
+ * @return true - if it's a multiply of 4
+ *         false - if it's not a multiply of 4 or if it's not a positive number
+ */
+static bool isValidPrice(int price);
+
+/**
+ * receives a difficulty level of a room or a skill level of an escaper and
+ * checks if the value is valid
+ * @param difficulty_or_skill - the input value of the skill / difficulty
+ * @return true - if it's between the min level and the max level
+ *         false - if it's not in the scale
+ */
+static bool isValidDifficultyOrSkill(int difficulty_or_skill);
+
+/**
+ * receives an email and checks if it's valid
+ * @param email - the email address to be checked
+ * @return true - contains only one '@'
+ *         false - containes more / less than one '@' or NULL
+ */
+static bool isValidEmail(char *email);
+
+/**
+ * receives a faculty name and checks if it's valid
+ * @param Faculty - the faculty name to be checked
+ * @return true - if it's mentioned in the listed faculties
+ *         false - it is not mentioned in the listed faculties
+ */
+static bool isValidFacultyName(TechnionFaculty Faculty);
 
 /**...........................................................................*/
 /**-----------------------FUNCTIONS-IMPLEMENTATIONS---------------------------*/
 /**...........................................................................*/
 
 
-bool isEmailValid(char *email) {
-    if (NULL == email) {
+bool isValidRoomParams(TechnionFaculty roomFaculty, char *company_email, int id,
+                       int price, int num_ppl, int difficulty){
+    if(!isValidFacultyName(roomFaculty) || !isValidEmail(company_email) ||
+            !isValidPrice(price) || !isValidDifficultyOrSkill(difficulty) ||
+            id <= 0 || num_ppl <= 0){
         return false;
     }
-    if (strlen(email) == 0) {
-        return false;
-    }
-    int count = 0;
-    for (int i = 0; i < strlen(email) + 1; ++i) {
-        if (email[i] == AT_SYMBOL) {
-            count++;
-            if (count > 1) {
-                return false;
-            }
-        }
-    }
-    if (count == 1) {
-        return true;
-    }
-    return false;
+    return true;
 }
 
-bool isFacultyValid(TechnionFaculty Faculty) {
-    if (Faculty < CIVIL_ENGINEERING || Faculty >= UNKNOWN) {
+bool isValidEscaperParams(TechnionFaculty escaperFaculty, char *email,
+                          int skill_level) {
+    if(!isValidFacultyName(escaperFaculty) || !isValidEmail(email) ||
+       !isValidDifficultyOrSkill(skill_level)){
         return false;
     }
+    return true;
+}
 
+bool isValidCompanyParams(TechnionFaculty Faculty, char *email) {
+    if(!isValidFacultyName(Faculty) || !isValidEmail(email)){
+        return false;
+    }
     return true;
 }
 
@@ -160,26 +189,6 @@ bool getDayAndHourFromStr(char* src_str, int *day, int *hour) {
     return true;
 }
 
-bool isPriceMultiplyOfFour(int price) {
-    if (price <= 0) {
-        return false;
-    }
-
-    if (price % 4 == 0) {
-        return true;
-    }
-
-    return false;
-}
-
-bool isValidDifficultyOrSkill(int difficulty_or_skill) {
-    if (difficulty_or_skill < MIN_DIFFICULTY_OR_SKILL ||
-        difficulty_or_skill > MAX_DIFFICULTY_OR_SKILL) {
-        return false;
-    }
-    return true;
-}
-
 void initializeArr(int *arr, int n) {
     for (int idx = 0; idx < n; idx++) {
         *(arr + idx) = 0;
@@ -199,11 +208,54 @@ int calcRoomMatch(int room_num_ppl, int reservation_num_ppl,
     return tmp_calc_1 + tmp_calc_2;
 }
 
-/*
-int minIdInFaculty(EscapeTechnion escapeTechnion, TechnionFaculty Faculty) {
-    if (NULL == escapeTechnion || !isFacultyValid(Faculty)) {
-        return INVALID_PARAMETER;
+/**...........................................................................*/
+/**--------------------------STATIC-FUNCTIONS---------------------------------*/
+/**...........................................................................*/
+
+static bool isValidPrice(int price) {
+    if (price <= 0) {
+        return false;
+    }
+    if (price % 4 == 0) {
+        return true;
+    }
+    return false;
+}
+
+static bool isValidDifficultyOrSkill(int difficulty_or_skill) {
+    if (difficulty_or_skill < MIN_DIFFICULTY_OR_SKILL ||
+        difficulty_or_skill > MAX_DIFFICULTY_OR_SKILL) {
+        return false;
+    }
+    return true;
+}
+
+static bool isValidEmail(char *email) {
+    if (NULL == email) {
+        return false;
+    }
+    if (strlen(email) == 0) {
+        return false;
+    }
+    int count = 0;
+    for (int i = 0; i < strlen(email) + 1; ++i) {
+        if (email[i] == AT_SYMBOL) {
+            count++;
+            if (count > 1) {
+                return false;
+            }
+        }
+    }
+    if (count == 1) {
+        return true;
+    }
+    return false;
+}
+
+static bool isValidFacultyName(TechnionFaculty Faculty) {
+    if (Faculty < CIVIL_ENGINEERING || Faculty >= UNKNOWN) {
+        return false;
     }
 
-
-}*/
+    return true;
+}

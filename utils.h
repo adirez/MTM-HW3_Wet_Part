@@ -10,23 +10,35 @@
 /**-------------------------FUNCTIONS-DECLARATIONS----------------------------*/
 /**...........................................................................*/
 
-
-
+//TODO: add comments
 /**
- * receives an email and checks if it's valid
- * @param email - the email address to be checked
- * @return true - contains only one '@'
- *         false - containes more / less than one '@' or NULL
+ *
+ * @param roomFaculty
+ * @param company_email
+ * @param id
+ * @param price
+ * @param num_ppl
+ * @param difficulty
+ * @return
  */
-bool isEmailValid(char *email);
-
+bool isValidRoomParams(TechnionFaculty roomFaculty, char *company_email, int id,
+                       int price, int num_ppl, int difficulty);
 /**
- * receives a faculty name and checks if it's valid
- * @param Faculty - the faculty name to be checked
- * @return true - if it's mentioned in the listed faculties
- *         false - it is not mentioned in the listed faculties
+ *
+ * @param email
+ * @param escaperFaculty
+ * @param skill_level
+ * @return
  */
-bool isFacultyValid(TechnionFaculty Faculty);
+bool isValidEscaperParams(TechnionFaculty escaperFaculty, char *email,
+                          int skill_level);
+/**
+ *
+ * @param email
+ * @param Faculty
+ * @return
+ */
+bool isValidCompanyParams(TechnionFaculty Faculty, char *email);
 
 /**
  * receives a string representing operation hours in the format "hh-hh" and
@@ -51,24 +63,6 @@ bool getHoursFromStr(char *hours_str, int *opening_time, int *closing_time);
  *         it is NULL
  */
 bool getDayAndHourFromStr(char *src_str, int *day, int *hour);
-
-/**
- * receives the price per person of a certain room and makes sure it it's a
- * multiply of 4
- * @param price - the integer to be checked
- * @return true - if it's a multiply of 4
- *         false - if it's not a multiply of 4 or if it's not a positive number
- */
-bool isPriceMultiplyOfFour (int price);
-
-/**
- * receives a difficulty level of a room or a skill level of an escaper and
- * checks if the value is valid
- * @param difficulty_or_skill - the input value of the skill / difficulty
- * @return true - if it's between the min level and the max level
- *         false - if it's not in the scale
- */
-bool isValidDifficultyOrSkill(int difficulty_or_skill);
 
 /**
  * receives an array and initializes the values to '0'

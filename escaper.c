@@ -12,71 +12,45 @@
 #define INVALID_PARAMETER -1
 
 struct Escaper_t {
-    char *escaper_email;
-    TechnionFaculty FacultyOfEscaper;
+    TechnionFaculty escaperFaculty;
+    char *email;
     int skill_level;
 };
-
-
-/**...........................................................................*/
-/**-------------------------FUNCTIONS-DECLARATIONS----------------------------*/
-/**...........................................................................*/
-
-
-/**
- * receives all the arguments to create an escaper and checks if they're all
- * valid
- * @param escaper_email - the email of the escaper to be added to his profile
- * @param FacultyOfEscaper - the faculty the escaper is listed in
- * @param skill_level - the escaper's expertise in escape rooms
- * @return true - all of the arguments are valid
- *         false - not all of the arguments are valid
- */
-static bool checkEscaperArgs(char *escaper_email, int skill_level,
-                             TechnionFaculty FacultyOfEscaper);
-
 
 /**...........................................................................*/
 /**-----------------------FUNCTIONS-IMPLEMENTATIONS---------------------------*/
 /**...........................................................................*/
 
 
-Escaper escaperCreate(char *escaper_email, TechnionFaculty FacultyOfEscaper,
-                      int skill_level, EscaperErrorCode *EscaperError) {
-    assert(NULL != escaper_email);
-    if (NULL == escaper_email || !checkEscaperArgs(escaper_email, skill_level,
-                                                   FacultyOfEscaper)) {
-        *EscaperError = ESCAPER_INVALID_PARAMETER;
+Escaper escaperCreate(char *email, TechnionFaculty escaperFaculty,
+                      int skill_level) {
+    assert(isValidEscaperParams(escaperFaculty, email, skill_level));
+    if (NULL == email){
         return NULL;
     }
-
     Escaper escaper = malloc(sizeof(*escaper));
     if (NULL == escaper) {
-        *EscaperError = ESCAPER_OUT_OF_MEMORY;
         return NULL;
     }
 
-    escaper->escaper_email = malloc(strlen(escaper_email) + 1);
-    if (NULL == escaper->escaper_email) {
+    escaper->email = malloc(strlen(email) + 1);
+    if (NULL == escaper->email) {
         free(escaper);
-        *EscaperError = ESCAPER_OUT_OF_MEMORY;
         return NULL;
     }
-    strcpy(escaper->escaper_email, escaper_email);
-    escaper->FacultyOfEscaper = FacultyOfEscaper;
+    strcpy(escaper->email, email);
+    escaper->escaperFaculty = escaperFaculty;
     escaper->skill_level = skill_level;
-    *EscaperError = ESCAPER_SUCCESS;
     return escaper;
 }
 
 
-EscaperErrorCode escaperDestroy(Escaper escaper) {
+void escaperDestroy(Escaper escaper) {
     if (NULL == escaper) {
-        return ESCAPER_INVALID_PARAMETER;
+        return;
     }
-    free(escaper->escaper_email);
+    free(escaper->email);
     free(escaper);
-    return ESCAPER_SUCCESS;
 }
 
 
@@ -85,7 +59,7 @@ int escaperCompareElements(SetElement escaper_1, SetElement escaper_2) {
         return INVALID_PARAMETER;
     }
     Escaper ptr1 = escaper_1, ptr2 = escaper_2;
-    int tmp_cmp = strcmp(ptr1->escaper_email, ptr2->escaper_email);
+    int tmp_cmp = strcmp(ptr1->email, ptr2->email);
     if (tmp_cmp == 0) {
         return 0;
     } else {
@@ -93,62 +67,39 @@ int escaperCompareElements(SetElement escaper_1, SetElement escaper_2) {
     }
 }
 
-
-void escaperFreeElement(SetElement escaper) {
-    if (NULL == escaper) {
-        return;
-    }
-    escaperDestroy(escaper);
-}
-
 SetElement escaperCopyElement(SetElement src_escaper) {
     if (NULL == src_escaper) {
         return NULL;
     }
-    Escaper ptr = src_escaper; //to make the code clearer
-    EscaperErrorCode CopyResult;
-    Escaper escaper = escaperCreate(ptr->escaper_email, ptr->FacultyOfEscaper,
-                                    ptr->skill_level, &CopyResult);
-    if (CopyResult == ESCAPER_OUT_OF_MEMORY ||
-        CopyResult == ESCAPER_INVALID_PARAMETER) {
-        return NULL;
-    }
+    Escaper ptr = src_escaper;
+    Escaper escaper = escaperCreate(ptr->email, ptr->escaperFaculty,
+                                    ptr->skill_level);
     return escaper;
 }
 
-char *escaperGetEmail(Escaper escaper, EscaperErrorCode *EscaperError) {
+char *escaperGetEmail(Escaper escaper) {
     if (NULL == escaper) {
-        *EscaperError = ESCAPER_INVALID_PARAMETER;
         return NULL;
     }
-    char *output = malloc(strlen(escaper->escaper_email) + 1);
-    if (NULL == output) {
-        *EscaperError = ESCAPER_OUT_OF_MEMORY;
+    char *email = malloc(strlen(escaper->email) + 1);
+    if (NULL == email) {
         return NULL;
     }
-    strcpy(output, escaper->escaper_email);
-    *EscaperError = ESCAPER_SUCCESS;
-    return output;
+    strcpy(email, escaper->email);
+    return email;
 }
 
-TechnionFaculty escaperGetFaculty(Escaper escaper,
-                                  EscaperErrorCode *EscaperError) {
+TechnionFaculty escaperGetFaculty(Escaper escaper) {
     if (NULL == escaper) {
-        *EscaperError = ESCAPER_INVALID_PARAMETER;
         return UNKNOWN;
     }
-
-    *EscaperError = ESCAPER_SUCCESS;
-    return escaper->FacultyOfEscaper;
+    return escaper->escaperFaculty;
 }
 
-int escaperGetSkillLevel(Escaper escaper, EscaperErrorCode *EscaperError) {
+int escaperGetSkillLevel(Escaper escaper) {
     if (NULL == escaper) {
-        *EscaperError = ESCAPER_INVALID_PARAMETER;
         return INVALID_PARAMETER;
     }
-
-    *EscaperError = ESCAPER_SUCCESS;
     return escaper->skill_level;
 }
 
@@ -156,29 +107,8 @@ bool isEscaperEmailEqual(Escaper escaper, char *email) {
     if (NULL == escaper || NULL == email) {
         return false;
     }
-    if (strcmp(escaper->escaper_email, email) == 0) {
+    if (strcmp(escaper->email, email) == 0) {
         return true;
     }
     return false;
 }
-
-
-/**...........................................................................*/
-/**--------------------------STATIC-FUNCTIONS---------------------------------*/
-/**...........................................................................*/
-
-
-static bool checkEscaperArgs(char *escaper_email, int skill_level,
-                             TechnionFaculty FacultyOfEscaper) {
-    if (!isEmailValid(escaper_email)) {
-        return false;
-    }
-    if (!isFacultyValid(FacultyOfEscaper)) {
-        return false;
-    }
-    if (!isValidDifficultyOrSkill(skill_level)) {
-        return false;
-    }
-    return true;
-}
-

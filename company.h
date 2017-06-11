@@ -29,7 +29,7 @@ typedef enum {
 /**
  * creates a new company according to the relevant input parameters and returns
  * the relevant result code.
- * @param company_email - the email address of the company which will be used
+ * @param email - the email address of the company which will be used
  *        to identify the company.
  * @param Faculty - the name of the faculty that the company is listed under
  * @param CompanyError - the result of the creation
@@ -37,8 +37,7 @@ typedef enum {
  *         went ok
  *         NULL - if the allocation was not successful
  */
-Company companyCreate(char *company_email, TechnionFaculty Faculty,
-                      CompanyErrorCode *CompanyError);
+Company companyCreate(TechnionFaculty Faculty, char *email);
 
 /**
  * destroys a company and all of it's components. releases all relevant
@@ -50,14 +49,14 @@ Company companyCreate(char *company_email, TechnionFaculty Faculty,
  *         COMPANY_RESERVATION_EXISTS - one of the rooms has an existing
  *         reservation
  */
-CompanyErrorCode companyDestroy(Company company);
+void companyDestroy(Company company);
 
 /**
  * creates a new room according to the relevant input parameters and returns
  * the relevant result code. calculates the working hours of the room and if
  * found valid, calls roomCreate to add the room to the set.
  * @param company - the company to which the room needs to be added
- * @param room_id - the id of the room
+ * @param id - the id of the room
  * @param price - entry price per person (must be a multiple of 4)
  * @param num_ppl - recommended number of people for this specific room
  * @param working_hrs - start time and close time of the room
@@ -69,8 +68,8 @@ CompanyErrorCode companyDestroy(Company company);
  *         COMPANY_ROOM_ALREADY_EXISTS - room with same id under that company
  *         already exists
  */
-CompanyErrorCode companyAddRoom(Company company, int room_id, int price,
-                                int num_ppl, int opening_time, int closing_time,
+CompanyErrorCode companyAddRoom(Company company, int id, int price,
+                                int num_ppl, int open_time, int close_time,
                                 int difficulty);
 
 /**
@@ -86,13 +85,13 @@ CompanyErrorCode companyRemoveRoom(Company company, Room room);
 
 /**
  * a comparison of two companies by email
- * @param company_1 - the first company
- * @param company_2 - the second company
+ * @param company1 - the first company
+ * @param company2 - the second company
  * @return -1 - INVALID_PARAMETER
  * @return 1 - emails are different
  * @return 0 - emails are equal
  */
-int companyCompareElements(SetElement company_1, SetElement company_2);
+int companyCompareElements(SetElement company1, SetElement company2);
 
 /**
  * frees all relevant allocated memory of a specific company element
@@ -114,7 +113,7 @@ SetElement companyCopyElement(SetElement src_company);
  * @param CompanyError - a type to get the result of the function
  * @return a pointer to the char* if the allocation worked and NULL if failed
  */
-char* companyGetEmail (Company company, CompanyErrorCode *CompanyError);
+char *companyGetEmail(Company company);
 
 /**
  * receives a company and returns the faculty it's listen in
@@ -122,8 +121,7 @@ char* companyGetEmail (Company company, CompanyErrorCode *CompanyError);
  * @param CompanyError - an error type to return the result / error
  * @return the faculty the company's listed in or UNKNOWN if an error was found
  */
-TechnionFaculty companyGetFaculty(Company company,
-                                  CompanyErrorCode *CompanyError);
+TechnionFaculty companyGetFaculty(Company company);
 
 /**
  * receives a company and a room id and iterates over the company's rooms to
@@ -182,6 +180,6 @@ Room mostRecommendedRoom(Company company, TechnionFaculty EscaperFaculty,
  * @param company - the company to iterate through
  * @return an integer, representing the minimum value
  */
-int minIdInCompany(Company company);
+int companyGetminRoomID(Company company);
 
 #endif //ESCAPETECHNION_COMPANY_H

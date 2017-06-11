@@ -176,76 +176,60 @@ static void checkBetterRoom(Escaper escaper, int cur_result, int cur_room_id,
 /**---------------------------------------------------------------------------*/
 
 
-EscapeTechnion escapeTechnionCreate(MtmErrorCode *EscapeTechnionError,
-                                    FILE* inputChannel, FILE* outputChannel) {
+EscapeTechnion escapeTechnionCreate(FILE* inputChannel, FILE* outputChannel) {
     EscapeTechnion escapeTechnion = malloc(sizeof(*escapeTechnion));
     if (NULL == escapeTechnion) {
-        *EscapeTechnionError = MTM_OUT_OF_MEMORY;
         return NULL;
     }
-
     escapeTechnion->faculties_earnings = malloc(sizeof(int) * UNKNOWN);
     if (NULL == escapeTechnion->faculties_earnings) {
-        *EscapeTechnionError = MTM_OUT_OF_MEMORY;
         free(escapeTechnion);
         return NULL;
     }
     initializeArr(escapeTechnion->faculties_earnings, UNKNOWN);
-
     escapeTechnion->companies = setCreate(companyCopyElement,
                                           companyFreeElement,
                                           companyCompareElements);
     if (NULL == escapeTechnion->companies) {
-        *EscapeTechnionError = MTM_OUT_OF_MEMORY;
         free(escapeTechnion->faculties_earnings);
         free(escapeTechnion);
         return NULL;
     }
-
     escapeTechnion->escapers = setCreate(escaperCopyElement, escaperFreeElement,
                                          escaperCompareElements);
     if (NULL == escapeTechnion->escapers) {
-        *EscapeTechnionError = MTM_OUT_OF_MEMORY;
         setDestroy(escapeTechnion->companies);
         free(escapeTechnion->faculties_earnings);
         free(escapeTechnion);
         return NULL;
     }
-
     escapeTechnion->reservations = listCreate(reservationCopyElement,
                                               reservationFreeElement);
     if (NULL == escapeTechnion->reservations) {
-        *EscapeTechnionError = MTM_OUT_OF_MEMORY;
         setDestroy(escapeTechnion->escapers);
         setDestroy(escapeTechnion->companies);
         free(escapeTechnion->faculties_earnings);
         free(escapeTechnion);
         return NULL;
     }
-
     escapeTechnion->current_day = 0;
     escapeTechnion->inputChannel = inputChannel;
     escapeTechnion->outputChannel = outputChannel;
-    *EscapeTechnionError = MTM_SUCCESS;
     return escapeTechnion;
 }
 
-MtmErrorCode escapeTechnionDestroy(EscapeTechnion escapeTechnion) {
-    if (NULL == escapeTechnion) {
-        return MTM_NULL_PARAMETER;
-    }
+void escapeTechnionDestroy(EscapeTechnion escapeTechnion) {
     listDestroy(escapeTechnion->reservations);
     setDestroy(escapeTechnion->escapers);
     setDestroy(escapeTechnion->companies);
     free(escapeTechnion->faculties_earnings);
     free(escapeTechnion);
-    return MTM_SUCCESS;
 }
 
 MtmErrorCode escapeTechnionAddCompany(EscapeTechnion escapeTechnion,
                                       char *email, TechnionFaculty Faculty) {
-    if (NULL == escapeTechnion || NULL == email || !isEmailValid(email) ||
-        !isFacultyValid(Faculty)) {
+    if (NULL == escapeTechnion || NULL == email || !isValidEmail(email) ||
+        !isValidFaculty(Faculty)) {
         return MTM_INVALID_PARAMETER;
     }
     if (isEmailInUse(escapeTechnion, email)) {
@@ -253,7 +237,7 @@ MtmErrorCode escapeTechnionAddCompany(EscapeTechnion escapeTechnion,
     }
 
     CompanyErrorCode CompanyError;
-    Company company = companyCreate(email, Faculty, &CompanyError);
+    Company company = companyCreate(Faculty, email);
     if (CompanyError == COMPANY_INVALID_PARAMETER) {
         return MTM_INVALID_PARAMETER;
     } else if (CompanyError == COMPANY_OUT_OF_MEMORY) {
@@ -272,7 +256,7 @@ MtmErrorCode escapeTechnionAddCompany(EscapeTechnion escapeTechnion,
 MtmErrorCode escapeTechnionRemoveCompany(EscapeTechnion escapeTechnion,
                                          char *company_email) {
     if (NULL == escapeTechnion || NULL == company_email ||
-        !isEmailValid(company_email)) {
+        !isValidEmail(company_email)) {
         return MTM_INVALID_PARAMETER;
     }
     Company company = findCompany(company_email, escapeTechnion);
@@ -293,11 +277,11 @@ MtmErrorCode escapeTechnionAddRoom(EscapeTechnion escapeTechnion,
                                    int num_ppl, char *working_hours,
                                    int difficulty) {
     if (NULL == company_email || NULL == working_hours ||
-        NULL == escapeTechnion || !isEmailValid(company_email)) {
+        NULL == escapeTechnion || !isValidEmail(company_email)) {
         return MTM_INVALID_PARAMETER;
     }
 
-    if (!isPriceMultiplyOfFour(price) ||
+    if (!isValidPrice(price) ||
         !isValidDifficultyOrSkill(difficulty) ||
         num_ppl <= 0 || room_id <= 0) {
         return MTM_INVALID_PARAMETER;
@@ -315,7 +299,7 @@ MtmErrorCode escapeTechnionAddRoom(EscapeTechnion escapeTechnion,
 
     CompanyErrorCode CompanyError;
 
-    TechnionFaculty CompanyFaculty = companyGetFaculty(company, &CompanyError);
+    TechnionFaculty CompanyFaculty = companyGetFaculty(company);
     if (isRoomSameIdInFaculty(escapeTechnion, room_id, CompanyFaculty)) {
         return MTM_ID_ALREADY_EXIST;
     }
@@ -333,7 +317,7 @@ MtmErrorCode escapeTechnionAddRoom(EscapeTechnion escapeTechnion,
 
 MtmErrorCode escapeTechnionRemoveRoom(EscapeTechnion escapeTechnion,
                                       int room_id, TechnionFaculty Faculty) {
-    if (NULL == escapeTechnion || !isFacultyValid(Faculty) || room_id <= 0) {
+    if (NULL == escapeTechnion || !isValidFaculty(Faculty) || room_id <= 0) {
         return MTM_INVALID_PARAMETER;
     }
     Company company;
@@ -354,9 +338,9 @@ MtmErrorCode escapeTechnionAddEscaper(EscapeTechnion escapeTechnion,
                                       char *escaper_email, int skill_level,
                                       TechnionFaculty FacultyOfEscaper) {
     if (NULL == escapeTechnion || NULL == escaper_email ||
-        !isEmailValid(escaper_email) ||
+        !isValidEmail(escaper_email) ||
         !isValidDifficultyOrSkill(skill_level) ||
-        !isFacultyValid(FacultyOfEscaper)) {
+        !isValidFaculty(FacultyOfEscaper)) {
         return MTM_INVALID_PARAMETER;
     }
 
@@ -366,7 +350,7 @@ MtmErrorCode escapeTechnionAddEscaper(EscapeTechnion escapeTechnion,
 
     EscaperErrorCode EscaperError;
     Escaper escaper = escaperCreate(escaper_email, FacultyOfEscaper,
-                                    skill_level, &EscaperError);
+                                    skill_level);
     assert(EscaperError != ESCAPER_INVALID_PARAMETER);
     if (EscaperError == ESCAPER_OUT_OF_MEMORY) {
         return MTM_OUT_OF_MEMORY;
@@ -382,7 +366,7 @@ MtmErrorCode escapeTechnionAddEscaper(EscapeTechnion escapeTechnion,
 
 MtmErrorCode escapeTechnionRemoveEscaper(char *email,
                                          EscapeTechnion escapeTechnion) {
-    if (NULL == email || NULL == escapeTechnion || !isEmailValid(email)) {
+    if (NULL == email || NULL == escapeTechnion || !isValidEmail(email)) {
         return MTM_INVALID_PARAMETER;
     }
     Escaper escaper = findEscaper(email, escapeTechnion);
@@ -399,7 +383,7 @@ MtmErrorCode escapeTechnionReservationReceived(char *escaper_email, int room_id,
                                                char *time, int num_ppl,
                                                EscapeTechnion escapeTechnion) {
     if (NULL == escaper_email || NULL == time || NULL == escapeTechnion ||
-        !isFacultyValid(FacultyOfRoom) || !isEmailValid(escaper_email) ||
+        !isValidFaculty(FacultyOfRoom) || !isValidEmail(escaper_email) ||
         room_id <= 0 || num_ppl <= 0) {
         return MTM_INVALID_PARAMETER;
     }
@@ -435,7 +419,7 @@ MtmErrorCode escapeTechnionReservationReceived(char *escaper_email, int room_id,
 MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
                                            EscapeTechnion escapeTechnion){
     if (NULL == escaper_email || NULL == escapeTechnion ||
-        !isEmailValid(escaper_email) || num_ppl <= 0) {
+        !isValidEmail(escaper_email) || num_ppl <= 0) {
         return MTM_INVALID_PARAMETER;
     }
     Escaper escaper = findEscaper(escaper_email, escapeTechnion);
@@ -443,9 +427,8 @@ MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
         return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
     }
     EscaperErrorCode escaperErrorCode;
-    int escaper_skill_level = escaperGetSkillLevel(escaper, &escaperErrorCode);
-    TechnionFaculty escapersFaculty = escaperGetFaculty(escaper,
-                                                        &escaperErrorCode);
+    int escaper_skill_level = escaperGetSkillLevel(escaper);
+    TechnionFaculty escapersFaculty = escaperGetFaculty(escaper);
     int min_result = INVALID_PARAMETER, min_faculty_diff = INVALID_PARAMETER,
         min_room_id = INVALID_PARAMETER;
     int cur_result, cur_faculty_diff, cur_room_id;
@@ -503,17 +486,15 @@ void escapeTechnionReportDay(EscapeTechnion escapeTechnion) {
 
     LIST_FOREACH(Reservation, iterator, ended_reservations) {
         Escaper escaper = reservationGetEscaper(iterator, &errorCode1);
-        char *escaper_email = escaperGetEmail(escaper, &errorCode2);
-        int escaper_skill = escaperGetSkillLevel(escaper, &errorCode2);
-        TechnionFaculty escaper_Faculty = escaperGetFaculty(escaper,
-                                                            &errorCode2);
+        char *escaper_email = escaperGetEmail(escaper);
+        int escaper_skill = escaperGetSkillLevel(escaper);
+        TechnionFaculty escaper_Faculty = escaperGetFaculty(escaper);
         Company company = reservationGetCompany(iterator, &errorCode1);
-        char *company_email = companyGetEmail(company, &errorCode3);
-        TechnionFaculty company_faculty = companyGetFaculty(company,
-                                                           &errorCode3);
+        char *company_email = companyGetEmail(company);
+        TechnionFaculty company_faculty = companyGetFaculty(company);
         Room room = reservationGetRoom(iterator, &errorCode1);
-        int room_id = roomGetID(room, &errorCode4);
-        int room_difficulty = roomGetDifficulty(room, &errorCode4);
+        int room_id = roomGetID(room);
+        int room_difficulty = roomGetDifficulty(room);
         int hour, num_ppl, price;
         reservationGetHour(iterator, &hour);
         reservationGetNumPpl(iterator, &num_ppl);
@@ -527,7 +508,7 @@ void escapeTechnionReportDay(EscapeTechnion escapeTechnion) {
     escapeTechnion->current_day += 1;
 }
 
-
+//TODO: go through the errors in static funcs
 
 /**...........................................................................*/
 /**--------------------------STATIC-FUNCTIONS---------------------------------*/
@@ -540,11 +521,9 @@ static MtmErrorCode reserveRoom(EscapeTechnion escapeTechnion, Escaper escaper,
 
     int price = calculatePricePerPerson(company, room, escaper);
     price *= num_ppl;
-    ReservationErrorCode reservationErrorCode;
     Reservation reservation = reservationCreate(escaper, company, room, num_ppl,
-                                                day, hour, price,
-                                                &reservationErrorCode);
-    if (reservationErrorCode != RESERVATION_SUCCESS) {
+                                                day, hour, price);
+    if (reservation != NULL) {
         return MTM_OUT_OF_MEMORY;
     }
     if (listInsertLast(escapeTechnion->reservations, reservation) ==
@@ -624,7 +603,7 @@ static bool isEscaperWithEmail(char *email, EscapeTechnion escapeTechnion) {
 }
 
 static Company findCompany(char *email, EscapeTechnion escapeTechnion) {
-    if (NULL == escapeTechnion || NULL == email || !isEmailValid(email)) {
+    if (NULL == escapeTechnion || NULL == email || !isValidEmail(email)) {
         return NULL;
     }
     Company company_iterator = setGetFirst(escapeTechnion->companies);
@@ -650,7 +629,7 @@ static Room escapeSystemFindRoom(int room_id, TechnionFaculty FacultyOfRoom,
         CompanyErrorCode CompanyError = COMPANY_SUCCESS;
         Room room = companyFindRoom(company_iterator, room_id, &CompanyError);
         if (NULL != room) {
-            if (companyGetFaculty(company_iterator, &CompanyError) ==
+            if (companyGetFaculty(company_iterator) ==
                 FacultyOfRoom) {
                 *company_of_room = company_iterator;
                 return room;
@@ -663,7 +642,7 @@ static Room escapeSystemFindRoom(int room_id, TechnionFaculty FacultyOfRoom,
 }
 
 static Escaper findEscaper(char *email, EscapeTechnion escapeTechnion) {
-    if (NULL == escapeTechnion || NULL == email || !isEmailValid(email)) {
+    if (NULL == escapeTechnion || NULL == email || !isValidEmail(email)) {
         return NULL;
     }
 
@@ -707,13 +686,13 @@ static int calculatePricePerPerson(Company company, Room room,
     EscaperErrorCode escaperErrorCode;
     int original_price;
 
-    original_price = roomGetPrice(room, &roomErrorCode);
+    original_price = roomGetPrice(room);
     if (roomErrorCode != ROOM_SUCCESS) {
         return INVALID_PARAMETER;
     }
 
-    if ((companyGetFaculty(company, &companyErrorCode) ==
-         escaperGetFaculty(escaper, &escaperErrorCode)) &&
+    if ((companyGetFaculty(company) ==
+            escaperGetFaculty(escaper)) &&
         companyErrorCode != COMPANY_SUCCESS) {
         return (original_price * 3) / 4;
     }
@@ -764,8 +743,8 @@ static bool isRoomAvailable(EscapeTechnion escapeTechnion, Room room,
     assert(NULL != escapeTechnion && NULL != room);
 
     RoomErrorCode RoomError;
-    if (reservation_hour < roomGetOpeningTime(room, &RoomError) ||
-        reservation_hour >= roomGetClosingTime(room, &RoomError)) {
+    if (reservation_hour < roomGetOpeningTime(room) ||
+        reservation_hour >= roomGetClosingTime(room)) {
         return false;
     }
 
@@ -792,7 +771,7 @@ static bool isRoomAvailable(EscapeTechnion escapeTechnion, Room room,
 
 static bool isRoomSameIdInFaculty(EscapeTechnion escapeTechnion, int room_id,
                                   TechnionFaculty Faculty) {
-    if (NULL == escapeTechnion || !isFacultyValid(Faculty) || room_id <= 0) {
+    if (NULL == escapeTechnion || !isValidFaculty(Faculty) || room_id <= 0) {
         return false;
     }
     Company company_iterator = setGetFirst(escapeTechnion->companies);
@@ -801,7 +780,7 @@ static bool isRoomSameIdInFaculty(EscapeTechnion escapeTechnion, int room_id,
     }
     while (NULL != company_iterator) {
         CompanyErrorCode CompanyError;
-        if (companyGetFaculty(company_iterator, &CompanyError) == Faculty) {
+        if (companyGetFaculty(company_iterator) == Faculty) {
             if (isRoomIdInCompany(company_iterator, room_id)) {
                 return true;
             }
@@ -859,10 +838,8 @@ static void checkBetterRoom(Escaper escaper, int cur_result, int cur_room_id,
         } else if (cur_faculty_diff == *min_faculty_diff) {
             CompanyErrorCode CompanyError;
             EscaperErrorCode EscaperError;
-            TechnionFaculty curFaculty = companyGetFaculty(company_iterator,
-                                                           &CompanyError);
-            TechnionFaculty escFaculty = escaperGetFaculty(escaper,
-                                                           &EscaperError);
+            TechnionFaculty curFaculty = companyGetFaculty(company_iterator);
+            TechnionFaculty escFaculty = escaperGetFaculty(escaper);
             if ((curFaculty == escFaculty) && (cur_room_id < *min_room_id)) {
                 *most_recommended_company = company_iterator;
                 *most_recommended_room = cur_recommended_room;
