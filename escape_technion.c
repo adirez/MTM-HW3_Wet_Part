@@ -174,6 +174,13 @@ static MtmErrorCode reserveRoom(EscapeTechnion escapeTechnion, Escaper escaper,
 static MtmErrorCode findClosestTime(EscapeTechnion escapeTechnion, Room room,
                                     Escaper escaper, int *day, int *hour);
 
+static void checkBetterRoom(Escaper escaper, int cur_result, int cur_room_id,
+                            int cur_faculty_diff, Room cur_recommended_room,
+                            int *min_result, int *min_room_id,
+                            int *min_faculty_diff, Room *most_recommended_room,
+                            Company *most_recommended_company,
+                            Company company_iterator);
+
 /**---------------------------------------------------------------------------*/
 
 
@@ -416,7 +423,6 @@ MtmErrorCode escapeTechnionReservationReceived(char *escaper_email, int room_id,
         return MTM_ID_DOES_NOT_EXIST;
     }
     Escaper escaper = findEscaper(escaper_email, escapeTechnion);
-    //int price = calculatePricePerPerson(company, room, escaper);
 
     int reservation_day = days_till_reservation + escapeTechnion->current_day;
     if (!isEscaperAvailable(escapeTechnion, escaper, reservation_day,
@@ -427,22 +433,6 @@ MtmErrorCode escapeTechnionReservationReceived(char *escaper_email, int room_id,
                          reservation_hour)) {
         return MTM_ROOM_NOT_AVAILABLE;
     }
-   /*
-    ReservationErrorCode reservationErrorCode;
-    Reservation reservation = reservationCreate(escaper, company, room,
-                                                num_ppl, reservation_day,
-                                                reservation_hour, price,
-                                                &reservationErrorCode);
-    if (reservationErrorCode != RESERVATION_SUCCESS) {
-        return MTM_OUT_OF_MEMORY;
-    }
-    if (listInsertLast(escapeTechnion->reservations, reservation) ==
-        LIST_OUT_OF_MEMORY) {
-        reservationDestroy(reservation);
-        return MTM_OUT_OF_MEMORY;
-    }
-    reservationDestroy(reservation);
-    return MTM_SUCCESS; */
     return reserveRoom(escapeTechnion, escaper, company, room, num_ppl,
                        reservation_day, reservation_hour);
 }
@@ -472,8 +462,8 @@ static MtmErrorCode reserveRoom(EscapeTechnion escapeTechnion, Escaper escaper,
 
 MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
                                            EscapeTechnion escapeTechnion){
-    if (NULL == escaper_email || !isEmailValid(escaper_email) || num_ppl <= 0 ||
-        NULL == escapeTechnion) {
+    if (NULL == escaper_email || NULL == escapeTechnion ||
+        !isEmailValid(escaper_email) || num_ppl <= 0) {
         return MTM_INVALID_PARAMETER;
     }
     Escaper escaper = findEscaper(escaper_email, escapeTechnion);
@@ -482,11 +472,8 @@ MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
     }
     EscaperErrorCode escaperErrorCode;
     int escaper_skill_level = escaperGetSkillLevel(escaper, &escaperErrorCode);
-
     TechnionFaculty escapersFaculty = escaperGetFaculty(escaper,
                                                         &escaperErrorCode);
-
-
     int min_result = INVALID_PARAMETER, min_faculty_diff = INVALID_PARAMETER,
         min_room_id = INVALID_PARAMETER;
     int cur_result, cur_faculty_diff, cur_room_id;
@@ -504,53 +491,17 @@ MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
             company_iterator = setGetNext(escapeTechnion->companies);
             continue;
         }
-
-        if(cur_result < min_result || min_result == INVALID_PARAMETER){
-            most_recommended_company = company_iterator;
-            most_recommended_room = cur_recommended_room;
-            min_result = cur_result;
-            min_faculty_diff = cur_faculty_diff;
-            min_room_id = cur_room_id;
-
-        } else if (cur_result == min_result){
-            if (cur_faculty_diff < min_faculty_diff ||
-                min_faculty_diff == INVALID_PARAMETER) {
-
-                most_recommended_company = company_iterator;
-                most_recommended_room = cur_recommended_room;
-                min_faculty_diff = cur_faculty_diff;
-                min_room_id = cur_room_id;
-
-            } else if (cur_faculty_diff == min_faculty_diff) {
-                CompanyErrorCode CompanyError;
-                EscaperErrorCode EscaperError;
-                TechnionFaculty curFaculty = companyGetFaculty(company_iterator,
-                                                               &CompanyError);
-                TechnionFaculty escFaculty = escaperGetFaculty(escaper,
-                                                               &EscaperError);
-
-                if ((curFaculty == escFaculty) && (cur_room_id < min_room_id)) {
-
-                    most_recommended_company = company_iterator;
-                    most_recommended_room = cur_recommended_room;
-                    min_room_id = cur_room_id;
-                } else if ((int)curFaculty < (int)escFaculty) {
-
-                    most_recommended_company = company_iterator;
-                    most_recommended_room = cur_recommended_room;
-                    min_room_id = cur_room_id;
-                }
-            }
-        }
+        checkBetterRoom(escaper, cur_result, cur_room_id, cur_faculty_diff,
+                        cur_recommended_room, &min_result, &min_room_id,
+                        &min_faculty_diff, &most_recommended_room,
+                        &most_recommended_company, company_iterator);
         company_iterator = setGetNext(escapeTechnion->companies);
     }
     if (NULL == most_recommended_room) {
         return MTM_NO_ROOMS_AVAILABLE;
     }
-
     int day, hour;
     findClosestTime(escapeTechnion, most_recommended_room, escaper, &day, &hour);
-
     return reserveRoom(escapeTechnion, escaper, most_recommended_company,
                        most_recommended_room, num_ppl, day, hour);
 }
@@ -861,15 +812,57 @@ static MtmErrorCode findClosestTime(EscapeTechnion escapeTechnion, Room room,
     }
 
     int tmp_day = 0;
-    while (1) {
+    bool trigger = true;
+    while (trigger) {
         for (int tmp_hour = 0; tmp_hour < 24; tmp_hour++) {
             if (isEscaperAvailable(escapeTechnion, escaper, tmp_day, tmp_hour)
                 && isRoomAvailable(escapeTechnion, room, tmp_day, tmp_hour)) {
                 *day = tmp_day;
                 *hour = tmp_hour;
-                return MTM_SUCCESS;
+                trigger = false;
+                break;
             }
+        }
+        tmp_day++;
+    }
+    return MTM_SUCCESS;
+}
 
+static void checkBetterRoom(Escaper escaper, int cur_result, int cur_room_id,
+                            int cur_faculty_diff, Room cur_recommended_room,
+                            int *min_result, int *min_room_id,
+                            int *min_faculty_diff, Room *most_recommended_room,
+                            Company *most_recommended_company,
+                            Company company_iterator) {
+    if (cur_result < *min_result || *min_result == INVALID_PARAMETER) {
+        *most_recommended_company = company_iterator;
+        *most_recommended_room = cur_recommended_room;
+        *min_result = cur_result;
+        *min_faculty_diff = cur_faculty_diff;
+        *min_room_id = cur_room_id;
+    } else if (cur_result == *min_result) {
+        if (cur_faculty_diff < *min_faculty_diff ||
+            *min_faculty_diff == INVALID_PARAMETER) {
+            *most_recommended_company = company_iterator;
+            *most_recommended_room = cur_recommended_room;
+            *min_faculty_diff = cur_faculty_diff;
+            *min_room_id = cur_room_id;
+        } else if (cur_faculty_diff == *min_faculty_diff) {
+            CompanyErrorCode CompanyError;
+            EscaperErrorCode EscaperError;
+            TechnionFaculty curFaculty = companyGetFaculty(company_iterator,
+                                                           &CompanyError);
+            TechnionFaculty escFaculty = escaperGetFaculty(escaper,
+                                                           &EscaperError);
+            if ((curFaculty == escFaculty) && (cur_room_id < *min_room_id)) {
+                *most_recommended_company = company_iterator;
+                *most_recommended_room = cur_recommended_room;
+                *min_room_id = cur_room_id;
+            } else if ((int) curFaculty < (int) escFaculty) {
+                *most_recommended_company = company_iterator;
+                *most_recommended_room = cur_recommended_room;
+                *min_room_id = cur_room_id;
+            }
         }
     }
 }
