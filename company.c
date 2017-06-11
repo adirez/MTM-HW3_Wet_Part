@@ -18,6 +18,12 @@ struct Company_t {
     Set company_rooms;
 };
 
+
+/**...........................................................................*/
+/**-----------------------FUNCTIONS-IMPLEMENTATIONS---------------------------*/
+/**...........................................................................*/
+
+
 Company companyCreate(char *company_email, TechnionFaculty Faculty,
                       CompanyErrorCode *CompanyError) {
     assert(NULL != company_email);
@@ -260,3 +266,22 @@ Room mostRecommendedRoom(Company company, TechnionFaculty EscaperFaculty,
     *room_id = best_id;
     return best_room;
 }
+
+int minIdInCompany(Company company) {
+    if (NULL == company) {
+        return  INVALID_PARAMETER;
+    }
+    int min_id = INVALID_PARAMETER;
+    Room room_iterator = setGetFirst(company->company_rooms);
+    while (NULL != room_iterator) {
+        RoomErrorCode RoomError;
+        int tmp_id = roomGetID(room_iterator, &RoomError);
+        if (tmp_id < min_id || min_id == INVALID_PARAMETER) {
+            min_id = tmp_id;
+        }
+        room_iterator = setGetNext(company->company_rooms);
+    }
+    return min_id;
+}
+
+

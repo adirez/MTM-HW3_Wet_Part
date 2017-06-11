@@ -15,6 +15,13 @@
  */
 typedef struct EscapeTechnion_t *EscapeTechnion;
 //TODO: add inout channel to comment
+
+
+/**...........................................................................*/
+/**-------------------------FUNCTIONS-DECLARATIONS----------------------------*/
+/**...........................................................................*/
+
+
 /**
  * creates a member of EscapeTechnion type, including all internal fields of
  * companies, rooms, faculties and reservations with all relevant allocations.

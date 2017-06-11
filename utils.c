@@ -21,6 +21,12 @@
 #define HOURS_STR_LEN 5 //according to the format "HH-HH"
 #define DAY_HOUR_MIN_LEN 3 //according to the format "D-H"
 
+
+/**...........................................................................*/
+/**-----------------------FUNCTIONS-IMPLEMENTATIONS---------------------------*/
+/**...........................................................................*/
+
+
 bool isEmailValid(char *email) {
     if (NULL == email) {
         return false;
@@ -193,3 +199,11 @@ int calcRoomMatch(int room_num_ppl, int reservation_num_ppl,
     return tmp_calc_1 + tmp_calc_2;
 }
 
+/*
+int minIdInFaculty(EscapeTechnion escapeTechnion, TechnionFaculty Faculty) {
+    if (NULL == escapeTechnion || !isFacultyValid(Faculty)) {
+        return INVALID_PARAMETER;
+    }
+
+
+}*/

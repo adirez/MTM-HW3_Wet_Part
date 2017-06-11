@@ -23,6 +23,12 @@ typedef enum {
     ESCAPER_OUT_OF_MEMORY
 } EscaperErrorCode;
 
+
+/**...........................................................................*/
+/**-------------------------FUNCTIONS-DECLARATIONS----------------------------*/
+/**...........................................................................*/
+
+
 /**
  * creates a new escaper client according to the relevant input parameters and
  * returns the relevant result code.

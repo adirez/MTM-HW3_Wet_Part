@@ -17,6 +17,12 @@ struct Escaper_t {
     int skill_level;
 };
 
+
+/**...........................................................................*/
+/**-------------------------FUNCTIONS-DECLARATIONS----------------------------*/
+/**...........................................................................*/
+
+
 /**
  * receives all the arguments to create an escaper and checks if they're all
  * valid
@@ -28,6 +34,12 @@ struct Escaper_t {
  */
 static bool checkEscaperArgs(char *escaper_email, int skill_level,
                              TechnionFaculty FacultyOfEscaper);
+
+
+/**...........................................................................*/
+/**-----------------------FUNCTIONS-IMPLEMENTATIONS---------------------------*/
+/**...........................................................................*/
+
 
 Escaper escaperCreate(char *escaper_email, TechnionFaculty FacultyOfEscaper,
                       int skill_level, EscaperErrorCode *EscaperError) {
@@ -149,6 +161,11 @@ bool isEscaperEmailEqual(Escaper escaper, char *email) {
     }
     return false;
 }
+
+
+/**...........................................................................*/
+/**--------------------------STATIC-FUNCTIONS---------------------------------*/
+/**...........................................................................*/
 
 
 static bool checkEscaperArgs(char *escaper_email, int skill_level,

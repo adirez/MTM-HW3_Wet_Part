@@ -64,17 +64,6 @@ static bool isReservationForRoom(Room room, EscapeTechnion escapeTechnion);
 static bool isEscaperWithEmail(char *email, EscapeTechnion escapeTechnion);
 
 /**
- * receives an escaper and an escapeTechnion system and checks if the escaper is
- * listed in any of the reservations in the system
- * @param escaper - the escaper to look for
- * @param escapeTechnion - the system to iterate through
- * @return true - if the escaper was found in the system
- *         false - if the escaper wasn't found in the system
- */
-//static bool isReservationForEscaper(Escaper escaper,
-//                                    EscapeTechnion escapeTechnion);
-
-/**
  * receives an email and an escapeTechnion system and checks if the email is
  * listed as a company's email in the system
  * @param email - the email to be checked
@@ -194,6 +183,7 @@ EscapeTechnion escapeTechnionCreate(MtmErrorCode *EscapeTechnionError,
         *EscapeTechnionError = MTM_OUT_OF_MEMORY;
         return NULL;
     }
+
     escapeTechnion->faculties_earnings = malloc(sizeof(int) * UNKNOWN);
     if (NULL == escapeTechnion->faculties_earnings) {
         *EscapeTechnionError = MTM_OUT_OF_MEMORY;
@@ -201,6 +191,7 @@ EscapeTechnion escapeTechnionCreate(MtmErrorCode *EscapeTechnionError,
         return NULL;
     }
     initializeArr(escapeTechnion->faculties_earnings, UNKNOWN);
+
     escapeTechnion->companies = setCreate(companyCopyElement,
                                           companyFreeElement,
                                           companyCompareElements);
@@ -210,6 +201,7 @@ EscapeTechnion escapeTechnionCreate(MtmErrorCode *EscapeTechnionError,
         free(escapeTechnion);
         return NULL;
     }
+
     escapeTechnion->escapers = setCreate(escaperCopyElement, escaperFreeElement,
                                          escaperCompareElements);
     if (NULL == escapeTechnion->escapers) {
@@ -219,6 +211,7 @@ EscapeTechnion escapeTechnionCreate(MtmErrorCode *EscapeTechnionError,
         free(escapeTechnion);
         return NULL;
     }
+
     escapeTechnion->reservations = listCreate(reservationCopyElement,
                                               reservationFreeElement);
     if (NULL == escapeTechnion->reservations) {
@@ -229,6 +222,7 @@ EscapeTechnion escapeTechnionCreate(MtmErrorCode *EscapeTechnionError,
         free(escapeTechnion);
         return NULL;
     }
+
     escapeTechnion->current_day = 0;
     escapeTechnion->inputChannel = inputChannel;
     escapeTechnion->outputChannel = outputChannel;
@@ -438,29 +432,6 @@ MtmErrorCode escapeTechnionReservationReceived(char *escaper_email, int room_id,
                        reservation_day, reservation_hour);
 }
 
-static MtmErrorCode reserveRoom(EscapeTechnion escapeTechnion, Escaper escaper,
-                                Company company, Room room, int num_ppl,
-                                int day, int hour) {
-
-    int price = calculatePricePerPerson(company, room, escaper);
-    price *= num_ppl;
-    ReservationErrorCode reservationErrorCode;
-    Reservation reservation = reservationCreate(escaper, company, room, num_ppl,
-                                                day, hour, price,
-                                                &reservationErrorCode);
-    if (reservationErrorCode != RESERVATION_SUCCESS) {
-        return MTM_OUT_OF_MEMORY;
-    }
-    if (listInsertLast(escapeTechnion->reservations, reservation) ==
-        LIST_OUT_OF_MEMORY) {
-
-        reservationDestroy(reservation);
-        return MTM_OUT_OF_MEMORY;
-    }
-    reservationDestroy(reservation);
-    return MTM_SUCCESS;
-}
-//TODO shorten the func
 MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
                                            EscapeTechnion escapeTechnion){
     if (NULL == escaper_email || NULL == escapeTechnion ||
@@ -554,6 +525,36 @@ void escapeTechnionReportDay(EscapeTechnion escapeTechnion) {
     listDestroy(ended_reservations);
 
     escapeTechnion->current_day += 1;
+}
+
+
+
+/**...........................................................................*/
+/**--------------------------STATIC-FUNCTIONS---------------------------------*/
+/**...........................................................................*/
+
+
+static MtmErrorCode reserveRoom(EscapeTechnion escapeTechnion, Escaper escaper,
+                                Company company, Room room, int num_ppl,
+                                int day, int hour) {
+
+    int price = calculatePricePerPerson(company, room, escaper);
+    price *= num_ppl;
+    ReservationErrorCode reservationErrorCode;
+    Reservation reservation = reservationCreate(escaper, company, room, num_ppl,
+                                                day, hour, price,
+                                                &reservationErrorCode);
+    if (reservationErrorCode != RESERVATION_SUCCESS) {
+        return MTM_OUT_OF_MEMORY;
+    }
+    if (listInsertLast(escapeTechnion->reservations, reservation) ==
+        LIST_OUT_OF_MEMORY) {
+
+        reservationDestroy(reservation);
+        return MTM_OUT_OF_MEMORY;
+    }
+    reservationDestroy(reservation);
+    return MTM_SUCCESS;
 }
 
 static bool isCompanyWithEmail(char *email, EscapeTechnion escapeTechnion) {

@@ -25,6 +25,12 @@ typedef enum {
     RESERVATION_OUT_OF_MEMORY
 } ReservationErrorCode;
 
+
+/**...........................................................................*/
+/**-------------------------FUNCTIONS-DECLARATIONS----------------------------*/
+/**...........................................................................*/
+
+
 /**
  * creates a new reservation according to the relevant input parameters and
  * returns the relevant result code.

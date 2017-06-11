@@ -21,6 +21,10 @@ struct Room_t {
     int difficulty;
 };
 
+/**...........................................................................*/
+/**-------------------------FUNCTIONS-DECLARATIONS----------------------------*/
+/**...........................................................................*/
+
 /**
  * receives all the arguments to create a room and checks if they're all valid
  * @param company_email - the email of the company that the room will be listed
@@ -37,6 +41,12 @@ struct Room_t {
 static bool checkRoomArgs(char *company_email, int room_id, int price,
                           int num_ppl, int opening_time, int closing_time,
                           int difficulty);
+
+
+/**...........................................................................*/
+/**-----------------------FUNCTIONS-IMPLEMENTATIONS---------------------------*/
+/**...........................................................................*/
+
 
 Room roomCreate(char *company_email, int room_id, int price, int num_ppl,
                 int opening_time, int closing_time, int difficulty,
@@ -208,6 +218,12 @@ bool isRoomID(Room room, int id, RoomErrorCode *RoomError) {
     }
     return false;
 }
+
+
+/**...........................................................................*/
+/**--------------------------STATIC-FUNCTIONS---------------------------------*/
+/**...........................................................................*/
+
 
 static bool checkRoomArgs(char *company_email, int room_id, int price,
                           int num_ppl, int opening_time, int closing_time,
