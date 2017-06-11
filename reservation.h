@@ -25,6 +25,12 @@ typedef enum {
     RESERVATION_OUT_OF_MEMORY
 } ReservationErrorCode;
 
+
+/**...........................................................................*/
+/**-------------------------FUNCTIONS-DECLARATIONS----------------------------*/
+/**...........................................................................*/
+
+
 /**
  * creates a new reservation according to the relevant input parameters and
  * returns the relevant result code.
@@ -129,10 +135,6 @@ ReservationErrorCode reservationGetNumPpl(Reservation reservation,int *num_ppl);
 
 ReservationErrorCode reservationGetPrice(Reservation reservation, int *price);
 
-static int reservationCompareHourAndId(ListElement element1, ListElement element2);
-
-
-
 /**
  *
  * @param reservation_1
@@ -141,16 +143,6 @@ static int reservationCompareHourAndId(ListElement element1, ListElement element
  */
 int reservationCompareElements(ListElement reservation_1,
                                ListElement reservation_2);
-
-/**
- *
- * @param element
- * @param cur_day
- * @return
- */
-static bool isReservationDueDate(ListElement element, ListFilterKey cur_day);
-
-static bool isReservationNotDueDate(ListElement element, ListFilterKey cur_day);
 
 
 #endif //HW3_RESERVATION_H

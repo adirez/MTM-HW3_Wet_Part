@@ -24,6 +24,42 @@ struct Reservation_t {
     int total_cost;
 };
 
+/**...........................................................................*/
+/**-------------------------FUNCTIONS-DECLARATIONS----------------------------*/
+/**...........................................................................*/
+
+
+/**
+ *
+ * @param element1
+ * @param element2
+ * @return
+ */
+static int reservationCompareHourAndId(ListElement element1,
+                                       ListElement element2);
+
+/**
+ *
+ * @param element
+ * @param cur_day
+ * @return
+ */
+static bool isReservationDueDate(ListElement element, ListFilterKey cur_day);
+
+/**
+ *
+ * @param element
+ * @param cur_day
+ * @return
+ */
+static bool isReservationNotDueDate(ListElement element, ListFilterKey cur_day);
+
+
+/**...........................................................................*/
+/**-----------------------FUNCTIONS-IMPLEMENTATIONS---------------------------*/
+/**...........................................................................*/
+
+
 Reservation reservationCreate(Escaper escaper, Company company, Room room,
                               int num_ppl, int reservation_day,
                               int reservation_hour, int total_cost,
@@ -170,6 +206,12 @@ int reservationCompareElements(ListElement reservation_1,
 
     return 0;
 }
+
+
+/**...........................................................................*/
+/**--------------------------STATIC-FUNCTIONS---------------------------------*/
+/**...........................................................................*/
+
 
 static bool isReservationDueDate(ListElement element, ListFilterKey cur_day) {
     Reservation reservation = element;

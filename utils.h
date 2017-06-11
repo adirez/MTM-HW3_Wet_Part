@@ -3,6 +3,14 @@
 //
 
 #include "mtm_ex3.h"
+#include "escape_technion.h"
+
+
+/**...........................................................................*/
+/**-------------------------FUNCTIONS-DECLARATIONS----------------------------*/
+/**...........................................................................*/
+
+
 
 /**
  * receives an email and checks if it's valid
@@ -81,3 +89,11 @@ void initializeArr(int *arr, int n);
  */
 int calcRoomMatch(int room_num_ppl, int reservation_num_ppl,
                   int room_difficulty, int escaper_skill_level);
+
+/**
+ *
+ * @param escapeTechnion
+ * @param Faculty
+ * @return
+ */
+int minIdInFaculty(EscapeTechnion escapeTechnion, TechnionFaculty Faculty);

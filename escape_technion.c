@@ -61,17 +61,6 @@ static bool isReservationForRoom(Room room, EscapeTechnion escapeTechnion);
 static bool isEscaperWithEmail(char *email, EscapeTechnion escapeTechnion);
 
 /**
- * receives an escaper and an escapeTechnion system and checks if the escaper is
- * listed in any of the reservations in the system
- * @param escaper - the escaper to look for
- * @param escapeTechnion - the system to iterate through
- * @return true - if the escaper was found in the system
- *         false - if the escaper wasn't found in the system
- */
-//static bool isReservationForEscaper(Escaper escaper,
-//                                    EscapeTechnion escapeTechnion);
-
-/**
  * receives an email and an escapeTechnion system and checks if the email is
  * listed as a company's email in the system
  * @param email - the email to be checked
@@ -437,29 +426,6 @@ MtmErrorCode escapeTechnionReservationReceived(char *escaper_email, int room_id,
                        reservation_day, reservation_hour);
 }
 
-static MtmErrorCode reserveRoom(EscapeTechnion escapeTechnion, Escaper escaper,
-                                Company company, Room room, int num_ppl,
-                                int day, int hour) {
-
-    int price = calculatePricePerPerson(company, room, escaper);
-    price *= num_ppl;
-    ReservationErrorCode reservationErrorCode;
-    Reservation reservation = reservationCreate(escaper, company, room, num_ppl,
-                                                day, hour, price,
-                                                &reservationErrorCode);
-    if (reservationErrorCode != RESERVATION_SUCCESS) {
-        return MTM_OUT_OF_MEMORY;
-    }
-    if (listInsertLast(escapeTechnion->reservations, reservation) ==
-        LIST_OUT_OF_MEMORY) {
-
-        reservationDestroy(reservation);
-        return MTM_OUT_OF_MEMORY;
-    }
-    reservationDestroy(reservation);
-    return MTM_SUCCESS;
-}
-
 MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
                                            EscapeTechnion escapeTechnion){
     if (NULL == escaper_email || NULL == escapeTechnion ||
@@ -553,6 +519,36 @@ void escapeTechnionReportDay(EscapeTechnion escapeTechnion) {
     listDestroy(ended_reservations);
 }
 
+
+
+/**...........................................................................*/
+/**--------------------------STATIC-FUNCTIONS---------------------------------*/
+/**...........................................................................*/
+
+
+static MtmErrorCode reserveRoom(EscapeTechnion escapeTechnion, Escaper escaper,
+                                Company company, Room room, int num_ppl,
+                                int day, int hour) {
+
+    int price = calculatePricePerPerson(company, room, escaper);
+    price *= num_ppl;
+    ReservationErrorCode reservationErrorCode;
+    Reservation reservation = reservationCreate(escaper, company, room, num_ppl,
+                                                day, hour, price,
+                                                &reservationErrorCode);
+    if (reservationErrorCode != RESERVATION_SUCCESS) {
+        return MTM_OUT_OF_MEMORY;
+    }
+    if (listInsertLast(escapeTechnion->reservations, reservation) ==
+        LIST_OUT_OF_MEMORY) {
+
+        reservationDestroy(reservation);
+        return MTM_OUT_OF_MEMORY;
+    }
+    reservationDestroy(reservation);
+    return MTM_SUCCESS;
+}
+
 static bool isCompanyWithEmail(char *email, EscapeTechnion escapeTechnion) {
     if (NULL == email || NULL == escapeTechnion) {
         return false;
@@ -618,24 +614,6 @@ static bool isEscaperWithEmail(char *email, EscapeTechnion escapeTechnion) {
     }
     return false;
 }
-
-/*static bool isReservationForEscaper(Escaper escaper,
-                                    EscapeTechnion escapeTechnion) {
-    if (NULL == escaper || NULL == escapeTechnion) {
-        return false;
-    }
-    Reservation reservation_iterator;
-    reservation_iterator = listGetFirst(escapeTechnion->reservations);
-    while (NULL != reservation_iterator) {
-        ReservationErrorCode error;
-        if (reservationGetEscaper(reservation_iterator, &error) == escaper) {
-            assert(error != RESERVATION_INVALID_PARAMETER);
-            return true;
-        }
-        reservation_iterator = listGetNext(escapeTechnion->reservations);
-    }
-    return false;
-}*/
 
 static Company findCompany(char *email, EscapeTechnion escapeTechnion) {
     if (NULL == escapeTechnion || NULL == email || !isEmailValid(email)) {
@@ -889,3 +867,5 @@ static void checkBetterRoom(Escaper escaper, int cur_result, int cur_room_id,
         }
     }
 }
+
+

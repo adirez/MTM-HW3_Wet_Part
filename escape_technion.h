@@ -15,6 +15,12 @@
  */
 typedef struct EscapeTechnion_t *EscapeTechnion;
 
+
+/**...........................................................................*/
+/**-------------------------FUNCTIONS-DECLARATIONS----------------------------*/
+/**...........................................................................*/
+
+
 /**
  * creates a member of EscapeTechnion type, including all internal fields of
  * companies, rooms, faculties and reservations with all relevant allocations.
@@ -181,19 +187,5 @@ MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
                                            EscapeTechnion escapeTechnion);
 
 
-/**
- *
- * @param company
- * @param EscaperFaculty
- * @param reservation_num_ppl
- * @param escaper_skill_level
- * @param result
- * @param faculty_difference
- * @param room_id
- * @return
- */
-Room mostRecommendedRoom(Company company, TechnionFaculty EscaperFaculty,
-                         int reservation_num_ppl, int escaper_skill_level,
-                         int *result, int *faculty_difference, int *room_id);
 
 #endif //HW3_ESCAPETECHNION_H

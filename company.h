@@ -149,15 +149,39 @@ bool isCompanyEmailEqual(Company company, char *email,
                          CompanyErrorCode *CompanyError);
 
 /**
- *
- * @param company
- * @param room_id
- * @return
+ * receives a company and a room id and checks if a room with this id exists
+ * within the company
+ * @param company - the company to iterate through
+ * @param room_id - the id to look for
+ * @return true - if the id was found
+ *         false - if the id wasn't found
  */
 bool isRoomIdInCompany(Company company, int room_id);
 
+/**
+ * receives a company, faculty and an escaper with his reservation details and
+ * find out by a pre-determined formula which of the company's rooms would be
+ * the best match for him. rooms with same result will be sorted for the room
+ * with the minimal room id
+ * @param company - the company to iterate through
+ * @param EscaperFaculty - the faculty of the escaper
+ * @param reservation_num_ppl - the number of people for the reservation
+ * @param escaper_skill_level - the skill level of the escaper who ordered
+ * @param result - a pointer to return the result of the calculation
+ * @param faculty_difference - a pointer to return the difference between the
+ *         enum value of the escaper faculty and company faculty
+ * @param room_id - a pointer to return the room with the minimal id found
+ * @return a pointer to the most recommended room found
+ */
 Room mostRecommendedRoom(Company company, TechnionFaculty EscaperFaculty,
                          int reservation_num_ppl, int escaper_skill_level,
                          int *result, int *faculty_difference, int *room_id);
+
+/**
+ * receives a company and returns the minimum id of the company rooms
+ * @param company - the company to iterate through
+ * @return an integer, representing the minimum value
+ */
+int minIdInCompany(Company company);
 
 #endif //ESCAPETECHNION_COMPANY_H

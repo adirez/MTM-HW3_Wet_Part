@@ -24,6 +24,12 @@ typedef enum {
     ROOM_ID_DOES_NOT_EXIST
 } RoomErrorCode;
 
+
+/**...........................................................................*/
+/**-------------------------FUNCTIONS-DECLARATIONS----------------------------*/
+/**...........................................................................*/
+
+
 /**
  * creates a new room according to the relevant input parameters and returns
  * the relevant result code.
