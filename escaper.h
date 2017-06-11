@@ -66,7 +66,7 @@ char *escaperGetEmail(Escaper escaper);
  * @param escaper - the ptr to the escaper
  * @return the faculty of the escaper or UNKNOWN if an error was found
  */
-TechnionFaculty escaperGetFaculty(Escaper escaper);
+TechnionFaculty escaperGetNameFaculty(Escaper escaper);
 
 /**
  * receives an escaper and returns his skill level

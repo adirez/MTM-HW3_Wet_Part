@@ -90,7 +90,7 @@ char *escaperGetEmail(Escaper escaper) {
     return email;
 }
 
-TechnionFaculty escaperGetFaculty(Escaper escaper) {
+TechnionFaculty escaperGetNameFaculty(Escaper escaper) {
     if (NULL == escaper) {
         return UNKNOWN;
     }

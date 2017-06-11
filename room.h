@@ -62,9 +62,16 @@ int roomCompareElements(SetElement room1, SetElement room2);
 SetElement roomCopyElement(SetElement src_room);
 
 /**
+ * receives a room and returns the name of the faculty its under
+ * @param room - the requested room
+ * @return the faculty name
+ */
+TechnionFaculty roomGetNameFaculty(Room room);
+
+/**
  * receives a room and returns the email of the company that the room is listed
  * under
- * @param room - the requested room to be checked
+ * @param room - the requested room
  * @return a pointer to the char* if the allocation worked and NULL if failed
  */
 char *roomGetCompanyEmail(Room room);

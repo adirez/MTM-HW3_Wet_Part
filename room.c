@@ -90,6 +90,13 @@ SetElement roomCopyElement(SetElement src_room) {
     return room;
 }
 
+TechnionFaculty roomGetNameFaculty(Room room) {
+    if (NULL == room) {
+        return UNKNOWN;
+    }
+    return room->roomFaculty;
+}
+
 char *roomGetCompanyEmail(Room room) {
     if (NULL == room) {
         return NULL;
