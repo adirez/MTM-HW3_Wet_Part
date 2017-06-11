@@ -174,22 +174,19 @@ void facultyIncEarnings(Faculty faculty, int earnings) {
     faculty->earnings += earnings;
 }
 
-bool facultyIsCompanyWithEmail(Faculty faculty, char *email) {
+Company facultyGetCompanyByEmail(Faculty faculty, char *email) {
     if (NULL == faculty || NULL == email) {
-        return false;
+        return NULL;
     }
 
     Company company_iterator = setGetFirst(faculty->companies);
-    if (NULL == company_iterator) {
-        return false;
-    }
 
     while (NULL != company_iterator) {
         if (isCompanyEmailEqual(company_iterator, email)) {
-            return true;
+            return company_iterator;
         }
 
         company_iterator = setGetNext(faculty->companies);
     }
-    return false;
+    return NULL;
 }

@@ -32,9 +32,9 @@ Escaper escaperCreate(char *email, TechnionFaculty escaperFaculty,
 
 /**
  * destroys an escaper and and releases all relevant allocated memory.
- * @param escaper - a pointer to the relevant escaper to be destroyed
+ * @param element - a pointer to the relevant escaper to be destroyed
  */
-void escaperDestroy(Escaper escaper);
+void escaperDestroy(SetElement element);
 
 /**
  * a comparison of two escapers by email

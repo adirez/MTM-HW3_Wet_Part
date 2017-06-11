@@ -36,8 +36,8 @@ static bool isCompanyWithEmail(char *email, EscapeTechnion escapeTechnion);
  * @return true - if the company was found in the system
  *         false - if the company wasn't found in the system
  */
-static bool isReservationForCompany(Company company,
-                                    EscapeTechnion escapeTechnion);
+static bool
+isReservationForCompany(EscapeTechnion escapeTechnion, Company company);
 
 /**
  * receives a room and an escapeTechnion system and checks if the room is listed
@@ -58,15 +58,6 @@ static bool isReservationForRoom(Room room, EscapeTechnion escapeTechnion);
  *         false - if the email doesn't exist in the system
  */
 static bool isEscaperWithEmail(char *email, EscapeTechnion escapeTechnion);
-
-/**
- * receives an email and an escapeTechnion system and checks if the email is
- * listed as a company's email in the system
- * @param email - the email to be checked
- * @param escapeTechnion - the system to iterate through
- * @return a pointer to the company if found, NULL if not found
- */
-static Company findCompany(char *email, EscapeTechnion escapeTechnion);
 
 /**
  * receives a room id, a faculty and an escapeTechnion system and checks if the
@@ -169,6 +160,9 @@ static void checkBetterRoom(Escaper escaper, int cur_result, int cur_room_id,
                             Company *most_recommended_company,
                             Company company_iterator);
 
+static Company getCompanyByEmail(EscapeTechnion escapeTechnion, char *email,
+                                Faculty *company_faculty);
+
 /**---------------------------------------------------------------------------*/
 
 
@@ -247,16 +241,19 @@ MtmErrorCode escapeTechnionRemoveCompany(EscapeTechnion escapeTechnion,
         !isValidEmail(company_email)) {
         return MTM_INVALID_PARAMETER;
     }
-    Company company = findCompany(company_email, escapeTechnion);
+    Faculty company_faculty;
+    Company company = getCompanyByEmail(escapeTechnion, company_email,
+                                        &company_faculty);
     if (NULL == company) {
         return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
     }
 
-    if (isReservationForCompany(company, escapeTechnion)) {
+    if (isReservationForCompany(escapeTechnion, company)) {
         return MTM_RESERVATION_EXISTS;
     }
 
-    setRemove(escapeTechnion->companies, company);
+    facultyRemoveCompany(company_faculty, company);
+
     return MTM_SUCCESS;
 }
 
@@ -275,7 +272,7 @@ MtmErrorCode escapeTechnionAddRoom(EscapeTechnion escapeTechnion,
         return MTM_INVALID_PARAMETER;
     }
 
-    Company company = findCompany(company_email, escapeTechnion);
+    Company company = findCompany(escapeTechnion, company_email);
     if (NULL == company) {
         return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
     }
@@ -313,6 +310,7 @@ MtmErrorCode escapeTechnionRemoveRoom(EscapeTechnion escapeTechnion,
     if (isReservationForRoom(room, escapeTechnion)) {
         return MTM_RESERVATION_EXISTS;
     }
+
     companyRemoveRoom(company, room);
     return MTM_SUCCESS;
 }
@@ -536,17 +534,15 @@ static bool isCompanyWithEmail(char *email, EscapeTechnion escapeTechnion) {
     return false;
 }
 
-static bool isReservationForCompany(Company company,
-                                    EscapeTechnion escapeTechnion) {
+static bool isReservationForCompany(EscapeTechnion escapeTechnion,
+                                    Company company) {
     if (NULL == company || NULL == escapeTechnion) {
         return false;
     }
     Reservation reservation_iterator;
     reservation_iterator = listGetFirst(escapeTechnion->reservations);
     while (NULL != reservation_iterator) {
-        ReservationErrorCode error;
-        if (reservationGetCompany(reservation_iterator, &error) == company) {
-            assert(error != RESERVATION_INVALID_PARAMETER);
+        if (reservationGetCompany(reservation_iterator) == company) {
             return true;
         }
         reservation_iterator = listGetNext(escapeTechnion->reservations);
@@ -583,22 +579,6 @@ static bool isEscaperWithEmail(char *email, EscapeTechnion escapeTechnion) {
         escaper_iterator = setGetNext(escapeTechnion->escapers);
     }
     return false;
-}
-
-static Company findCompany(char *email, EscapeTechnion escapeTechnion) {
-    if (NULL == escapeTechnion || NULL == email || !isValidEmail(email)) {
-        return NULL;
-    }
-    Company company_iterator = setGetFirst(escapeTechnion->companies);
-    while (NULL != company_iterator) {
-        CompanyErrorCode CompanyError = COMPANY_SUCCESS;
-        if (isCompanyEmailEqual(company_iterator, email)) {
-            return company_iterator;
-        }
-        assert(CompanyError != COMPANY_INVALID_PARAMETER);
-        company_iterator = setGetNext(escapeTechnion->companies);
-    }
-    return NULL;
 }
 
 static Room escapeSystemFindRoom(int room_id, TechnionFaculty FacultyOfRoom,
@@ -854,6 +834,22 @@ Faculty getFacultyByName(EscapeTechnion escapeTechnion,
 
         if (tmpName == nameFaculty) {
             return faculty_iterator;
+        }
+        faculty_iterator = setGetNext(escapeTechnion->faculties);
+    }
+    return NULL;
+}
+
+static Company getCompanyByEmail(EscapeTechnion escapeTechnion, char *email,
+                                Faculty *company_faculty) {
+    assert(email != NULL);
+    Faculty faculty_iterator = setGetFirst(escapeTechnion->faculties);
+
+    while(NULL != faculty_iterator){
+        Company company = facultyGetCompanyByEmail(faculty_iterator, email);
+        if(NULL != company){
+            *company_faculty = faculty_iterator;
+            return company;
         }
         faculty_iterator = setGetNext(escapeTechnion->faculties);
     }

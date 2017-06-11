@@ -45,10 +45,11 @@ Escaper escaperCreate(char *email, TechnionFaculty escaperFaculty,
 }
 
 
-void escaperDestroy(Escaper escaper) {
-    if (NULL == escaper) {
+void escaperDestroy(SetElement element) {
+    if (NULL == element) {
         return;
     }
+    Escaper escaper = element;
     free(escaper->email);
     free(escaper);
 }

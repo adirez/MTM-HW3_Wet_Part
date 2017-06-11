@@ -39,13 +39,6 @@ static bool isValidPrice(int price);
  */
 static bool isValidDifficultyOrSkill(int difficulty_or_skill);
 
-/**
- * receives an email and checks if it's valid
- * @param email - the email address to be checked
- * @return true - contains only one '@'
- *         false - containes more / less than one '@' or NULL
- */
-static bool isValidEmail(char *email);
 
 
 /**...........................................................................*/
@@ -82,6 +75,37 @@ bool isValidReservationParams(int num_ppl, int price) {
     if(!isValidPrice(price) || num_ppl <= 0){
         return false;
     }
+    return true;
+}
+
+bool isValidEmail(char *email) {
+    if (NULL == email) {
+        return false;
+    }
+    if (strlen(email) == 0) {
+        return false;
+    }
+    int count = 0;
+    for (int i = 0; i < strlen(email) + 1; ++i) {
+        if (email[i] == AT_SYMBOL) {
+            count++;
+            if (count > 1) {
+                return false;
+            }
+        }
+    }
+    if (count == 1) {
+        return true;
+    }
+    return false;
+}
+
+
+bool isValidFacultyName(TechnionFaculty Faculty) {
+    if (Faculty < CIVIL_ENGINEERING || Faculty >= UNKNOWN) {
+        return false;
+    }
+
     return true;
 }
 
@@ -200,13 +224,6 @@ int calcRoomMatch(int room_num_ppl, int reservation_num_ppl,
     return tmp_calc_1 + tmp_calc_2;
 }
 
-bool isValidFacultyName(TechnionFaculty Faculty) {
-    if (Faculty < CIVIL_ENGINEERING || Faculty >= UNKNOWN) {
-        return false;
-    }
-
-    return true;
-}
 
 /**...........................................................................*/
 /**--------------------------STATIC-FUNCTIONS---------------------------------*/
@@ -228,26 +245,4 @@ static bool isValidDifficultyOrSkill(int difficulty_or_skill) {
         return false;
     }
     return true;
-}
-
-static bool isValidEmail(char *email) {
-    if (NULL == email) {
-        return false;
-    }
-    if (strlen(email) == 0) {
-        return false;
-    }
-    int count = 0;
-    for (int i = 0; i < strlen(email) + 1; ++i) {
-        if (email[i] == AT_SYMBOL) {
-            count++;
-            if (count > 1) {
-                return false;
-            }
-        }
-    }
-    if (count == 1) {
-        return true;
-    }
-    return false;
 }

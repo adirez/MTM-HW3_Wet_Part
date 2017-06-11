@@ -49,11 +49,11 @@ void reservationDestroy(ListElement reservation);
 /**
  * receives a source reservation element and copies it into a newly
  * created reservation element
- * @param src_reservation - the source reservation that needs to be copied
+ * @param src_element - the source reservation that needs to be copied
  * @return pointer to the new allocated reservation or NULL if the allocation
  * failed
  */
-Reservation reservationCopyElement(Reservation src_reservation);
+ListElement reservationCopyElement(ListElement src_element);
 
 /**
  * receives a reservation type and returns a ptr to the escaper whom reserved it

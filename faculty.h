@@ -122,7 +122,7 @@ void facultyIncEarnings(Faculty faculty, int earnings);
  * @return true - if the email address was found
  *         false - if the email address wasn't found
  */
-bool facultyIsCompanyWithEmail(Faculty faculty, char *email);
+Company facultyGetCompanyByEmail(Faculty faculty, char *email);
 
 
 

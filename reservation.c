@@ -59,11 +59,11 @@ void reservationDestroy(ListElement reservation) {
     free(reservation);
 }
 
-Reservation reservationCopyElement(Reservation src_reservation) {
-    if (NULL == src_reservation) {
+ListElement reservationCopyElement(ListElement src_element) {
+    if (NULL == src_element) {
         return NULL;
     }
-    Reservation ptr = src_reservation; //to make the code clearer
+    Reservation ptr = src_element;
     Reservation reservation = reservationCreate(ptr->escaper, ptr->company,
                                                 ptr->room, ptr->num_ppl,
                                                 ptr->day,ptr->hour, ptr->price);
