@@ -124,7 +124,13 @@ void facultyIncEarnings(Faculty faculty, int earnings);
  */
 Company facultyGetCompanyByEmail(Faculty faculty, char *email);
 
-
+/**
+ * receives a faculty and a room id and searches for the room id in the faculty
+ * @param faculty - the faculty to to search for the room in
+ * @param id - the room id to look for
+ * @return a pointer to the room if found or NULL if not found
+ */
+Room facultyGetRoomByID(Faculty faculty, int id);
 
 
 

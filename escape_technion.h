@@ -202,4 +202,15 @@ void escapeTechnionReportDay(EscapeTechnion escapeTechnion);
 Faculty getFacultyByName(EscapeTechnion escapeTechnion,
                          TechnionFaculty nameFaculty);
 
+/**
+ *
+ * @param escapeTechnion
+ * @param nameFaculty
+ * @param id
+ * @return
+ */
+static Room getRoomByID(EscapeTechnion escapeTechnion,
+                        TechnionFaculty nameFaculty,
+                        int id);
+
 #endif //HW3_ESCAPETECHNION_H

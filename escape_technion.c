@@ -272,14 +272,21 @@ MtmErrorCode escapeTechnionAddRoom(EscapeTechnion escapeTechnion,
         return MTM_INVALID_PARAMETER;
     }
 
-    Company company = findCompany(escapeTechnion, company_email);
+    Faculty room_faculty;
+    Company company = getCompanyByEmail(escapeTechnion, company_email,
+                                        &room_faculty);
     if (NULL == company) {
         return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
     }
 
+    TechnionFaculty nameFaculty = companyGetFaculty(company);
+    Room room = getRoomByID(escapeTechnion, nameFaculty, room_id);
+
+
+
+
     CompanyErrorCode CompanyError;
 
-    TechnionFaculty CompanyFaculty = companyGetFaculty(company);
     if (isRoomSameIdInFaculty(escapeTechnion, room_id, CompanyFaculty)) {
         return MTM_ID_ALREADY_EXIST;
     }
@@ -732,27 +739,6 @@ static bool isRoomAvailable(EscapeTechnion escapeTechnion, Room room,
     return true;
 }
 
-static bool isRoomSameIdInFaculty(EscapeTechnion escapeTechnion, int room_id,
-                                  TechnionFaculty Faculty) {
-    if (NULL == escapeTechnion || !isValidFaculty(Faculty) || room_id <= 0) {
-        return false;
-    }
-    Company company_iterator = setGetFirst(escapeTechnion->companies);
-    if (NULL == company_iterator) {
-        return false;
-    }
-    while (NULL != company_iterator) {
-        CompanyErrorCode CompanyError;
-        if (companyGetFaculty(company_iterator) == Faculty) {
-            if (isRoomIdInCompany(company_iterator, room_id)) {
-                return true;
-            }
-        }
-        company_iterator = setGetNext(escapeTechnion->companies);
-    }
-    return false;
-}
-
 static MtmErrorCode findClosestTime(EscapeTechnion escapeTechnion, Room room,
                             Escaper escaper, int *day, int *hour) {
 
@@ -853,5 +839,21 @@ static Company getCompanyByEmail(EscapeTechnion escapeTechnion, char *email,
         }
         faculty_iterator = setGetNext(escapeTechnion->faculties);
     }
+    *company_faculty = NULL;
     return NULL;
+}
+
+static Room getRoomByID(EscapeTechnion escapeTechnion,
+                        TechnionFaculty nameFaculty,
+                        int id) {
+    if (NULL == escapeTechnion || !isValidFacultyName(nameFaculty) || id <= 0) {
+        return NULL;
+    }
+
+    Faculty faculty = getFacultyByName(escapeTechnion, nameFaculty);
+    if (NULL == faculty) {
+        return NULL;
+    }
+
+    return facultyGetRoomByID(faculty, id);
 }
