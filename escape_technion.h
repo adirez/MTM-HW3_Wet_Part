@@ -28,7 +28,7 @@ typedef struct EscapeTechnion_t *EscapeTechnion;
  * @param EscapeTechnionError - a type to hold the result of the function
  * @return a pointer to the allocated system or NULL if an error was found
  */
-EscapeTechnion escapeTechnionCreate(FILE* inputChannel, FILE* outputChannel);
+EscapeTechnion escapeTechnionCreate();
 
 /**
  * receives an escapeTechnion type and destroys it, including releasing all
@@ -177,7 +177,7 @@ MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
  *
  * @param company
  * @param escaperFaculty
- * @param P_r
+ * @param P_e
  * @param skill
  * @param result
  * @param faculty_distance
@@ -185,7 +185,7 @@ MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
  * @return
  */
 Room mostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
-                         int P_r, int skill,
+                         int P_e, int skill,
                          int *result, int *faculty_distance, int *room_id);
 
 

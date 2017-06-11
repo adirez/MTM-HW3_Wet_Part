@@ -17,9 +17,6 @@ struct EscapeTechnion_t {
 
     int *faculties_earnings;
     int current_day;
-
-    FILE* inputChannel;
-    FILE* outputChannel;
 };
 
 /**
@@ -176,7 +173,7 @@ static void checkBetterRoom(Escaper escaper, int cur_result, int cur_room_id,
 /**---------------------------------------------------------------------------*/
 
 
-EscapeTechnion escapeTechnionCreate(FILE* inputChannel, FILE* outputChannel) {
+EscapeTechnion escapeTechnionCreate() {
     EscapeTechnion escapeTechnion = malloc(sizeof(*escapeTechnion));
     if (NULL == escapeTechnion) {
         return NULL;
@@ -213,8 +210,6 @@ EscapeTechnion escapeTechnionCreate(FILE* inputChannel, FILE* outputChannel) {
         return NULL;
     }
     escapeTechnion->current_day = 0;
-    escapeTechnion->inputChannel = inputChannel;
-    escapeTechnion->outputChannel = outputChannel;
     return escapeTechnion;
 }
 
@@ -472,7 +467,7 @@ void escapeTechnionReportDay(EscapeTechnion escapeTechnion) {
     mtmPrintDayHeader(stdout, system_day, num_events);
 
     List new_reservation_list = listFilter(escapeTechnion->reservations,
-                                           isReservationNotDueDate,
+                                           isReservationRelevant,
                                            &system_day);
     listDestroy(escapeTechnion->reservations);
     escapeTechnion->reservations = new_reservation_list;
@@ -482,7 +477,7 @@ void escapeTechnionReportDay(EscapeTechnion escapeTechnion) {
     CompanyErrorCode errorCode3;
     RoomErrorCode errorCode4;
 
-    listSort(ended_reservations, reservationCompareHourAndId);
+    listSort(ended_reservations, reservationCompareForPrint);
 
     LIST_FOREACH(Reservation, iterator, ended_reservations) {
         Escaper escaper = reservationGetEscaper(iterator, &errorCode1);
@@ -521,8 +516,8 @@ static MtmErrorCode reserveRoom(EscapeTechnion escapeTechnion, Escaper escaper,
 
     int price = calculatePricePerPerson(company, room, escaper);
     price *= num_ppl;
-    Reservation reservation = reservationCreate(escaper, company, room, num_ppl,
-                                                day, hour, price);
+    Reservation reservation = reservationCreate(company, room, num_ppl, day,
+                                                hour, price, 0);
     if (reservation != NULL) {
         return MTM_OUT_OF_MEMORY;
     }
