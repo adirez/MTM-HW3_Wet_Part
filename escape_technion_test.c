@@ -70,12 +70,12 @@ bool testEscapeTechnionRemoveCompany() {
     escapeTechnionAddCompany(escapeTechnion, PHYSICS, "sha@hak");
     escapeTechnionAddRoom(escapeTechnion, "sha@hak", 123, 12, 5, "10-20", 10);
     escapeTechnionAddEscaper(escapeTechnion, "adi@", 5, PHYSICS);
-    escapeTechnionReservationReceived("adi@", 123, PHYSICS, "2-10", 5,
-                                      escapeTechnion);
+    escapeTechnionReservationReceived(escapeTechnion, "adi@", 123, PHYSICS,
+                                      "2-10", 5);
     ASSERT_TEST(escapeTechnionRemoveCompany(escapeTechnion, "sha@hak") ==
                 MTM_RESERVATION_EXISTS);
 
-    escapeTechnionRemoveEscaper("adi@", escapeTechnion);
+    escapeTechnionRemoveEscaper(escapeTechnion, "adi@");
     ASSERT_TEST(escapeTechnionRemoveCompany(escapeTechnion, "sha@hak") ==
                 MTM_SUCCESS);
     escapeTechnionDestroy(escapeTechnion);
@@ -174,12 +174,12 @@ bool testEscapeTechnionRemoveRoom() {
     escapeTechnionAddCompany(escapeTechnion, BIOLOGY, "sha@hak");
     escapeTechnionAddRoom(escapeTechnion, "sha@hak", 12345, 12, 5, "10-20", 10);
     escapeTechnionAddEscaper(escapeTechnion, "adi@", 5, PHYSICS);
-    escapeTechnionReservationReceived("adi@", 12345, BIOLOGY, "2-10", 5,
-                                      escapeTechnion);
+    escapeTechnionReservationReceived(escapeTechnion, "adi@", 12345, BIOLOGY,
+                                      "2-10", 5);
     ASSERT_TEST(escapeTechnionRemoveRoom(escapeTechnion, 12345, BIOLOGY) ==
                 MTM_RESERVATION_EXISTS);
 
-    escapeTechnionRemoveEscaper("adi@", escapeTechnion);
+    escapeTechnionRemoveEscaper(escapeTechnion, "adi@");
     ASSERT_TEST(escapeTechnionRemoveRoom(escapeTechnion, 12345, BIOLOGY) ==
                 MTM_SUCCESS);
 
@@ -213,7 +213,7 @@ bool testEscapeTechnionAddEscaper() {
     ASSERT_TEST(escapeTechnionAddEscaper(escapeTechnion, "adi@", 10, BIOLOGY) ==
                 MTM_EMAIL_ALREADY_EXISTS);
 
-    escapeTechnionRemoveEscaper("adi@", escapeTechnion);
+    escapeTechnionRemoveEscaper(escapeTechnion, "adi@");
 
     escapeTechnionAddCompany(escapeTechnion, BIOLOGY, "@");
 
@@ -229,26 +229,26 @@ bool testEscapeTechnionRemoveEscaper() {
     EscapeTechnion escapeTechnion = escapeTechnionCreate
             ();
 
-    ASSERT_TEST(escapeTechnionRemoveEscaper("adi@", NULL) ==
+    ASSERT_TEST(escapeTechnionRemoveEscaper(NULL, "adi@") ==
                 MTM_INVALID_PARAMETER);
-    ASSERT_TEST(escapeTechnionRemoveEscaper("@ad@i@", escapeTechnion) ==
+    ASSERT_TEST(escapeTechnionRemoveEscaper(escapeTechnion, "@ad@i@") ==
                 MTM_INVALID_PARAMETER);
-    ASSERT_TEST(escapeTechnionRemoveEscaper("@adi@", escapeTechnion) ==
+    ASSERT_TEST(escapeTechnionRemoveEscaper(escapeTechnion, "@adi@") ==
                 MTM_INVALID_PARAMETER);
-    ASSERT_TEST(escapeTechnionRemoveEscaper("", escapeTechnion) ==
+    ASSERT_TEST(escapeTechnionRemoveEscaper(escapeTechnion, "") ==
                 MTM_INVALID_PARAMETER);
 
-    ASSERT_TEST(escapeTechnionRemoveEscaper("@", escapeTechnion) ==
+    ASSERT_TEST(escapeTechnionRemoveEscaper(escapeTechnion, "@") ==
                 MTM_CLIENT_EMAIL_DOES_NOT_EXIST);
-    ASSERT_TEST(escapeTechnionRemoveEscaper("adi@", escapeTechnion) ==
+    ASSERT_TEST(escapeTechnionRemoveEscaper(escapeTechnion, "adi@") ==
                 MTM_CLIENT_EMAIL_DOES_NOT_EXIST);
 
 
     escapeTechnionAddEscaper(escapeTechnion, "adi@", 5, PHYSICS);
 
-    ASSERT_TEST(escapeTechnionRemoveEscaper("adi@", escapeTechnion) ==
+    ASSERT_TEST(escapeTechnionRemoveEscaper(escapeTechnion, "adi@") ==
                 MTM_SUCCESS);
-    ASSERT_TEST(escapeTechnionRemoveEscaper("adi@", escapeTechnion) ==
+    ASSERT_TEST(escapeTechnionRemoveEscaper(escapeTechnion, "adi@") ==
                 MTM_CLIENT_EMAIL_DOES_NOT_EXIST);
 
     escapeTechnionDestroy(escapeTechnion);
@@ -269,69 +269,89 @@ bool testEscapeTechnionReservationReceived() {
     escapeTechnionAddEscaper(escapeTechnion, "@gmail", 5, PHYSICS);
 
     //test Illegal params
-    ASSERT_TEST(escapeTechnionReservationReceived(NULL, 123, PHYSICS, "3-4",
-                5, escapeTechnion) == MTM_INVALID_PARAMETER);
-    ASSERT_TEST(escapeTechnionReservationReceived("a@di@gmail", 123, PHYSICS,
-                "3-4", 5, escapeTechnion) == MTM_INVALID_PARAMETER);
-    ASSERT_TEST(escapeTechnionReservationReceived("", 123, PHYSICS, "3-4",
-                5, escapeTechnion) == MTM_INVALID_PARAMETER);
-    ASSERT_TEST(escapeTechnionReservationReceived("adi@gmail", 0, PHYSICS,
-                "3-4", 5, escapeTechnion) == MTM_INVALID_PARAMETER);
-    ASSERT_TEST(escapeTechnionReservationReceived("adi@gmail", -1, PHYSICS,
-                "3-4", 5, escapeTechnion) == MTM_INVALID_PARAMETER);
-    ASSERT_TEST(escapeTechnionReservationReceived("adi@gmail", 123, UNKNOWN,
-                "3-4", 5, escapeTechnion) == MTM_INVALID_PARAMETER);
-    ASSERT_TEST(escapeTechnionReservationReceived("adi@gmail", 123, PHYSICS,
-                "-3-4", 5, escapeTechnion) == MTM_INVALID_PARAMETER);
-    ASSERT_TEST(escapeTechnionReservationReceived("adi@gmail", 123, PHYSICS,
-                "3-24", 5, escapeTechnion) == MTM_INVALID_PARAMETER);
-    ASSERT_TEST(escapeTechnionReservationReceived("adi@gmail", 123, PHYSICS,
-                "3-30", 5, escapeTechnion) == MTM_INVALID_PARAMETER);
-    ASSERT_TEST(escapeTechnionReservationReceived("adi@gmail", 123, PHYSICS,
-                "3-4", 0, escapeTechnion) == MTM_INVALID_PARAMETER);
-    ASSERT_TEST(escapeTechnionReservationReceived("adi@gmail", 123, PHYSICS,
-                "3-4", -1, escapeTechnion) == MTM_INVALID_PARAMETER);
-    ASSERT_TEST(escapeTechnionReservationReceived("adi@gmail", 123, PHYSICS,
-                "3-4", 5, NULL) == MTM_INVALID_PARAMETER);
+    ASSERT_TEST(escapeTechnionReservationReceived(escapeTechnion, NULL, 123,
+                                                  PHYSICS, "3-4", 5) == MTM_INVALID_PARAMETER);
+    ASSERT_TEST(
+            escapeTechnionReservationReceived(escapeTechnion, "a@di@gmail", 123,
+                                              PHYSICS, "3-4", 5) == MTM_INVALID_PARAMETER);
+    ASSERT_TEST(
+            escapeTechnionReservationReceived(escapeTechnion, "", 123, PHYSICS,
+                                              "3-4", 5) == MTM_INVALID_PARAMETER);
+    ASSERT_TEST(
+            escapeTechnionReservationReceived(escapeTechnion, "adi@gmail", 0,
+                                              PHYSICS, "3-4", 5) == MTM_INVALID_PARAMETER);
+    ASSERT_TEST(
+            escapeTechnionReservationReceived(escapeTechnion, "adi@gmail", -1,
+                                              PHYSICS, "3-4", 5) == MTM_INVALID_PARAMETER);
+    ASSERT_TEST(
+            escapeTechnionReservationReceived(escapeTechnion, "adi@gmail", 123,
+                                              UNKNOWN, "3-4", 5) == MTM_INVALID_PARAMETER);
+    ASSERT_TEST(
+            escapeTechnionReservationReceived(escapeTechnion, "adi@gmail", 123,
+                                              PHYSICS, "-3-4", 5) == MTM_INVALID_PARAMETER);
+    ASSERT_TEST(
+            escapeTechnionReservationReceived(escapeTechnion, "adi@gmail", 123,
+                                              PHYSICS, "3-24", 5) == MTM_INVALID_PARAMETER);
+    ASSERT_TEST(
+            escapeTechnionReservationReceived(escapeTechnion, "adi@gmail", 123,
+                                              PHYSICS, "3-30", 5) == MTM_INVALID_PARAMETER);
+    ASSERT_TEST(
+            escapeTechnionReservationReceived(escapeTechnion, "adi@gmail", 123,
+                                              PHYSICS, "3-4", 0) == MTM_INVALID_PARAMETER);
+    ASSERT_TEST(
+            escapeTechnionReservationReceived(escapeTechnion, "adi@gmail", 123,
+                                              PHYSICS, "3-4", -1) == MTM_INVALID_PARAMETER);
+    ASSERT_TEST(
+            escapeTechnionReservationReceived(NULL, "adi@gmail", 123, PHYSICS,
+                                              "3-4", 5) == MTM_INVALID_PARAMETER);
 
 
     //test wrong email
-    ASSERT_TEST(escapeTechnionReservationReceived("not@exist", 123, PHYSICS,
-                "3-4", 5, escapeTechnion) == MTM_CLIENT_EMAIL_DOES_NOT_EXIST);
+    ASSERT_TEST(
+            escapeTechnionReservationReceived(escapeTechnion, "not@exist", 123,
+                                              PHYSICS, "3-4", 5) == MTM_CLIENT_EMAIL_DOES_NOT_EXIST);
 
-    ASSERT_TEST(escapeTechnionReservationReceived("not@exist", 12, PHYSICS,
-                "3-4", 5, escapeTechnion) == MTM_CLIENT_EMAIL_DOES_NOT_EXIST);
+    ASSERT_TEST(
+            escapeTechnionReservationReceived(escapeTechnion, "not@exist", 12,
+                                              PHYSICS, "3-4", 5) == MTM_CLIENT_EMAIL_DOES_NOT_EXIST);
 
     //test wrong room id
-    ASSERT_TEST(escapeTechnionReservationReceived("adi@gmail", 12, PHYSICS,
-                "3-4", 5, escapeTechnion) == MTM_ID_DOES_NOT_EXIST);
+    ASSERT_TEST(
+            escapeTechnionReservationReceived(escapeTechnion, "adi@gmail", 12,
+                                              PHYSICS, "3-4", 5) == MTM_ID_DOES_NOT_EXIST);
 
 
-    ASSERT_TEST(escapeTechnionReservationReceived("adi@gmail", 123, PHYSICS,
-                "3-10", 5, escapeTechnion) == MTM_SUCCESS);
+    ASSERT_TEST(
+            escapeTechnionReservationReceived(escapeTechnion, "adi@gmail", 123,
+                                              PHYSICS, "3-10", 5) == MTM_SUCCESS);
     //test client is already in room at that time
-    ASSERT_TEST(escapeTechnionReservationReceived("adi@gmail", 123, PHYSICS,
-                "3-10", 5, escapeTechnion) == MTM_CLIENT_IN_ROOM);
+    ASSERT_TEST(
+            escapeTechnionReservationReceived(escapeTechnion, "adi@gmail", 123,
+                                              PHYSICS, "3-10", 5) == MTM_CLIENT_IN_ROOM);
     //test reservation out of room's opening hours
-    ASSERT_TEST(escapeTechnionReservationReceived("adi@gmail", 123, PHYSICS,
-                "3-21", 5, escapeTechnion) == MTM_ROOM_NOT_AVAILABLE);
+    ASSERT_TEST(
+            escapeTechnionReservationReceived(escapeTechnion, "adi@gmail", 123,
+                                              PHYSICS, "3-21", 5) == MTM_ROOM_NOT_AVAILABLE);
     //test same hour and different day reservation
-    ASSERT_TEST(escapeTechnionReservationReceived("adi@gmail", 123, PHYSICS,
-                "2-10", 5, escapeTechnion) == MTM_SUCCESS);
+    ASSERT_TEST(
+            escapeTechnionReservationReceived(escapeTechnion, "adi@gmail", 123,
+                                              PHYSICS, "2-10", 5) == MTM_SUCCESS);
 
     //test one hour after reservation that was already booked
-    ASSERT_TEST(escapeTechnionReservationReceived("adi@gmail", 123, PHYSICS,
-                "3-11", 5, escapeTechnion) == MTM_SUCCESS);
+    ASSERT_TEST(
+            escapeTechnionReservationReceived(escapeTechnion, "adi@gmail", 123,
+                                              PHYSICS, "3-11", 5) == MTM_SUCCESS);
     //test different escaper when room is not available
-    ASSERT_TEST(escapeTechnionReservationReceived("@", 123, PHYSICS, "3-11",
-                5, escapeTechnion) == MTM_ROOM_NOT_AVAILABLE);
+    ASSERT_TEST(
+            escapeTechnionReservationReceived(escapeTechnion, "@", 123, PHYSICS,
+                                              "3-11", 5) == MTM_ROOM_NOT_AVAILABLE);
 
     escapeTechnionRemoveCompany(escapeTechnion, "company");
     escapeTechnionRemoveRoom(escapeTechnion, 123, PHYSICS);
-    escapeTechnionRemoveEscaper("adi@gmail", escapeTechnion);
-    escapeTechnionRemoveEscaper("@", escapeTechnion);
-    escapeTechnionRemoveEscaper("adi@", escapeTechnion);
-    escapeTechnionRemoveEscaper("@gmail", escapeTechnion);
+    escapeTechnionRemoveEscaper(escapeTechnion, "adi@gmail");
+    escapeTechnionRemoveEscaper(escapeTechnion, "@");
+    escapeTechnionRemoveEscaper(escapeTechnion, "adi@");
+    escapeTechnionRemoveEscaper(escapeTechnion, "@gmail");
     escapeTechnionDestroy(escapeTechnion);
     return true;
 }
@@ -374,44 +394,44 @@ bool testEscapeTechnionRecommendedRoom() {
 
     ASSERT_TEST(escapeTechnionRecommendedRoom("escaper@", 5, escapeTechnion) ==
                 MTM_SUCCESS);
-    ASSERT_TEST(escapeTechnionReservationReceived("escaper@", 1, PHYSICS,
-                "0-08", 5, escapeTechnion) == MTM_CLIENT_IN_ROOM);
-    ASSERT_TEST(escapeTechnionReservationReceived("escaper@", 1, PHYSICS,
-                "0-09", 5, escapeTechnion) == MTM_SUCCESS);
+    ASSERT_TEST(escapeTechnionReservationReceived(escapeTechnion, "escaper@", 1,
+                                                  PHYSICS, "0-08", 5) == MTM_CLIENT_IN_ROOM);
+    ASSERT_TEST(escapeTechnionReservationReceived(escapeTechnion, "escaper@", 1,
+                                                  PHYSICS, "0-09", 5) == MTM_SUCCESS);
 
     escapeTechnionAddRoom(escapeTechnion, "company@1", 3, 4, 7, "08-10", 6);
     escapeTechnionAddRoom(escapeTechnion, "company@1", 4, 4, 4, "08-10", 4);
 
     ASSERT_TEST(escapeTechnionRecommendedRoom("escaper@", 5, escapeTechnion) ==
                 MTM_SUCCESS);
-    ASSERT_TEST(escapeTechnionReservationReceived("escaper@", 4, PHYSICS,
-                "1-08", 5, escapeTechnion) == MTM_CLIENT_IN_ROOM);
+    ASSERT_TEST(escapeTechnionReservationReceived(escapeTechnion, "escaper@", 4,
+                                                  PHYSICS, "1-08", 5) == MTM_CLIENT_IN_ROOM);
 
     escapeTechnionAddRoom(escapeTechnion, "company@2", 5, 4, 7, "08-10", 6);
     escapeTechnionAddRoom(escapeTechnion, "company@3", 6, 4, 7, "08-10", 6);
 
     ASSERT_TEST(escapeTechnionRecommendedRoom("escaper@", 5, escapeTechnion) ==
                 MTM_SUCCESS);
-    ASSERT_TEST(escapeTechnionReservationReceived("escaper@", 6, BIOLOGY,
-                "1-09", 5, escapeTechnion) == MTM_CLIENT_IN_ROOM);
+    ASSERT_TEST(escapeTechnionReservationReceived(escapeTechnion, "escaper@", 6,
+                                                  BIOLOGY, "1-09", 5) == MTM_CLIENT_IN_ROOM);
 
     escapeTechnionAddRoom(escapeTechnion, "company@1", 7, 4, 7, "08-10", 6);
     escapeTechnionAddRoom(escapeTechnion, "company@3", 8, 4, 7, "08-10", 6);
 
     ASSERT_TEST(escapeTechnionRecommendedRoom("escaper@", 5, escapeTechnion) ==
                 MTM_SUCCESS);
-    ASSERT_TEST(escapeTechnionReservationReceived("escaper@", 8, BIOLOGY,
-                "2-08", 5, escapeTechnion) == MTM_CLIENT_IN_ROOM);
+    ASSERT_TEST(escapeTechnionReservationReceived(escapeTechnion, "escaper@", 8,
+                                                  BIOLOGY, "2-08", 5) == MTM_CLIENT_IN_ROOM);
 
     escapeTechnionAddRoom(escapeTechnion, "company@2", 9, 4, 7, "08-10", 6);
     escapeTechnionAddRoom(escapeTechnion, "company@2", 10, 4, 7, "08-10", 6);
 
     ASSERT_TEST(escapeTechnionRecommendedRoom("escaper@", 5, escapeTechnion) ==
                 MTM_SUCCESS);
-    ASSERT_TEST(escapeTechnionReservationReceived("escaper@", 9, MATHEMATICS,
-                "2-09", 5, escapeTechnion) == MTM_CLIENT_IN_ROOM);
+    ASSERT_TEST(escapeTechnionReservationReceived(escapeTechnion, "escaper@", 9,
+                                                  MATHEMATICS, "2-09", 5) == MTM_CLIENT_IN_ROOM);
 
-    escapeTechnionRemoveEscaper("escaper@", escapeTechnion);
+    escapeTechnionRemoveEscaper(escapeTechnion, "escaper@");
     escapeTechnionRemoveCompany(escapeTechnion, "company@1");
     escapeTechnionRemoveCompany(escapeTechnion, "company@2");
     escapeTechnionRemoveCompany(escapeTechnion, "company@3");

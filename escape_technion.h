@@ -112,9 +112,9 @@ MtmErrorCode escapeTechnionRemoveRoom(EscapeTechnion escapeTechnion,
  * receives an escapeTechnion system and escaper's details and adds the escaper
  * to the list.
  * @param escapeTechnion - the system to iterate through
- * @param escaper_email - the email of the escaper to be added
- * @param skill_level - the skill level of the escaper
- * @param FacultyOfEscaper - the faculty of the escaper
+ * @param email - the email of the escaper to be added
+ * @param skill - the skill level of the escaper
+ * @param nameFaculty - the faculty of the escaper
  * @return MTM_SUCCESS - if the function succeeded
  *         MTM_INVALID_PARAMETER - if one of the parameters was incompatible
  *         MTM_EMAIL_ALREADY_EXISTS- if the escaper's email is  already in use
@@ -122,8 +122,8 @@ MtmErrorCode escapeTechnionRemoveRoom(EscapeTechnion escapeTechnion,
  *         MTM_OUT_OF_MEMORY - if one of the allocations failed
  */
 MtmErrorCode escapeTechnionAddEscaper(EscapeTechnion escapeTechnion,
-                                      char *escaper_email, int skill_level,
-                                      TechnionFaculty FacultyOfEscaper);
+                                      char *email, int skill,
+                                      TechnionFaculty nameFaculty);
 
 /**
  * receives an escapeTechnion system and an email of an escaper and iterates
@@ -136,8 +136,8 @@ MtmErrorCode escapeTechnionAddEscaper(EscapeTechnion escapeTechnion,
  *         system
  *         MTM_INVALID_PARAMETER - if one of the parameteres was incorrect
  */
-MtmErrorCode escapeTechnionRemoveEscaper(char *email,
-                                         EscapeTechnion escapeTechnion);
+MtmErrorCode
+escapeTechnionRemoveEscaper(EscapeTechnion escapeTechnion, char *email);
 
 /**
  * receives the details of a reservation, checks if the room and escaper are
@@ -145,7 +145,7 @@ MtmErrorCode escapeTechnionRemoveEscaper(char *email,
  * discount and creates the reservation
  * @param escaper_email - the email of the escaper
  * @param room_id - the id of the room to be reserved
- * @param FacultyOfRoom - the faculty of the room to be reserved
+ * @param nameFaculty - the faculty of the room to be reserved
  * @param time - a string containing the day and hour of the reservation
  * @param num_ppl - the number of people in the reservation
  * @param escapeTechnion - the system to iterate through
@@ -159,10 +159,10 @@ MtmErrorCode escapeTechnionRemoveEscaper(char *email,
  *         MTM_ROOM_NOT_AVAILABLE - if the room is taken or not working in the
  *         hours of the reservation
  */
-MtmErrorCode escapeTechnionReservationReceived(char *escaper_email, int room_id,
-                                               TechnionFaculty FacultyOfRoom,
-                                               char *time, int num_ppl,
-                                               EscapeTechnion escapeTechnion);
+MtmErrorCode escapeTechnionReservationReceived(EscapeTechnion escapeTechnion,
+                                               char *escaper_email, int room_id,
+                                               TechnionFaculty nameFaculty,
+                                               char *time, int num_ppl);
 /**
  *
  * @param escaper_email
