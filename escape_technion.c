@@ -283,23 +283,19 @@ MtmErrorCode escapeTechnionAddRoom(EscapeTechnion escapeTechnion,
     TechnionFaculty nameFaculty = companyGetFaculty(company);
     Room room = getRoomByID(escapeTechnion, nameFaculty, room_id);
 
-
-
-
-    CompanyErrorCode CompanyError;
-
-    if (isRoomSameIdInFaculty(escapeTechnion, room_id, CompanyFaculty)) {
+    if (NULL != room) {
         return MTM_ID_ALREADY_EXIST;
     }
 
-    CompanyError = companyAddRoom(company, room_id, price, num_ppl,
-                                  opening_time, closing_time, difficulty);
-    assert(CompanyError != COMPANY_INVALID_PARAMETER &&
-           CompanyError != COMPANY_ROOM_ALREADY_EXISTS);
-    if (CompanyError == COMPANY_OUT_OF_MEMORY) {
+    CompanyErrorCode errorCode = companyAddRoom(company, room_id, price,
+                                                num_ppl, opening_time,
+                                                closing_time, difficulty);
+    assert(errorCode != COMPANY_INVALID_PARAMETER &&
+           errorCode != COMPANY_ROOM_ALREADY_EXISTS);
+
+    if (errorCode == COMPANY_OUT_OF_MEMORY) {
         return MTM_OUT_OF_MEMORY;
     }
-    assert(CompanyError == MTM_SUCCESS);
     return MTM_SUCCESS;
 }
 
@@ -309,7 +305,6 @@ MtmErrorCode escapeTechnionRemoveRoom(EscapeTechnion escapeTechnion, int room_id
             room_id <= 0){
         return MTM_INVALID_PARAMETER;
     }
-    Faculty faculty = getFacultyByName(escapeTechnion, nameFaculty);
     Company company;
     Room room = facultyGetRoomByID(faculty, &company, room_id);
     if (NULL == room) {
@@ -853,5 +848,6 @@ static Room getRoomByID(EscapeTechnion escapeTechnion,
         return NULL;
     }
 
-    return facultyGetRoomByID(faculty, NULL, id);
+    Company company;
+    return facultyGetRoomByID(faculty, &company, id);
 }
