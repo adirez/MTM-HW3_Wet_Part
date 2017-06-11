@@ -6,11 +6,14 @@
 #include <string.h>
 #include <stdlib.h>
 
+//TODO: add test create with different inout channels
+
 bool testEscapeTechnionDestroy() {
     ASSERT_TEST(escapeTechnionDestroy(NULL) == MTM_NULL_PARAMETER);
 
     MtmErrorCode EscapeTechnionError;
-    EscapeTechnion escapeTechnion = escapeTechnionCreate(&EscapeTechnionError);
+    EscapeTechnion escapeTechnion = escapeTechnionCreate
+            (&EscapeTechnionError, stdin, stdout);
     ASSERT_TEST(escapeTechnionDestroy(escapeTechnion) == MTM_SUCCESS);
 
     return true;
@@ -18,7 +21,8 @@ bool testEscapeTechnionDestroy() {
 
 bool testEscapeTechnionAddCompany() {
     MtmErrorCode EscapeTechnionError;
-    EscapeTechnion escapeTechnion = escapeTechnionCreate(&EscapeTechnionError);
+    EscapeTechnion escapeTechnion = escapeTechnionCreate
+            (&EscapeTechnionError, stdin, stdout);
 
     ASSERT_TEST(escapeTechnionAddCompany(NULL, "adi@gmail", PHYSICS) ==
                 MTM_INVALID_PARAMETER);
@@ -47,7 +51,8 @@ bool testEscapeTechnionAddCompany() {
 
 bool testEscapeTechnionRemoveCompany() {
     MtmErrorCode EscapeTechnionError;
-    EscapeTechnion escapeTechnion = escapeTechnionCreate(&EscapeTechnionError);
+    EscapeTechnion escapeTechnion = escapeTechnionCreate
+            (&EscapeTechnionError, stdin, stdout);
 
     escapeTechnionAddCompany(escapeTechnion, "adi@gmail", PHYSICS);
 
@@ -79,7 +84,8 @@ bool testEscapeTechnionRemoveCompany() {
 
 bool testEscapeTechnionAddRoom() {
     MtmErrorCode EscapeTechnionError;
-    EscapeTechnion escapeTechnion = escapeTechnionCreate(&EscapeTechnionError);
+    EscapeTechnion escapeTechnion = escapeTechnionCreate
+            (&EscapeTechnionError, stdin, stdout);
 
     escapeTechnionAddCompany(escapeTechnion, "adi@gmail", PHYSICS);
     escapeTechnionAddCompany(escapeTechnion, "sha@hak", PHYSICS);
@@ -141,7 +147,8 @@ bool testEscapeTechnionAddRoom() {
 
 bool testEscapeTechnionRemoveRoom() {
     MtmErrorCode EscapeTechnionError;
-    EscapeTechnion escapeTechnion = escapeTechnionCreate(&EscapeTechnionError);
+    EscapeTechnion escapeTechnion = escapeTechnionCreate
+            (&EscapeTechnionError, stdin, stdout);
 
     escapeTechnionAddCompany(escapeTechnion, "adi@gmail", PHYSICS);
 
@@ -184,7 +191,8 @@ bool testEscapeTechnionRemoveRoom() {
 
 bool testEscapeTechnionAddEscaper() {
     MtmErrorCode EscapeTechnionError;
-    EscapeTechnion escapeTechnion = escapeTechnionCreate(&EscapeTechnionError);
+    EscapeTechnion escapeTechnion = escapeTechnionCreate
+            (&EscapeTechnionError, stdin, stdout);
 
     ASSERT_TEST(escapeTechnionAddEscaper(NULL, "adi@", 5, PHYSICS) ==
                 MTM_INVALID_PARAMETER);
@@ -218,7 +226,8 @@ bool testEscapeTechnionAddEscaper() {
 
 bool testEscapeTechnionRemoveEscaper() {
     MtmErrorCode EscapeTechnionError;
-    EscapeTechnion escapeTechnion = escapeTechnionCreate(&EscapeTechnionError);
+    EscapeTechnion escapeTechnion = escapeTechnionCreate
+            (&EscapeTechnionError, stdin, stdout);
 
     ASSERT_TEST(escapeTechnionRemoveEscaper("adi@", NULL) ==
                 MTM_INVALID_PARAMETER);
@@ -249,7 +258,8 @@ bool testEscapeTechnionRemoveEscaper() {
 bool testEscapeTechnionReservationReceived() {
     MtmErrorCode EscapeTechnionError;
 
-    EscapeTechnion escapeTechnion = escapeTechnionCreate(&EscapeTechnionError);
+    EscapeTechnion escapeTechnion = escapeTechnionCreate
+            (&EscapeTechnionError, stdin, stdout);
 
     escapeTechnionAddCompany(escapeTechnion, "company@", PHYSICS);
     escapeTechnionAddRoom(escapeTechnion, "company@", 123, 12, 5, "10-20", 10);
@@ -329,7 +339,8 @@ bool testEscapeTechnionReservationReceived() {
 bool testEscapeTechnionRecommendedRoom() {
     MtmErrorCode EscapeTechnionError;
 
-    EscapeTechnion escapeTechnion = escapeTechnionCreate(&EscapeTechnionError);
+    EscapeTechnion escapeTechnion = escapeTechnionCreate
+            (&EscapeTechnionError, stdin, stdout);
 
     escapeTechnionAddEscaper(escapeTechnion, "escaper@", 5, CHEMISTRY);
 
@@ -408,6 +419,15 @@ bool testEscapeTechnionRecommendedRoom() {
     return true;
 }
 
+bool testEscapeTechnionRecommendedRoom() {
+    MtmErrorCode EscapeTechnionError;
+
+    EscapeTechnion escapeTechnion = escapeTechnionCreate
+            (&EscapeTechnionError, stdin, stdout);
+
+    return true;
+}
+
 int main(int argv, char **arc) {
 
     RUN_TEST(testEscapeTechnionDestroy);
@@ -418,6 +438,7 @@ int main(int argv, char **arc) {
     RUN_TEST(testEscapeTechnionAddEscaper);
     RUN_TEST(testEscapeTechnionRemoveEscaper);
     RUN_TEST(testEscapeTechnionReservationReceived);
+    RUN_TEST(testEscapeTechnionRecommendedRoom);
     RUN_TEST(testEscapeTechnionRecommendedRoom);
 
     return 0;

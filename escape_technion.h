@@ -14,14 +14,15 @@
  * EscapeTechnion will be implemented in this flie.
  */
 typedef struct EscapeTechnion_t *EscapeTechnion;
-
+//TODO: add inout channel to comment
 /**
  * creates a member of EscapeTechnion type, including all internal fields of
  * companies, rooms, faculties and reservations with all relevant allocations.
  * @param EscapeTechnionError - a type to hold the result of the function
  * @return a pointer to the allocated system or NULL if an error was found
  */
-EscapeTechnion escapeTechnionCreate(MtmErrorCode *EscapeTechnionError);
+EscapeTechnion escapeTechnionCreate(MtmErrorCode *EscapeTechnionError,
+                                    FILE* inputChannel, FILE* outputChannel);
 
 /**
  * receives an escapeTechnion type and destroys it, including releasing all
@@ -151,21 +152,6 @@ MtmErrorCode escapeTechnionRemoveEscaper(char *email,
  *         MTM_ROOM_NOT_AVAILABLE - if the room is taken or not working in the
  *         hours of the reservation
  */
-MtmErrorCode escapeTechnionAddReservation(char *escaper_email, int room_id,
-                                          TechnionFaculty FacultyOfRoom,
-                                          char *time, int num_ppl,
-                                          EscapeTechnion escapeTechnion);
-
-/**
- *
- * @param escaper_email
- * @param room_id
- * @param FacultyOfRoom
- * @param time
- * @param num_ppl
- * @param escapeTechnion
- * @return
- */
 MtmErrorCode escapeTechnionReservationReceived(char *escaper_email, int room_id,
                                                TechnionFaculty FacultyOfRoom,
                                                char *time, int num_ppl,
@@ -195,5 +181,8 @@ MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
 Room mostRecommendedRoom(Company company, TechnionFaculty EscaperFaculty,
                          int reservation_num_ppl, int escaper_skill_level,
                          int *result, int *faculty_difference, int *room_id);
+
+
+void escapeTechnionReportDay(EscapeTechnion escapeTechnion);
 
 #endif //HW3_ESCAPETECHNION_H

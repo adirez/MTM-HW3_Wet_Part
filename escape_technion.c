@@ -17,6 +17,9 @@ struct EscapeTechnion_t {
 
     int *faculties_earnings;
     int current_day;
+
+    FILE* inputChannel;
+    FILE* outputChannel;
 };
 
 /**
@@ -166,7 +169,7 @@ static bool isEscaperAvailable(EscapeTechnion escapeTechnion,
  */
 static bool isRoomSameIdInFaculty(EscapeTechnion escapeTechnion, int room_id,
                                   TechnionFaculty Faculty);
-
+//TODO add comments to everything
 static MtmErrorCode reserveRoom(EscapeTechnion escapeTechnion, Escaper escaper,
                                 Company company, Room room, int num_ppl,
                                 int day, int hour);
@@ -184,13 +187,13 @@ static void checkBetterRoom(Escaper escaper, int cur_result, int cur_room_id,
 /**---------------------------------------------------------------------------*/
 
 
-EscapeTechnion escapeTechnionCreate(MtmErrorCode *EscapeTechnionError) {
+EscapeTechnion escapeTechnionCreate(MtmErrorCode *EscapeTechnionError,
+                                    FILE* inputChannel, FILE* outputChannel) {
     EscapeTechnion escapeTechnion = malloc(sizeof(*escapeTechnion));
     if (NULL == escapeTechnion) {
         *EscapeTechnionError = MTM_OUT_OF_MEMORY;
         return NULL;
     }
-
     escapeTechnion->faculties_earnings = malloc(sizeof(int) * UNKNOWN);
     if (NULL == escapeTechnion->faculties_earnings) {
         *EscapeTechnionError = MTM_OUT_OF_MEMORY;
@@ -198,7 +201,6 @@ EscapeTechnion escapeTechnionCreate(MtmErrorCode *EscapeTechnionError) {
         return NULL;
     }
     initializeArr(escapeTechnion->faculties_earnings, UNKNOWN);
-
     escapeTechnion->companies = setCreate(companyCopyElement,
                                           companyFreeElement,
                                           companyCompareElements);
@@ -208,7 +210,6 @@ EscapeTechnion escapeTechnionCreate(MtmErrorCode *EscapeTechnionError) {
         free(escapeTechnion);
         return NULL;
     }
-
     escapeTechnion->escapers = setCreate(escaperCopyElement, escaperFreeElement,
                                          escaperCompareElements);
     if (NULL == escapeTechnion->escapers) {
@@ -218,7 +219,6 @@ EscapeTechnion escapeTechnionCreate(MtmErrorCode *EscapeTechnionError) {
         free(escapeTechnion);
         return NULL;
     }
-
     escapeTechnion->reservations = listCreate(reservationCopyElement,
                                               reservationFreeElement);
     if (NULL == escapeTechnion->reservations) {
@@ -229,8 +229,9 @@ EscapeTechnion escapeTechnionCreate(MtmErrorCode *EscapeTechnionError) {
         free(escapeTechnion);
         return NULL;
     }
-
     escapeTechnion->current_day = 0;
+    escapeTechnion->inputChannel = inputChannel;
+    escapeTechnion->outputChannel = outputChannel;
     *EscapeTechnionError = MTM_SUCCESS;
     return escapeTechnion;
 }
@@ -459,7 +460,7 @@ static MtmErrorCode reserveRoom(EscapeTechnion escapeTechnion, Escaper escaper,
     reservationDestroy(reservation);
     return MTM_SUCCESS;
 }
-
+//TODO shorten the func
 MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
                                            EscapeTechnion escapeTechnion){
     if (NULL == escaper_email || NULL == escapeTechnion ||
@@ -514,7 +515,7 @@ void escapeTechnionReportDay(EscapeTechnion escapeTechnion) {
     List ended_reservations = listFilter(escapeTechnion->reservations,
                                          isReservationDueDate, &system_day);
     num_events = listGetSize(ended_reservations);
-    mtmPrintDayHeader(_OUT_TO_DEFAULT, system_day, num_events);
+    mtmPrintDayHeader(stdout, system_day, num_events);
 
     List new_reservation_list = listFilter(escapeTechnion->reservations,
                                            isReservationNotDueDate,
@@ -546,11 +547,13 @@ void escapeTechnionReportDay(EscapeTechnion escapeTechnion) {
         reservationGetHour(iterator, &hour);
         reservationGetNumPpl(iterator, &num_ppl);
         reservationGetPrice(iterator, &price);
-        mtmPrintOrder(_OUT_TO_DEFAULT, escaper_email, escaper_skill,
+        mtmPrintOrder(stdout, escaper_email, escaper_skill,
                       escaper_Faculty, company_email, company_faculty,
                       room_id, hour, room_difficulty, num_ppl, price);
     }
     listDestroy(ended_reservations);
+
+    escapeTechnion->current_day += 1;
 }
 
 static bool isCompanyWithEmail(char *email, EscapeTechnion escapeTechnion) {
@@ -618,24 +621,6 @@ static bool isEscaperWithEmail(char *email, EscapeTechnion escapeTechnion) {
     }
     return false;
 }
-
-/*static bool isReservationForEscaper(Escaper escaper,
-                                    EscapeTechnion escapeTechnion) {
-    if (NULL == escaper || NULL == escapeTechnion) {
-        return false;
-    }
-    Reservation reservation_iterator;
-    reservation_iterator = listGetFirst(escapeTechnion->reservations);
-    while (NULL != reservation_iterator) {
-        ReservationErrorCode error;
-        if (reservationGetEscaper(reservation_iterator, &error) == escaper) {
-            assert(error != RESERVATION_INVALID_PARAMETER);
-            return true;
-        }
-        reservation_iterator = listGetNext(escapeTechnion->reservations);
-    }
-    return false;
-}*/
 
 static Company findCompany(char *email, EscapeTechnion escapeTechnion) {
     if (NULL == escapeTechnion || NULL == email || !isEmailValid(email)) {

@@ -171,7 +171,7 @@ int reservationCompareElements(ListElement reservation_1,
     return 0;
 }
 
-static bool isReservationDueDate(ListElement element, ListFilterKey cur_day) {
+bool isReservationDueDate(ListElement element, ListFilterKey cur_day) {
     Reservation reservation = element;
     if (reservation->reservation_day == *(int*) cur_day) {
         return true;
@@ -179,7 +179,7 @@ static bool isReservationDueDate(ListElement element, ListFilterKey cur_day) {
     return false;
 }
 
-static bool isReservationNotDueDate(ListElement element, ListFilterKey cur_day) {
+bool isReservationNotDueDate(ListElement element, ListFilterKey cur_day) {
     Reservation reservation = element;
     if (reservation->reservation_day == *(int*) cur_day) {
         return false;
@@ -187,7 +187,7 @@ static bool isReservationNotDueDate(ListElement element, ListFilterKey cur_day) 
     return true;
 }
 
-static int reservationCompareHourAndId(ListElement element1, ListElement element2) {
+int reservationCompareHourAndId(ListElement element1, ListElement element2) {
     Reservation reservation1 = element1;
     Reservation reservation2 = element2;
     if (reservation1->reservation_hour < reservation2->reservation_hour){
@@ -200,5 +200,10 @@ static int reservationCompareHourAndId(ListElement element1, ListElement element
             (reservation1->reservation_company, &errorCode1);
     TechnionFaculty faculty2 = companyGetFaculty
             (reservation2->reservation_company, &errorCode1);
-    return (int)faculty1 - (int)faculty2;
+    if((int)faculty1 < (int)faculty2){
+        return -1;
+    } else if((int)faculty1 > (int)faculty2){
+        return 1;
+    }
+    return 0; //TODO add the third critrea
 }
