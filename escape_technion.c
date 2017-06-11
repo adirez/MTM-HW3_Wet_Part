@@ -252,7 +252,8 @@ MtmErrorCode escapeTechnionRemoveCompany(EscapeTechnion escapeTechnion,
         return MTM_RESERVATION_EXISTS;
     }
 
-    facultyRemoveCompany(company_faculty, company);
+    FacultyErrorCode errorCode = facultyRemoveCompany(company_faculty, company);
+    assert(FACULTY_SUCCESS == errorCode);
 
     return MTM_SUCCESS;
 }
@@ -302,15 +303,16 @@ MtmErrorCode escapeTechnionAddRoom(EscapeTechnion escapeTechnion,
     return MTM_SUCCESS;
 }
 
-MtmErrorCode escapeTechnionRemoveRoom(EscapeTechnion escapeTechnion,
-                                      int room_id, TechnionFaculty Faculty) {
-    if (NULL == escapeTechnion || !isValidFaculty(Faculty) || room_id <= 0) {
+MtmErrorCode escapeTechnionRemoveRoom(EscapeTechnion escapeTechnion, int room_id,
+                                      TechnionFaculty nameFaculty) {
+    if (NULL == escapeTechnion || !isValidFacultyName(nameFaculty) ||
+            room_id <= 0){
         return MTM_INVALID_PARAMETER;
     }
+    Faculty faculty = getFacultyByName(escapeTechnion, nameFaculty);
     Company company;
-    Room room = escapeSystemFindRoom(room_id, Faculty, escapeTechnion,
-                                     &company);
-    if (NULL == room || NULL == company) {
+    Room room = facultyGetRoomByID(faculty, &company, room_id);
+    if (NULL == room) {
         return MTM_ID_DOES_NOT_EXIST;
     }
 
@@ -326,9 +328,7 @@ MtmErrorCode escapeTechnionAddEscaper(EscapeTechnion escapeTechnion,
                                       char *escaper_email, int skill_level,
                                       TechnionFaculty FacultyOfEscaper) {
     if (NULL == escapeTechnion || NULL == escaper_email ||
-        !isValidEmail(escaper_email) ||
-        !isValidDifficultyOrSkill(skill_level) ||
-        !isValidFaculty(FacultyOfEscaper)) {
+            !isValidEscaperParams(FacultyOfEscaper, escaper_email, skill_level)){
         return MTM_INVALID_PARAMETER;
     }
 
@@ -336,11 +336,9 @@ MtmErrorCode escapeTechnionAddEscaper(EscapeTechnion escapeTechnion,
         return MTM_EMAIL_ALREADY_EXISTS;
     }
 
-    EscaperErrorCode EscaperError;
     Escaper escaper = escaperCreate(escaper_email, FacultyOfEscaper,
                                     skill_level);
-    assert(EscaperError != ESCAPER_INVALID_PARAMETER);
-    if (EscaperError == ESCAPER_OUT_OF_MEMORY) {
+    if (NULL == escaper) {
         return MTM_OUT_OF_MEMORY;
     }
 
@@ -855,5 +853,5 @@ static Room getRoomByID(EscapeTechnion escapeTechnion,
         return NULL;
     }
 
-    return facultyGetRoomByID(faculty, id);
+    return facultyGetRoomByID(faculty, NULL, id);
 }

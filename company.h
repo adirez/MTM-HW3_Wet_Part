@@ -155,4 +155,13 @@ Room mostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
                          int P_e, int skill, int *result, int *faculty_distance,
                          int *room_id);
 
+/**
+ * searches for a room in the company by its ID and returns it if exists
+ * @param company - ptr to the company
+ * @param id - the room ID that we are looking for
+ * @return the room if we found it and NULL is it is not in the company or
+ *         the company is NULL
+ */
+Room companyGetRoomByID(Company company, int id);
+
 #endif //ESCAPETECHNION_COMPANY_H

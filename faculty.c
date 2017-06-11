@@ -191,7 +191,8 @@ Company facultyGetCompanyByEmail(Faculty faculty, char *email) {
     return NULL;
 }
 
-Room facultyGetRoomByID(Faculty faculty, int id) {
+Room facultyGetRoomByID(Faculty faculty, Company *company, int id) {
+    *company = NULL;
     if (NULL == faculty || id <= 0) {
         return NULL;
     }
@@ -201,6 +202,7 @@ Room facultyGetRoomByID(Faculty faculty, int id) {
     {
         Room room = companyGetRoomByID(company_iterator, id);
         if (NULL != room) {
+            *company = company_iterator;
             return room;
         }
         company_iterator = setGetNext(faculty->companies);

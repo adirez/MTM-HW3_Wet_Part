@@ -228,4 +228,17 @@ int companyGetMinRoomID(Company company) {
     return min_id;
 }
 
+Room companyGetRoomByID(Company company, int id){
+    if (NULL == company){
+        return NULL;
+    }
+    Room room_iterator = setGetFirst(company->rooms);
 
+    while (NULL != room_iterator){
+        if(roomGetID(room_iterator) == id){
+            return room_iterator;
+        }
+        room_iterator = setGetNext(company->rooms);
+    }
+    return NULL;
+}

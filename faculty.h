@@ -127,10 +127,12 @@ Company facultyGetCompanyByEmail(Faculty faculty, char *email);
 /**
  * receives a faculty and a room id and searches for the room id in the faculty
  * @param faculty - the faculty to to search for the room in
+ * @param company - ptr to company to get the room's company back
  * @param id - the room id to look for
- * @return a pointer to the room if found or NULL if not found
+ * @return a pointer to the room if found and updates the company ptr to the
+ * room's company or NULL if not found in both
  */
-Room facultyGetRoomByID(Faculty faculty, int id);
+Room facultyGetRoomByID(Faculty faculty, Company *company, int id);
 
 
 
