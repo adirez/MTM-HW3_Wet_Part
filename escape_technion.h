@@ -5,6 +5,7 @@
 #ifndef HW3_ESCAPETECHNION_H
 #define HW3_ESCAPETECHNION_H
 
+#include "faculty.h"
 #include "company.h"
 #include "room.h"
 #include "escaper.h"
@@ -44,14 +45,14 @@ void escapeTechnionDestroy(EscapeTechnion escapeTechnion);
  * a new company with suitable details within the system
  * @param escapeTechnion - the system to create the company in
  * @param email - the email of the company to be created
- * @param Faculty - the faculty of the company to be created
+ * @param nameFaculty - the faculty of the company to be created
  * @return MTM_SUCCESS - if the function succeeded
  *         MTM_INVALID_PARAMETER - if one of the parameters was incompatible
  *         MTM_MEMORY_PROBLEM - if the allocations failed
  *         MTM_EMAIL_ALREADY_EXISTS - if the email is already in use
  */
 MtmErrorCode escapeTechnionAddCompany(EscapeTechnion escapeTechnion,
-                                      char *email, TechnionFaculty Faculty);
+                                      char *email, TechnionFaculty nameFaculty);
 
 /**
  * receives an escapeTechnion system and a company email and iterates through
@@ -190,5 +191,15 @@ Room mostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
 
 
 void escapeTechnionReportDay(EscapeTechnion escapeTechnion);
+
+/**
+ * receives an escapeTechnion system and a faculty name and iterates through all
+ * the faculties in the system to find a faculty with a matching name
+ * @param escapeTechnion - the system to iterate through
+ * @param nameFaculty - the faculty name to look for
+ * @return a pointer to the faculty if found or NULL if not found
+ */
+Faculty getFacultyByName(EscapeTechnion escapeTechnion,
+                         TechnionFaculty nameFaculty);
 
 #endif //HW3_ESCAPETECHNION_H

@@ -11,15 +11,11 @@
 #define INVALID_PARAMETER -1
 
 struct EscapeTechnion_t {
-    Set companies;
+    Set faculties;
     Set escapers;
     List reservations;
 
-    int *faculties_earnings;
     int current_day;
-
-    FILE* inputChannel;
-    FILE* outputChannel;
 };
 
 /**
@@ -176,68 +172,60 @@ static void checkBetterRoom(Escaper escaper, int cur_result, int cur_room_id,
 /**---------------------------------------------------------------------------*/
 
 
-EscapeTechnion escapeTechnionCreate(FILE* inputChannel, FILE* outputChannel) {
+EscapeTechnion escapeTechnionCreate() {
     EscapeTechnion escapeTechnion = malloc(sizeof(*escapeTechnion));
     if (NULL == escapeTechnion) {
         return NULL;
     }
-    escapeTechnion->faculties_earnings = malloc(sizeof(int) * UNKNOWN);
-    if (NULL == escapeTechnion->faculties_earnings) {
+
+    escapeTechnion->faculties = setCreate(facultyCopyElement, facultyDestroy,
+                                          facultyCompareElements);
+    if (NULL == escapeTechnion->faculties) {
         free(escapeTechnion);
         return NULL;
     }
-    initializeArr(escapeTechnion->faculties_earnings, UNKNOWN);
-    escapeTechnion->companies = setCreate(companyCopyElement,
-                                          companyFreeElement,
-                                          companyCompareElements);
-    if (NULL == escapeTechnion->companies) {
-        free(escapeTechnion->faculties_earnings);
-        free(escapeTechnion);
-        return NULL;
-    }
-    escapeTechnion->escapers = setCreate(escaperCopyElement, escaperFreeElement,
+
+    escapeTechnion->escapers = setCreate(escaperCopyElement, escaperDestroy,
                                          escaperCompareElements);
     if (NULL == escapeTechnion->escapers) {
-        setDestroy(escapeTechnion->companies);
-        free(escapeTechnion->faculties_earnings);
+        setDestroy(escapeTechnion->faculties);
         free(escapeTechnion);
         return NULL;
     }
+
     escapeTechnion->reservations = listCreate(reservationCopyElement,
-                                              reservationFreeElement);
+                                              reservationDestroy);
     if (NULL == escapeTechnion->reservations) {
         setDestroy(escapeTechnion->escapers);
-        setDestroy(escapeTechnion->companies);
-        free(escapeTechnion->faculties_earnings);
+        setDestroy(escapeTechnion->faculties);
         free(escapeTechnion);
         return NULL;
     }
+
     escapeTechnion->current_day = 0;
-    escapeTechnion->inputChannel = inputChannel;
-    escapeTechnion->outputChannel = outputChannel;
     return escapeTechnion;
 }
 
 void escapeTechnionDestroy(EscapeTechnion escapeTechnion) {
     listDestroy(escapeTechnion->reservations);
     setDestroy(escapeTechnion->escapers);
-    setDestroy(escapeTechnion->companies);
-    free(escapeTechnion->faculties_earnings);
+    setDestroy(escapeTechnion->faculties);
     free(escapeTechnion);
 }
 
 MtmErrorCode escapeTechnionAddCompany(EscapeTechnion escapeTechnion,
-                                      char *email, TechnionFaculty Faculty) {
-    if (NULL == escapeTechnion || NULL == email || !isValidEmail(email) ||
-        !isValidFaculty(Faculty)) {
+                                      char *email, TechnionFaculty nameFaculty) {
+    if (NULL == escapeTechnion || NULL == email ||
+        !isValidCompanyParams(nameFaculty, email)) {
         return MTM_INVALID_PARAMETER;
     }
     if (isEmailInUse(escapeTechnion, email)) {
         return MTM_EMAIL_ALREADY_EXISTS;
     }
 
+    Faculty faculty = getFacultyByName(escapeTechnion, nameFaculty);
     CompanyErrorCode CompanyError;
-    Company company = companyCreate(Faculty, email);
+    Company company = companyCreate(nameFaculty, email);
     if (CompanyError == COMPANY_INVALID_PARAMETER) {
         return MTM_INVALID_PARAMETER;
     } else if (CompanyError == COMPANY_OUT_OF_MEMORY) {
@@ -851,4 +839,28 @@ static void checkBetterRoom(Escaper escaper, int cur_result, int cur_room_id,
             }
         }
     }
+}
+
+Faculty getFacultyByName(EscapeTechnion escapeTechnion,
+                         TechnionFaculty nameFaculty) {
+    if (NULL == escapeTechnion) {
+        return NULL;
+    }
+
+    Faculty faculty_iterator = setGetFirst(escapeTechnion->faculties);
+    if (NULL == faculty_iterator) {
+        return NULL;
+    }
+
+    TechnionFaculty tmpName;
+    while (NULL != faculty_iterator) {
+        tmpName = facultyGetName(faculty_iterator);
+        assert(tmpName != UNKNOWN);
+
+        if (tmpName == nameFaculty) {
+            return faculty_iterator;
+        }
+        faculty_iterator = setGetNext(escapeTechnion->faculties);
+    }
+    return NULL;
 }

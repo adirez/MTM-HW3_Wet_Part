@@ -212,7 +212,7 @@ Room mostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
     return best_room;
 }
 
-int companyGetminRoomID(Company company) {
+int companyGetMinRoomID(Company company) {
     if (NULL == company) {
         return  INVALID_PARAMETER;
     }

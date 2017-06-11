@@ -178,6 +178,6 @@ Room mostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
  * @param company - the company to iterate through
  * @return an integer, representing the minimum value
  */
-int companyGetminRoomID(Company company);
+int companyGetMinRoomID(Company company);
 
 #endif //ESCAPETECHNION_COMPANY_H
