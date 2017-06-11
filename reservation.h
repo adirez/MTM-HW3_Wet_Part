@@ -125,6 +125,14 @@ ReservationErrorCode reservationGetDay(Reservation reservation, int *day);
  */
 ReservationErrorCode reservationGetHour(Reservation reservation, int *hour);
 
+ReservationErrorCode reservationGetNumPpl(Reservation reservation,int *num_ppl);
+
+ReservationErrorCode reservationGetPrice(Reservation reservation, int *price);
+
+static int reservationCompareHourAndId(ListElement element1, ListElement element2);
+
+
+
 /**
  *
  * @param reservation_1
@@ -141,5 +149,8 @@ int reservationCompareElements(ListElement reservation_1,
  * @return
  */
 static bool isReservationDueDate(ListElement element, ListFilterKey cur_day);
+
+static bool isReservationNotDueDate(ListElement element, ListFilterKey cur_day);
+
 
 #endif //HW3_RESERVATION_H

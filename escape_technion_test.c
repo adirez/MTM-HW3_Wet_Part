@@ -364,7 +364,7 @@ bool testEscapeTechnionRecommendedRoom() {
     ASSERT_TEST(escapeTechnionRecommendedRoom("escaper@", 5, escapeTechnion) ==
                 MTM_SUCCESS);
     ASSERT_TEST(escapeTechnionReservationReceived("escaper@", 1, PHYSICS,
-                "0-08", 5, escapeTechnion) == MTM_ROOM_NOT_AVAILABLE);
+                "0-08", 5, escapeTechnion) == MTM_CLIENT_IN_ROOM);
     ASSERT_TEST(escapeTechnionReservationReceived("escaper@", 1, PHYSICS,
                 "0-09", 5, escapeTechnion) == MTM_SUCCESS);
 
@@ -374,7 +374,7 @@ bool testEscapeTechnionRecommendedRoom() {
     ASSERT_TEST(escapeTechnionRecommendedRoom("escaper@", 5, escapeTechnion) ==
                 MTM_SUCCESS);
     ASSERT_TEST(escapeTechnionReservationReceived("escaper@", 4, PHYSICS,
-                "1-08", 5, escapeTechnion) == MTM_ROOM_NOT_AVAILABLE);
+                "1-08", 5, escapeTechnion) == MTM_CLIENT_IN_ROOM);
 
     escapeTechnionAddRoom(escapeTechnion, "company@2", 5, 4, 7, "08-10", 6);
     escapeTechnionAddRoom(escapeTechnion, "company@3", 6, 4, 7, "08-10", 6);
@@ -382,7 +382,7 @@ bool testEscapeTechnionRecommendedRoom() {
     ASSERT_TEST(escapeTechnionRecommendedRoom("escaper@", 5, escapeTechnion) ==
                 MTM_SUCCESS);
     ASSERT_TEST(escapeTechnionReservationReceived("escaper@", 6, BIOLOGY,
-                "1-09", 5, escapeTechnion) == MTM_ROOM_NOT_AVAILABLE);
+                "1-09", 5, escapeTechnion) == MTM_CLIENT_IN_ROOM);
 
     escapeTechnionAddRoom(escapeTechnion, "company@1", 7, 4, 7, "08-10", 6);
     escapeTechnionAddRoom(escapeTechnion, "company@3", 8, 4, 7, "08-10", 6);
@@ -390,7 +390,7 @@ bool testEscapeTechnionRecommendedRoom() {
     ASSERT_TEST(escapeTechnionRecommendedRoom("escaper@", 5, escapeTechnion) ==
                 MTM_SUCCESS);
     ASSERT_TEST(escapeTechnionReservationReceived("escaper@", 8, BIOLOGY,
-                "2-08", 5, escapeTechnion) == MTM_ROOM_NOT_AVAILABLE);
+                "2-08", 5, escapeTechnion) == MTM_CLIENT_IN_ROOM);
 
     escapeTechnionAddRoom(escapeTechnion, "company@2", 9, 4, 7, "08-10", 6);
     escapeTechnionAddRoom(escapeTechnion, "company@2", 10, 4, 7, "08-10", 6);
@@ -398,7 +398,7 @@ bool testEscapeTechnionRecommendedRoom() {
     ASSERT_TEST(escapeTechnionRecommendedRoom("escaper@", 5, escapeTechnion) ==
                 MTM_SUCCESS);
     ASSERT_TEST(escapeTechnionReservationReceived("escaper@", 9, MATHEMATICS,
-                "2-09", 5, escapeTechnion) == MTM_ROOM_NOT_AVAILABLE);
+                "2-09", 5, escapeTechnion) == MTM_CLIENT_IN_ROOM);
 
     escapeTechnionRemoveEscaper("escaper@", escapeTechnion);
     escapeTechnionRemoveCompany(escapeTechnion, "company@1");

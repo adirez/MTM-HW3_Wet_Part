@@ -555,28 +555,51 @@ MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
                        most_recommended_room, num_ppl, day, hour);
 }
 
-MtmErrorCode escapeTechnionReportDay(EscapeTechnion escapeTechnion){
-    if (escapeTechnion == NULL){
-        return MTM_INVALID_PARAMETER;
+void escapeTechnionReportDay(EscapeTechnion escapeTechnion) {
+    if (escapeTechnion == NULL) {
+        return;
     }
-    int system_day = escapeTechnion->current_day;
+    int system_day = escapeTechnion->current_day, num_events;
     List ended_reservations = listFilter(escapeTechnion->reservations,
                                          isReservationDueDate, &system_day);
+    num_events = listGetSize(ended_reservations);
+    mtmPrintDayHeader(_OUT_TO_DEFAULT, system_day, num_events);
 
+    List new_reservation_list = listFilter(escapeTechnion->reservations,
+                                           isReservationNotDueDate,
+                                           &system_day);
+    listDestroy(escapeTechnion->reservations);
+    escapeTechnion->reservations = new_reservation_list;
 
-/*    int num_events = 0;
-    //TODO add sort by time
-    Reservation reservation_iterator;
-    reservation_iterator = listGetFirst(escapeTechnion->reservations);
-    int reservation_day, system_day = escapeTechnion->current_day;
-    reservationGetDay(reservation_iterator, &reservation_day);
-    while (system_day - reservation_day == 0){
-        num_events++;
+    ReservationErrorCode errorCode1;
+    EscaperErrorCode errorCode2;
+    CompanyErrorCode errorCode3;
+    RoomErrorCode errorCode4;
 
-        reservation_iterator = listGetNext(escapeTechnion->reservations);
-        reservationGetDay(reservation_iterator, &reservation_day);
+    listSort(ended_reservations, reservationCompareHourAndId);
+
+    LIST_FOREACH(Reservation, iterator, ended_reservations) {
+        Escaper escaper = reservationGetEscaper(iterator, &errorCode1);
+        char *escaper_email = escaperGetEmail(escaper, &errorCode2);
+        int escaper_skill = escaperGetSkillLevel(escaper, &errorCode2);
+        TechnionFaculty escaper_Faculty = escaperGetFaculty(escaper,
+                                                            &errorCode2);
+        Company company = reservationGetCompany(iterator, &errorCode1);
+        char *company_email = companyGetEmail(company, &errorCode3);
+        TechnionFaculty company_faculty = companyGetFaculty(company,
+                                                           &errorCode3);
+        Room room = reservationGetRoom(iterator, &errorCode1);
+        int room_id = roomGetID(room, &errorCode4);
+        int room_difficulty = roomGetDifficulty(room, &errorCode4);
+        int hour, num_ppl, price;
+        reservationGetHour(iterator, &hour);
+        reservationGetNumPpl(iterator, &num_ppl);
+        reservationGetPrice(iterator, &price);
+        mtmPrintOrder(_OUT_TO_DEFAULT, escaper_email, escaper_skill,
+                      escaper_Faculty, company_email, company_faculty,
+                      room_id, hour, room_difficulty, num_ppl, price);
     }
-    mtmPrintDayHeader(_OUT_TO_DEFAULT, system_day, num_events);*/
+    listDestroy(ended_reservations);
 }
 
 static bool isCompanyWithEmail(char *email, EscapeTechnion escapeTechnion) {
@@ -869,7 +892,7 @@ static MtmErrorCode findClosestTime(EscapeTechnion escapeTechnion, Room room,
                 *hour = tmp_hour;
                 return MTM_SUCCESS;
             }
-
         }
+        tmp_day++;
     }
 }

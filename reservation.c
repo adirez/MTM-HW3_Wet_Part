@@ -121,7 +121,6 @@ Room reservationGetRoom(Reservation reservation, ReservationErrorCode *error) {
 
 ReservationErrorCode reservationGetDay(Reservation reservation, int *day) {
     if (NULL == reservation || NULL == day) {
-        *day = INVALID_PARAMETER;
         return RESERVATION_INVALID_PARAMETER;
     }
     *day = reservation->reservation_day;
@@ -130,10 +129,26 @@ ReservationErrorCode reservationGetDay(Reservation reservation, int *day) {
 
 ReservationErrorCode reservationGetHour(Reservation reservation, int *hour) {
     if (NULL == reservation || NULL == hour) {
-        *hour = INVALID_PARAMETER;
         return RESERVATION_INVALID_PARAMETER;
     }
     *hour = reservation->reservation_hour;
+    return RESERVATION_SUCCESS;
+}
+
+ReservationErrorCode reservationGetNumPpl(Reservation reservation,
+                                          int *num_ppl) {
+    if (NULL == reservation || NULL == num_ppl) {
+        return RESERVATION_INVALID_PARAMETER;
+    }
+    *num_ppl = reservation->num_ppl;
+    return RESERVATION_SUCCESS;
+}
+
+ReservationErrorCode reservationGetPrice(Reservation reservation, int *price) {
+    if (NULL == reservation || NULL == price) {
+        return RESERVATION_INVALID_PARAMETER;
+    }
+    *price = reservation->total_cost;
     return RESERVATION_SUCCESS;
 }
 
@@ -158,8 +173,32 @@ int reservationCompareElements(ListElement reservation_1,
 
 static bool isReservationDueDate(ListElement element, ListFilterKey cur_day) {
     Reservation reservation = element;
-    if (reservation->reservation_day == (int) cur_day) {
+    if (reservation->reservation_day == *(int*) cur_day) {
         return true;
     }
     return false;
+}
+
+static bool isReservationNotDueDate(ListElement element, ListFilterKey cur_day) {
+    Reservation reservation = element;
+    if (reservation->reservation_day == *(int*) cur_day) {
+        return false;
+    }
+    return true;
+}
+
+static int reservationCompareHourAndId(ListElement element1, ListElement element2) {
+    Reservation reservation1 = element1;
+    Reservation reservation2 = element2;
+    if (reservation1->reservation_hour < reservation2->reservation_hour){
+        return -1;
+    } else if(reservation1->reservation_hour > reservation2->reservation_hour){
+        return 1;
+    }
+    CompanyErrorCode errorCode1;
+    TechnionFaculty faculty1 = companyGetFaculty
+            (reservation1->reservation_company, &errorCode1);
+    TechnionFaculty faculty2 = companyGetFaculty
+            (reservation2->reservation_company, &errorCode1);
+    return (int)faculty1 - (int)faculty2;
 }
