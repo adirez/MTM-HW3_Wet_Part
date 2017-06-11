@@ -214,7 +214,10 @@ void escapeTechnionDestroy(EscapeTechnion escapeTechnion) {
 }
 
 MtmErrorCode escapeTechnionAddCompany(EscapeTechnion escapeTechnion,
-                                      char *email, TechnionFaculty nameFaculty) {
+                                      TechnionFaculty nameFaculty,
+                                      char *email) {
+    assert(isValidFacultyName(nameFaculty));
+
     if (NULL == escapeTechnion || NULL == email ||
         !isValidCompanyParams(nameFaculty, email)) {
         return MTM_INVALID_PARAMETER;
@@ -224,20 +227,17 @@ MtmErrorCode escapeTechnionAddCompany(EscapeTechnion escapeTechnion,
     }
 
     Faculty faculty = getFacultyByName(escapeTechnion, nameFaculty);
-    CompanyErrorCode CompanyError;
-    Company company = companyCreate(nameFaculty, email);
-    if (CompanyError == COMPANY_INVALID_PARAMETER) {
-        return MTM_INVALID_PARAMETER;
-    } else if (CompanyError == COMPANY_OUT_OF_MEMORY) {
+    assert(NULL != faculty);
+
+    FacultyErrorCode errorCode = facultyAddCompany(faculty, email);
+    assert(errorCode != FACULTY_INVALID_PARAMETER);
+
+    if (errorCode == FACULTY_OUT_OF_MEMORY) {
         return MTM_OUT_OF_MEMORY;
+    } else if (errorCode == FACULTY_COMPANY_ALREADY_EXISTS) {
+        return MTM_EMAIL_ALREADY_EXISTS;
     }
-    SetResult SetError = setAdd(escapeTechnion->companies, company);
-    companyDestroy(company);
-    assert(SetError != SET_ITEM_ALREADY_EXISTS &&
-           SetError != SET_NULL_ARGUMENT);
-    if (SetError == SET_OUT_OF_MEMORY) {
-        return MTM_OUT_OF_MEMORY;
-    }
+
     return MTM_SUCCESS;
 }
 
@@ -264,14 +264,9 @@ MtmErrorCode escapeTechnionAddRoom(EscapeTechnion escapeTechnion,
                                    char *company_email, int room_id, int price,
                                    int num_ppl, char *working_hours,
                                    int difficulty) {
-    if (NULL == company_email || NULL == working_hours ||
-        NULL == escapeTechnion || !isValidEmail(company_email)) {
-        return MTM_INVALID_PARAMETER;
-    }
-
-    if (!isValidPrice(price) ||
-        !isValidDifficultyOrSkill(difficulty) ||
-        num_ppl <= 0 || room_id <= 0) {
+    if (NULL == escapeTechnion || NULL == company_email ||
+        NULL == working_hours ||
+        !isValidRoomParams(company_email, room_id, price, num_ppl, difficulty) {
         return MTM_INVALID_PARAMETER;
     }
 

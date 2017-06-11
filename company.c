@@ -61,8 +61,7 @@ CompanyErrorCode companyAddRoom(Company company, int id, int price,
     if (NULL == company) {
         return COMPANY_INVALID_PARAMETER;
     }
-    assert(isValidRoomParams(company->companyFaculty, company->email, id,
-                             price, num_ppl, difficulty));
+    assert(isValidRoomParams(company->email, id, price, num_ppl, difficulty));
     Room room = roomCreate(company->companyFaculty, company->email, id, price,
                            num_ppl, open_time, close_time, difficulty);
     if (NULL == room) {

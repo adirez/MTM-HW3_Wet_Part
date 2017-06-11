@@ -24,6 +24,7 @@ struct Faculty_t {
 
 
 Faculty facultyCreate(TechnionFaculty nameFaculty) {
+    assert(isValidFacultyName(nameFaculty));
     Faculty faculty = malloc(sizeof(*faculty));
     if (NULL == faculty) {
         return NULL;

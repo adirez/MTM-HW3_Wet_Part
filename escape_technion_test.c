@@ -24,24 +24,24 @@ bool testEscapeTechnionAddCompany() {
     EscapeTechnion escapeTechnion = escapeTechnionCreate
             ();
 
-    ASSERT_TEST(escapeTechnionAddCompany(NULL, "adi@gmail", PHYSICS) ==
+    ASSERT_TEST(escapeTechnionAddCompany(NULL, PHYSICS, "adi@gmail") ==
                 MTM_INVALID_PARAMETER);
-    ASSERT_TEST(escapeTechnionAddCompany(escapeTechnion, "adigmail", PHYSICS) ==
+    ASSERT_TEST(escapeTechnionAddCompany(escapeTechnion, PHYSICS, "adigmail") ==
                 MTM_INVALID_PARAMETER);
-    ASSERT_TEST(escapeTechnionAddCompany(escapeTechnion, "adi@gma@", PHYSICS) ==
+    ASSERT_TEST(escapeTechnionAddCompany(escapeTechnion, PHYSICS, "adi@gma@") ==
                 MTM_INVALID_PARAMETER);
-    ASSERT_TEST(escapeTechnionAddCompany(escapeTechnion, "", PHYSICS) ==
+    ASSERT_TEST(escapeTechnionAddCompany(escapeTechnion, PHYSICS, "") ==
                 MTM_INVALID_PARAMETER);
-    ASSERT_TEST(escapeTechnionAddCompany(escapeTechnion, "adi@gm", UNKNOWN) ==
+    ASSERT_TEST(escapeTechnionAddCompany(escapeTechnion, UNKNOWN, "adi@gm") ==
                 MTM_INVALID_PARAMETER);
 
 
-    ASSERT_TEST(escapeTechnionAddCompany(escapeTechnion, "@", PHYSICS) ==
+    ASSERT_TEST(escapeTechnionAddCompany(escapeTechnion, PHYSICS, "@") ==
                 MTM_SUCCESS);
-    ASSERT_TEST(escapeTechnionAddCompany(escapeTechnion, "@", PHYSICS) ==
+    ASSERT_TEST(escapeTechnionAddCompany(escapeTechnion, PHYSICS, "@") ==
                 MTM_EMAIL_ALREADY_EXISTS);
     escapeTechnionAddEscaper(escapeTechnion, "adi@", 5, PHYSICS);
-    ASSERT_TEST(escapeTechnionAddCompany(escapeTechnion, "adi@", BIOLOGY) ==
+    ASSERT_TEST(escapeTechnionAddCompany(escapeTechnion, BIOLOGY, "adi@") ==
                 MTM_EMAIL_ALREADY_EXISTS);
 
     escapeTechnionRemoveCompany(escapeTechnion, "@");
@@ -54,7 +54,7 @@ bool testEscapeTechnionRemoveCompany() {
     EscapeTechnion escapeTechnion = escapeTechnionCreate
             ();
 
-    escapeTechnionAddCompany(escapeTechnion, "adi@gmail", PHYSICS);
+    escapeTechnionAddCompany(escapeTechnion, PHYSICS, "adi@gmail");
 
     ASSERT_TEST(escapeTechnionRemoveCompany(escapeTechnion, "@") ==
                 MTM_COMPANY_EMAIL_DOES_NOT_EXIST);
@@ -67,7 +67,7 @@ bool testEscapeTechnionRemoveCompany() {
     ASSERT_TEST(escapeTechnionRemoveCompany(escapeTechnion, "adi@gmail") ==
                 MTM_SUCCESS);
 
-    escapeTechnionAddCompany(escapeTechnion, "sha@hak", PHYSICS);
+    escapeTechnionAddCompany(escapeTechnion, PHYSICS, "sha@hak");
     escapeTechnionAddRoom(escapeTechnion, "sha@hak", 123, 12, 5, "10-20", 10);
     escapeTechnionAddEscaper(escapeTechnion, "adi@", 5, PHYSICS);
     escapeTechnionReservationReceived("adi@", 123, PHYSICS, "2-10", 5,
@@ -87,8 +87,8 @@ bool testEscapeTechnionAddRoom() {
     EscapeTechnion escapeTechnion = escapeTechnionCreate
             ();
 
-    escapeTechnionAddCompany(escapeTechnion, "adi@gmail", PHYSICS);
-    escapeTechnionAddCompany(escapeTechnion, "sha@hak", PHYSICS);
+    escapeTechnionAddCompany(escapeTechnion, PHYSICS, "adi@gmail");
+    escapeTechnionAddCompany(escapeTechnion, PHYSICS, "sha@hak");
 
     ASSERT_TEST(escapeTechnionAddRoom(NULL, "adi@gmail", 123, 12,
                                       5, "10-20", 10) == MTM_INVALID_PARAMETER);
@@ -150,7 +150,7 @@ bool testEscapeTechnionRemoveRoom() {
     EscapeTechnion escapeTechnion = escapeTechnionCreate
             ();
 
-    escapeTechnionAddCompany(escapeTechnion, "adi@gmail", PHYSICS);
+    escapeTechnionAddCompany(escapeTechnion, PHYSICS, "adi@gmail");
 
     escapeTechnionAddRoom(escapeTechnion, "adi@gmail", 123, 12, 5, "10-20", 10);
 
@@ -171,7 +171,7 @@ bool testEscapeTechnionRemoveRoom() {
 
     escapeTechnionRemoveCompany(escapeTechnion, "adi@gmail");
 
-    escapeTechnionAddCompany(escapeTechnion, "sha@hak", BIOLOGY);
+    escapeTechnionAddCompany(escapeTechnion, BIOLOGY, "sha@hak");
     escapeTechnionAddRoom(escapeTechnion, "sha@hak", 12345, 12, 5, "10-20", 10);
     escapeTechnionAddEscaper(escapeTechnion, "adi@", 5, PHYSICS);
     escapeTechnionReservationReceived("adi@", 12345, BIOLOGY, "2-10", 5,
@@ -215,7 +215,7 @@ bool testEscapeTechnionAddEscaper() {
 
     escapeTechnionRemoveEscaper("adi@", escapeTechnion);
 
-    escapeTechnionAddCompany(escapeTechnion, "@", BIOLOGY);
+    escapeTechnionAddCompany(escapeTechnion, BIOLOGY, "@");
 
     ASSERT_TEST(escapeTechnionAddEscaper(escapeTechnion, "@", 10, BIOLOGY) ==
                 MTM_EMAIL_ALREADY_EXISTS);
@@ -261,7 +261,7 @@ bool testEscapeTechnionReservationReceived() {
     EscapeTechnion escapeTechnion = escapeTechnionCreate
             ();
 
-    escapeTechnionAddCompany(escapeTechnion, "company@", PHYSICS);
+    escapeTechnionAddCompany(escapeTechnion, PHYSICS, "company@");
     escapeTechnionAddRoom(escapeTechnion, "company@", 123, 12, 5, "10-20", 10);
     escapeTechnionAddEscaper(escapeTechnion, "adi@gmail", 5, PHYSICS);
     escapeTechnionAddEscaper(escapeTechnion, "@", 5, PHYSICS);
@@ -364,9 +364,9 @@ bool testEscapeTechnionRecommendedRoom() {
     ASSERT_TEST(escapeTechnionRecommendedRoom("escaper@", 5, escapeTechnion) ==
                 MTM_NO_ROOMS_AVAILABLE);
 
-    escapeTechnionAddCompany(escapeTechnion, "company@1", PHYSICS);
-    escapeTechnionAddCompany(escapeTechnion, "company@2", MATHEMATICS);
-    escapeTechnionAddCompany(escapeTechnion, "company@3", BIOLOGY);
+    escapeTechnionAddCompany(escapeTechnion, PHYSICS, "company@1");
+    escapeTechnionAddCompany(escapeTechnion, MATHEMATICS, "company@2");
+    escapeTechnionAddCompany(escapeTechnion, BIOLOGY, "company@3");
 
     escapeTechnionAddRoom(escapeTechnion, "company@1", 1, 4, 5, "08-10", 6);
     escapeTechnionAddRoom(escapeTechnion, "company@1", 2, 4, 5, "08-10", 7);

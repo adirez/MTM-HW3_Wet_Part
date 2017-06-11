@@ -30,8 +30,8 @@ struct Room_t {
 Room roomCreate(TechnionFaculty roomFaculty, char *company_email, int id,
                 int price, int num_ppl, int open_time, int close_time,
                 int difficulty) {
-    assert(isValidRoomParams(roomFaculty, company_email, id, price, num_ppl,
-                             difficulty));
+    assert(isValidRoomParams(company_email, id, price, num_ppl, difficulty));
+    assert(isValidFacultyName(roomFaculty));
     if(NULL == company_email){
         return NULL;
     }

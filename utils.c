@@ -47,24 +47,16 @@ static bool isValidDifficultyOrSkill(int difficulty_or_skill);
  */
 static bool isValidEmail(char *email);
 
-/**
- * receives a faculty name and checks if it's valid
- * @param Faculty - the faculty name to be checked
- * @return true - if it's mentioned in the listed faculties
- *         false - it is not mentioned in the listed faculties
- */
-static bool isValidFacultyName(TechnionFaculty Faculty);
 
 /**...........................................................................*/
 /**-----------------------FUNCTIONS-IMPLEMENTATIONS---------------------------*/
 /**...........................................................................*/
 
 
-bool isValidRoomParams(TechnionFaculty roomFaculty, char *company_email, int id,
-                       int price, int num_ppl, int difficulty){
-    if(!isValidFacultyName(roomFaculty) || !isValidEmail(company_email) ||
-            !isValidPrice(price) || !isValidDifficultyOrSkill(difficulty) ||
-            id <= 0 || num_ppl <= 0){
+bool isValidRoomParams(char *company_email, int id, int price, int num_ppl,
+                       int difficulty) {
+    if(!isValidEmail(company_email) || !isValidPrice(price) ||
+       !isValidDifficultyOrSkill(difficulty) || id <= 0 || num_ppl <= 0){
         return false;
     }
     return true;
@@ -208,6 +200,14 @@ int calcRoomMatch(int room_num_ppl, int reservation_num_ppl,
     return tmp_calc_1 + tmp_calc_2;
 }
 
+bool isValidFacultyName(TechnionFaculty Faculty) {
+    if (Faculty < CIVIL_ENGINEERING || Faculty >= UNKNOWN) {
+        return false;
+    }
+
+    return true;
+}
+
 /**...........................................................................*/
 /**--------------------------STATIC-FUNCTIONS---------------------------------*/
 /**...........................................................................*/
@@ -250,12 +250,4 @@ static bool isValidEmail(char *email) {
         return true;
     }
     return false;
-}
-
-static bool isValidFacultyName(TechnionFaculty Faculty) {
-    if (Faculty < CIVIL_ENGINEERING || Faculty >= UNKNOWN) {
-        return false;
-    }
-
-    return true;
 }

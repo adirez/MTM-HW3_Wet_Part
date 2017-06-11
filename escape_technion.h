@@ -52,7 +52,7 @@ void escapeTechnionDestroy(EscapeTechnion escapeTechnion);
  *         MTM_EMAIL_ALREADY_EXISTS - if the email is already in use
  */
 MtmErrorCode escapeTechnionAddCompany(EscapeTechnion escapeTechnion,
-                                      char *email, TechnionFaculty nameFaculty);
+                                      TechnionFaculty nameFaculty, char *email);
 
 /**
  * receives an escapeTechnion system and a company email and iterates through

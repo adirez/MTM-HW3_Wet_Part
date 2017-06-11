@@ -21,8 +21,8 @@
  * @param difficulty
  * @return
  */
-bool isValidRoomParams(TechnionFaculty roomFaculty, char *company_email, int id,
-                       int price, int num_ppl, int difficulty);
+bool isValidRoomParams(char *company_email, int id, int price, int num_ppl,
+                       int difficulty);
 /**
  *
  * @param email
@@ -84,3 +84,11 @@ bool getDayAndHourFromStr(char *src_str, int *day, int *hour);
  */
 int calcRoomMatch(int room_num_ppl, int reservation_num_ppl,
                   int room_difficulty, int escaper_skill_level);
+
+/**
+ * receives a faculty name and checks if it's valid
+ * @param Faculty - the faculty name to be checked
+ * @return true - if it's mentioned in the listed faculties
+ *         false - it is not mentioned in the listed faculties
+ */
+static bool isValidFacultyName(TechnionFaculty Faculty);
