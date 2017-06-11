@@ -57,11 +57,11 @@ void companyDestroy(Company company) {
 CompanyErrorCode companyAddRoom(Company company, int id, int price,
                                 int num_ppl, int open_time, int close_time,
                                 int difficulty) {
-    assert(isValidRoomParams(company->companyFaculty, company->email, id,
-                             price, num_ppl, difficulty));
     if (NULL == company) {
         return COMPANY_INVALID_PARAMETER;
     }
+    assert(isValidRoomParams(company->companyFaculty, company->email, id,
+                             price, num_ppl, difficulty));
     Room room = roomCreate(company->companyFaculty, company->email, id, price,
                            num_ppl, open_time, close_time, difficulty);
     if (NULL == room) {
@@ -131,35 +131,27 @@ TechnionFaculty companyGetFaculty(Company company) {
     return company->companyFaculty;
 }
 
-Room companyFindRoom(Company company, int room_id,
-                     CompanyErrorCode *CompanyError) {
-    if (NULL == company || room_id <= 0) {
-        *CompanyError = COMPANY_INVALID_PARAMETER;
+Room companyFindRoom(Company company, int room_id) {
+    assert(room_id > 0);
+    if (NULL == company) {
         return NULL;
     }
 
     Room room_iterator = setGetFirst(company->rooms);
-    //TODO should we check NULL?
     while (NULL != room_iterator) {
         bool isEqual = isRoomID(room_iterator, room_id);
         if (isEqual) {
-            *CompanyError = COMPANY_SUCCESS;
             return room_iterator;
         }
         room_iterator = setGetNext(company->rooms);
     }
-    *CompanyError = COMPANY_ROOM_DOES_NOT_EXIST;
     return NULL;
 }
 
-bool isCompanyEmailEqual(Company company, char *email,
-                         CompanyErrorCode *CompanyError) {
+bool isCompanyEmailEqual(Company company, char *email) {
     if (NULL == company || NULL == email) {
-        *CompanyError = COMPANY_INVALID_PARAMETER;
         return false;
     }
-    *CompanyError = COMPANY_SUCCESS;
-
     if (strcmp(company->email, email) == 0) {
         return true;
     }
@@ -167,7 +159,8 @@ bool isCompanyEmailEqual(Company company, char *email,
 }
 
 bool isRoomIdInCompany(Company company, int room_id) {
-    if (NULL == company || room_id <= 0) {
+    assert(room_id > 0);
+    if (NULL == company) {
         return false;
     }
     Room room_iterator = setGetFirst(company->rooms);
@@ -175,7 +168,6 @@ bool isRoomIdInCompany(Company company, int room_id) {
         return false;
     }
     while (NULL != room_iterator) {
-        RoomErrorCode RoomError;
         if (roomGetID(room_iterator) == room_id) {
             return true;
         }
@@ -184,26 +176,21 @@ bool isRoomIdInCompany(Company company, int room_id) {
     return false;
 }
 
-Room mostRecommendedRoom(Company company, TechnionFaculty EscaperFaculty,
-                         int reservation_num_ppl, int escaper_skill_level,
-                         int *result, int *faculty_difference, int *room_id) {
+Room mostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
+                         int P_r, int skill, int *result, int *faculty_distance,
+                         int *room_id) {
+    Room best_room = NULL;
+    int best_result = INVALID_PARAMETER;
+    int best_id = INVALID_PARAMETER;
+    int best_distance = abs((int)escaperFaculty-(int)(company->companyFaculty));
     Room room_iterator = setGetFirst(company->rooms);
     if (NULL == room_iterator) {
         return NULL;
     }
-
-    Room best_room = NULL;
-    int best_result = INVALID_PARAMETER;
-    int best_id = INVALID_PARAMETER;
-    int best_difference =
-            abs((int)EscaperFaculty - (int)(company->companyFaculty));
-
     while (NULL != room_iterator) {
-        RoomErrorCode RoomError;
-        int room_num_ppl = roomGetNumPpl(room_iterator);
-        int room_difficulty = roomGetDifficulty(room_iterator);
-        int tmp_result = calcRoomMatch(room_num_ppl, reservation_num_ppl,
-                                       room_difficulty, escaper_skill_level);
+        int P_e = roomGetNumPpl(room_iterator);
+        int difficulty = roomGetDifficulty(room_iterator);
+        int tmp_result = calcRoomMatch(P_e, P_r, difficulty, skill);
         if (best_result == INVALID_PARAMETER || tmp_result < best_result) {
             best_room = room_iterator;
             best_result = tmp_result;
@@ -220,7 +207,7 @@ Room mostRecommendedRoom(Company company, TechnionFaculty EscaperFaculty,
         room_iterator = setGetNext(company->rooms);
     }
     *result = best_result;
-    *faculty_difference = best_difference;
+    *faculty_distance = best_distance;
     *room_id = best_id;
     return best_room;
 }
@@ -232,7 +219,6 @@ int companyGetminRoomID(Company company) {
     int min_id = INVALID_PARAMETER;
     Room room_iterator = setGetFirst(company->rooms);
     while (NULL != room_iterator) {
-        RoomErrorCode RoomError;
         int tmp_id = roomGetID(room_iterator);
         if (tmp_id < min_id || min_id == INVALID_PARAMETER) {
             min_id = tmp_id;

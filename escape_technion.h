@@ -176,17 +176,17 @@ MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
 /**
  *
  * @param company
- * @param EscaperFaculty
- * @param reservation_num_ppl
- * @param escaper_skill_level
+ * @param escaperFaculty
+ * @param P_r
+ * @param skill
  * @param result
- * @param faculty_difference
+ * @param faculty_distance
  * @param room_id
  * @return
  */
-Room mostRecommendedRoom(Company company, TechnionFaculty EscaperFaculty,
-                         int reservation_num_ppl, int escaper_skill_level,
-                         int *result, int *faculty_difference, int *room_id);
+Room mostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
+                         int P_r, int skill,
+                         int *result, int *faculty_distance, int *room_id);
 
 
 void escapeTechnionReportDay(EscapeTechnion escapeTechnion);

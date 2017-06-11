@@ -544,7 +544,7 @@ static bool isCompanyWithEmail(char *email, EscapeTechnion escapeTechnion) {
     //TODO should we check NULL separately?
     while (NULL != company_iterator) {
         CompanyErrorCode CompanyError = COMPANY_SUCCESS;
-        if (isCompanyEmailEqual(company_iterator, email, &CompanyError)) {
+        if (isCompanyEmailEqual(company_iterator, email)) {
             return true;
         }
         assert(CompanyError != COMPANY_INVALID_PARAMETER);
@@ -609,7 +609,7 @@ static Company findCompany(char *email, EscapeTechnion escapeTechnion) {
     Company company_iterator = setGetFirst(escapeTechnion->companies);
     while (NULL != company_iterator) {
         CompanyErrorCode CompanyError = COMPANY_SUCCESS;
-        if (isCompanyEmailEqual(company_iterator, email, &CompanyError)) {
+        if (isCompanyEmailEqual(company_iterator, email)) {
             return company_iterator;
         }
         assert(CompanyError != COMPANY_INVALID_PARAMETER);
@@ -627,7 +627,7 @@ static Room escapeSystemFindRoom(int room_id, TechnionFaculty FacultyOfRoom,
     Company company_iterator = setGetFirst(escapeTechnion->companies);
     while (NULL != company_iterator) {
         CompanyErrorCode CompanyError = COMPANY_SUCCESS;
-        Room room = companyFindRoom(company_iterator, room_id, &CompanyError);
+        Room room = companyFindRoom(company_iterator, room_id);
         if (NULL != room) {
             if (companyGetFaculty(company_iterator) ==
                 FacultyOfRoom) {

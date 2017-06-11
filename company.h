@@ -131,8 +131,7 @@ TechnionFaculty companyGetFaculty(Company company);
  * @param CompanyError - a type to return the result of the function
  * @return a pointer to the room if exists, else NULL
  */
-Room companyFindRoom(Company company, int room_id,
-                     CompanyErrorCode *CompanyError);
+Room companyFindRoom(Company company, int room_id);
 
 /**
  * receives a company and checks if it's email is equal to an email received
@@ -143,8 +142,7 @@ Room companyFindRoom(Company company, int room_id,
  * @return true - if the company's email equals 'email'
  *         false - if the emails are different
  */
-bool isCompanyEmailEqual(Company company, char *email,
-                         CompanyErrorCode *CompanyError);
+bool isCompanyEmailEqual(Company company, char *email);
 
 /**
  * receives a company and a room id and checks if a room with this id exists
@@ -162,18 +160,18 @@ bool isRoomIdInCompany(Company company, int room_id);
  * the best match for him. rooms with same result will be sorted for the room
  * with the minimal room id
  * @param company - the company to iterate through
- * @param EscaperFaculty - the faculty of the escaper
- * @param reservation_num_ppl - the number of people for the reservation
- * @param escaper_skill_level - the skill level of the escaper who ordered
+ * @param escaperFaculty - the faculty of the escaper
+ * @param P_r - the number of people for the reservation
+ * @param skill - the skill level of the escaper who ordered
  * @param result - a pointer to return the result of the calculation
- * @param faculty_difference - a pointer to return the difference between the
+ * @param faculty_distance - a pointer to return the difference between the
  *         enum value of the escaper faculty and company faculty
  * @param room_id - a pointer to return the room with the minimal id found
  * @return a pointer to the most recommended room found
  */
-Room mostRecommendedRoom(Company company, TechnionFaculty EscaperFaculty,
-                         int reservation_num_ppl, int escaper_skill_level,
-                         int *result, int *faculty_difference, int *room_id);
+Room mostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
+                         int P_r, int skill,
+                         int *result, int *faculty_distance, int *room_id);
 
 /**
  * receives a company and returns the minimum id of the company rooms
