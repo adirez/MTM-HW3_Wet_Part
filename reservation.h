@@ -135,5 +135,14 @@ bool isReservationDueDate(ListElement element, ListFilterKey cur_day);
  */
 bool isReservationRelevant(ListElement element, ListFilterKey cur_day);
 
+//TODO: add comments
+/**
+ *
+ * @param element1
+ * @param element2
+ * @return
+ */
+int reservationCompareElements(ListElement element1, ListElement element2);
+
 
 #endif //HW3_RESERVATION_H

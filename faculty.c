@@ -2,12 +2,11 @@
 // Created by Shahak on 11/06/2017.
 //
 
-#include "faculty.h"
-#include "utils.h"
-
 #include <stdlib.h>
 #include <assert.h>
-#include <string.h>
+
+#include "faculty.h"
+#include "utils.h"
 
 #define INVALID_PARAMETER -1
 
@@ -208,4 +207,18 @@ Room facultyGetRoomByID(Faculty faculty, Company *company, int id) {
         company_iterator = setGetNext(faculty->companies);
     }
     return NULL;
+}
+
+bool isCompanyEmailFaculty(Faculty faculty, char *email) {
+    if (NULL == faculty || NULL == email) {
+        return false;
+    }
+    Company company_iterator = setGetFirst(faculty->companies);
+    while (NULL != company_iterator) {
+        if (isCompanyEmailEqual(company_iterator, email)) {
+            return true;
+        }
+        company_iterator = setGetNext(faculty->companies);
+    }
+    return false;
 }

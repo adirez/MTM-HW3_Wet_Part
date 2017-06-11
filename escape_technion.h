@@ -15,8 +15,6 @@
  * EscapeTechnion will be implemented in this flie.
  */
 typedef struct EscapeTechnion_t *EscapeTechnion;
-//TODO: add inout channel to comment
-
 
 /**...........................................................................*/
 /**-------------------------FUNCTIONS-DECLARATIONS----------------------------*/
@@ -136,8 +134,8 @@ MtmErrorCode escapeTechnionAddEscaper(EscapeTechnion escapeTechnion,
  *         system
  *         MTM_INVALID_PARAMETER - if one of the parameteres was incorrect
  */
-MtmErrorCode
-escapeTechnionRemoveEscaper(EscapeTechnion escapeTechnion, char *email);
+MtmErrorCode escapeTechnionRemoveEscaper(EscapeTechnion escapeTechnion,
+                                         char *email);
 
 /**
  * receives the details of a reservation, checks if the room and escaper are
@@ -186,11 +184,15 @@ MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
  * @return
  */
 Room mostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
-                         int P_e, int skill,
-                         int *result, int *faculty_distance, int *room_id);
-
-
-void escapeTechnionReportDay(EscapeTechnion escapeTechnion);
+                         int P_e, int skill, int *result, int *faculty_distance,
+                         int *room_id);
+//TODO: add comments
+/**
+ *
+ * @param escapeTechnion
+ * @param output_channel
+ */
+void escapeTechnionReportDay(EscapeTechnion escapeTechnion, FILE* output_channel);
 
 /**
  * receives an escapeTechnion system and a faculty name and iterates through all
@@ -210,7 +212,6 @@ Faculty getFacultyByName(EscapeTechnion escapeTechnion,
  * @return
  */
 static Room getRoomByID(EscapeTechnion escapeTechnion,
-                        TechnionFaculty nameFaculty,
-                        int id);
+                        TechnionFaculty nameFaculty, int id);
 
 #endif //HW3_ESCAPETECHNION_H

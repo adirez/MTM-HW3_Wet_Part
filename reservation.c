@@ -2,14 +2,11 @@
 // Created by Shahak on 06/06/2017.
 //
 
-#include "reservation.h"
-#include "utils.h"
-#include "escaper.h"
-#include "company.h"
-
 #include <stdlib.h>
 #include <assert.h>
-#include <string.h>
+
+#include "reservation.h"
+#include "utils.h"
 
 #define INVALID_PARAMETER -1
 
@@ -154,4 +151,20 @@ int reservationCompareForPrint(ListElement element1, ListElement element2) {
     }
 
     return 0; //TODO add the third critrea
+}
+
+int reservationCompareElements(ListElement element1, ListElement element2) {
+    Reservation reservation1 = element1, reservation2 = element2;
+    if (reservation1->day < reservation2->day){
+        return -1;
+    } else if(reservation1->day > reservation2->day){
+        return 1;
+    }
+    assert(reservation1->day == reservation2->day);
+    if (reservation1->hour < reservation2->hour){
+        return -1;
+    } else if(reservation1->hour == reservation2->hour){
+        return 1;
+    }
+    return 0;
 }

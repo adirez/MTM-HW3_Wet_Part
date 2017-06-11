@@ -108,15 +108,6 @@ char *companyGetEmail(Company company);
 TechnionFaculty companyGetFaculty(Company company);
 
 /**
- * receives a company and a room id and iterates over the company's rooms to
- * check if a room with the received id exists
- * @param company - the company to be checked
- * @param room_id - the id we're looking for
- * @return a pointer to the room if exists, else NULL
- */
-Room companyFindRoom(Company company, int room_id);
-
-/**
  * receives a company and checks if it's email is equal to an email received
  * through the parameters
  * @param company - the company to be checked
@@ -125,16 +116,6 @@ Room companyFindRoom(Company company, int room_id);
  *         false - if the emails are different
  */
 bool isCompanyEmailEqual(Company company, char *email);
-
-/**
- * receives a company and a room id and checks if a room with this id exists
- * within the company
- * @param company - the company to iterate through
- * @param room_id - the id to look for
- * @return true - if the id was found
- *         false - if the id wasn't found
- */
-bool isRoomIdInCompany(Company company, int room_id);
 
 /**
  * receives a company, faculty and an escaper with his reservation details and
@@ -163,5 +144,13 @@ Room mostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
  *         the company is NULL
  */
 Room companyGetRoomByID(Company company, int id);
+
+//TODO: add comments
+/**
+ *
+ * @param company
+ * @return
+ */
+int companyGetMinRoomID(Company company);
 
 #endif //ESCAPETECHNION_COMPANY_H

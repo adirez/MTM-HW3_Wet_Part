@@ -134,8 +134,15 @@ Company facultyGetCompanyByEmail(Faculty faculty, char *email);
  */
 Room facultyGetRoomByID(Faculty faculty, Company *company, int id);
 
-
-
+/**
+ * receives a faculty and an email and check whether there is a company with
+ * that email in the faculty
+ * @param faculty - the faculty to search in
+ * @param email - the email to check
+ * @return true if a company was found with same email in the faculty false
+ * otherwise
+ */
+bool isCompanyEmailFaculty(Faculty faculty, char *email);
 
 
 

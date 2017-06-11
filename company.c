@@ -4,7 +4,6 @@
 
 #include "company.h"
 #include "utils.h"
-#include "set.h"
 
 #include <stdlib.h>
 #include <assert.h>
@@ -131,47 +130,12 @@ TechnionFaculty companyGetFaculty(Company company) {
     return company->companyFaculty;
 }
 
-Room companyFindRoom(Company company, int room_id) {
-    assert(room_id > 0);
-    if (NULL == company) {
-        return NULL;
-    }
-
-    Room room_iterator = setGetFirst(company->rooms);
-    while (NULL != room_iterator) {
-        bool isEqual = isRoomID(room_iterator, room_id);
-        if (isEqual) {
-            return room_iterator;
-        }
-        room_iterator = setGetNext(company->rooms);
-    }
-    return NULL;
-}
-
 bool isCompanyEmailEqual(Company company, char *email) {
     if (NULL == company || NULL == email) {
         return false;
     }
     if (strcmp(company->email, email) == 0) {
         return true;
-    }
-    return false;
-}
-
-bool isRoomIdInCompany(Company company, int room_id) {
-    assert(room_id > 0);
-    if (NULL == company) {
-        return false;
-    }
-    Room room_iterator = setGetFirst(company->rooms);
-    if (NULL == room_iterator) {
-        return false;
-    }
-    while (NULL != room_iterator) {
-        if (roomGetID(room_iterator) == room_id) {
-            return true;
-        }
-        room_iterator = setGetNext(company->rooms);
     }
     return false;
 }
