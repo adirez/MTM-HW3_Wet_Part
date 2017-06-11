@@ -86,6 +86,13 @@ bool isValidCompanyParams(TechnionFaculty Faculty, char *email) {
     return true;
 }
 
+bool isValidReservationParams(int num_ppl, int price) {
+    if(!isValidPrice(price) || num_ppl <= 0){
+        return false;
+    }
+    return true;
+}
+
 bool getHoursFromStr(char *hours_str, int *opening_time, int *closing_time) {
     int tmp_opening = 0, tmp_closing = 0;
     if (NULL == hours_str || strlen(hours_str) != HOURS_STR_LEN) {
@@ -187,13 +194,6 @@ bool getDayAndHourFromStr(char* src_str, int *day, int *hour) {
     }
 
     return true;
-}
-
-void initializeArr(int *arr, int n) {
-    for (int idx = 0; idx < n; idx++) {
-        *(arr + idx) = 0;
-    }
-    return;
 }
 
 int calcRoomMatch(int room_num_ppl, int reservation_num_ppl,

@@ -14,6 +14,7 @@
 #define INVALID_PARAMETER -1
 
 struct Reservation_t {
+    TechnionFaculty Faculty;
     Escaper escaper;
     Company company;
     Room room;
@@ -25,46 +26,15 @@ struct Reservation_t {
 };
 
 /**...........................................................................*/
-/**-------------------------FUNCTIONS-DECLARATIONS----------------------------*/
-/**...........................................................................*/
-
-//TODO: add the comments:
-/**
- *
- * @param element1
- * @param element2
- * @return
- */
-static int reservationCompareHourAndId(ListElement element1,
-                                       ListElement element2);
-
-/**
- *
- * @param element
- * @param cur_day
- * @return
- */
-static bool isReservationDueDate(ListElement element, ListFilterKey cur_day);
-
-/**
- *
- * @param element
- * @param cur_day
- * @return
- */
-static bool isReservationNotDueDate(ListElement element, ListFilterKey cur_day);
-
-
-/**...........................................................................*/
 /**-----------------------FUNCTIONS-IMPLEMENTATIONS---------------------------*/
 /**...........................................................................*/
 
 
 Reservation reservationCreate(Escaper escaper, Company company, Room room,
                               int num_ppl, int day, int hour, int price) {
-
     assert(escaper != NULL && company != NULL && room != NULL);
-    assert(num_ppl <= 0 && price < 0);
+    assert(isValidReservationParams(num_ppl, price));
+
     Reservation reservation = malloc(sizeof(*reservation));
     if (NULL == reservation) {
         return NULL;
@@ -96,7 +66,7 @@ Reservation reservationCopyElement(Reservation src_reservation) {
     Reservation ptr = src_reservation; //to make the code clearer
     Reservation reservation = reservationCreate(ptr->escaper, ptr->company,
                                                 ptr->room, ptr->num_ppl,
-                                                ptr->day, ptr->hour, ptr->price);
+                                                ptr->day,ptr->hour, ptr->price);
     if (NULL == reservation) {
         return NULL;
     }
@@ -152,31 +122,6 @@ int reservationGetPrice(Reservation reservation) {
     return reservation->price;
 }
 
-int reservationCompareElements(ListElement reservation_1,
-                               ListElement reservation_2) {
-
-    Reservation ptr1 = reservation_1, ptr2 = reservation_2;
-    if (ptr1->day < ptr2->day) {
-        return -1;
-    } else if (ptr1->day > ptr2->day) {
-        return 1;
-    }
-
-    if (ptr1->hour < ptr2->hour) {
-        return -1;
-    } else if (ptr1->hour > ptr2->hour) {
-        return 1;
-    }
-
-    return 0;
-}
-
-
-/**...........................................................................*/
-/**--------------------------STATIC-FUNCTIONS---------------------------------*/
-/**...........................................................................*/
-
-
 bool isReservationDueDate(ListElement element, ListFilterKey cur_day) {
     Reservation reservation = element;
     if (reservation->day == *(int*) cur_day) {
@@ -185,7 +130,7 @@ bool isReservationDueDate(ListElement element, ListFilterKey cur_day) {
     return false;
 }
 
-bool isReservationNotDueDate(ListElement element, ListFilterKey cur_day) {
+bool isReservationRelevant(ListElement element, ListFilterKey cur_day) {
     Reservation reservation = element;
     if (reservation->day == *(int*) cur_day) {
         return false;
@@ -193,23 +138,20 @@ bool isReservationNotDueDate(ListElement element, ListFilterKey cur_day) {
     return true;
 }
 
-int reservationCompareHourAndId(ListElement element1, ListElement element2) {
-    Reservation reservation1 = element1;
-    Reservation reservation2 = element2;
+int reservationCompareForPrint(ListElement element1, ListElement element2) {
+    Reservation reservation1 = element1, reservation2 = element2;
     if (reservation1->hour < reservation2->hour){
         return -1;
     } else if(reservation1->hour > reservation2->hour){
         return 1;
     }
-    CompanyErrorCode errorCode1;
-    TechnionFaculty faculty1 = companyGetFaculty
-            (reservation1->company);
-    TechnionFaculty faculty2 = companyGetFaculty
-            (reservation2->company);
+    TechnionFaculty faculty1 = companyGetFaculty(reservation1->company);
+    TechnionFaculty faculty2 = companyGetFaculty(reservation2->company);
     if((int)faculty1 < (int)faculty2){
         return -1;
     } else if((int)faculty1 > (int)faculty2){
         return 1;
     }
+
     return 0; //TODO add the third critrea
 }

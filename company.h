@@ -22,7 +22,6 @@ typedef enum {
     COMPANY_ROOM_ALREADY_EXISTS,
     COMPANY_ROOM_DOES_NOT_EXIST,
     COMPANY_INVALID_PARAMETER,
-    COMPANY_RESERVATION_EXISTS,
     COMPANY_OUT_OF_MEMORY
 } CompanyErrorCode;
 
@@ -32,24 +31,18 @@ typedef enum {
  * @param email - the email address of the company which will be used
  *        to identify the company.
  * @param Faculty - the name of the faculty that the company is listed under
- * @param CompanyError - the result of the creation
  * @return Company - a pointer to the successfully created company if everything
- *         went ok
- *         NULL - if the allocation was not successful
+ *         went well
+ *         NULL - if the allocation was not successful or email is NULL
  */
 Company companyCreate(TechnionFaculty Faculty, char *email);
 
 /**
  * destroys a company and all of it's components. releases all relevant
  * allocated memory.
- * @param company - a pointer to the relevant company to be destroyed
- * @return COMPANY_SUCCESS - the room was removed successfuly
- *         COMPANY_INVALID_PARAMETER - one of the parameters was invalid
- *         COMPANY_ROOM_DOES_NOT_EXIST - the asked room wasn't found
- *         COMPANY_RESERVATION_EXISTS - one of the rooms has an existing
- *         reservation
+ * @param element - a pointer to the relevant company to be destroyed
  */
-void companyDestroy(Company company);
+void companyDestroy(SetElement element);
 
 /**
  * creates a new room according to the relevant input parameters and returns
@@ -62,8 +55,7 @@ void companyDestroy(Company company);
  * @param working_hrs - start time and close time of the room
  * @param difficulty - the difficulty level of the room
  * @return COMPANY_SUCCESS - the function finished with no errors
- *         COMPANY_INVALID_PARAMETER - the function received an invalid
- *         parameter as an input
+ *         COMPANY_INVALID_PARAMETER - if company is NULL
  *         COMPANY_MEMORY_PROBLEM - the room allocation was not successful
  *         COMPANY_ROOM_ALREADY_EXISTS - room with same id under that company
  *         already exists
@@ -94,12 +86,6 @@ CompanyErrorCode companyRemoveRoom(Company company, Room room);
 int companyCompareElements(SetElement company1, SetElement company2);
 
 /**
- * frees all relevant allocated memory of a specific company element
- * @param company - the company  to be freed
- */
-void companyFreeElement(SetElement company);
-
-/**
  * receives a source company element and copies it's data into a newly created
  * company element
  * @param src_company - the source company that needs to be copied
@@ -110,15 +96,13 @@ SetElement companyCopyElement(SetElement src_company);
 /**
  * receives a company and returns it's email
  * @param company - the requested company
- * @param CompanyError - a type to get the result of the function
  * @return a pointer to the char* if the allocation worked and NULL if failed
  */
 char *companyGetEmail(Company company);
 
 /**
- * receives a company and returns the faculty it's listen in
+ * receives a company and returns the faculty it's under
  * @param company - the requested company
- * @param CompanyError - an error type to return the result / error
  * @return the faculty the company's listed in or UNKNOWN if an error was found
  */
 TechnionFaculty companyGetFaculty(Company company);
@@ -128,7 +112,6 @@ TechnionFaculty companyGetFaculty(Company company);
  * check if a room with the received id exists
  * @param company - the company to be checked
  * @param room_id - the id we're looking for
- * @param CompanyError - a type to return the result of the function
  * @return a pointer to the room if exists, else NULL
  */
 Room companyFindRoom(Company company, int room_id);
@@ -138,7 +121,6 @@ Room companyFindRoom(Company company, int room_id);
  * through the parameters
  * @param company - the company to be checked
  * @param email - the email to compare
- * @param CompanyError - a type to hold the result of the function
  * @return true - if the company's email equals 'email'
  *         false - if the emails are different
  */
@@ -161,7 +143,7 @@ bool isRoomIdInCompany(Company company, int room_id);
  * with the minimal room id
  * @param company - the company to iterate through
  * @param escaperFaculty - the faculty of the escaper
- * @param P_r - the number of people for the reservation
+ * @param P_e - the number of people for the reservation
  * @param skill - the skill level of the escaper who ordered
  * @param result - a pointer to return the result of the calculation
  * @param faculty_distance - a pointer to return the difference between the
@@ -170,14 +152,7 @@ bool isRoomIdInCompany(Company company, int room_id);
  * @return a pointer to the most recommended room found
  */
 Room mostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
-                         int P_r, int skill,
-                         int *result, int *faculty_distance, int *room_id);
-
-/**
- * receives a company and returns the minimum id of the company rooms
- * @param company - the company to iterate through
- * @return an integer, representing the minimum value
- */
-int companyGetMinRoomID(Company company);
+                         int P_e, int skill, int *result, int *faculty_distance,
+                         int *room_id);
 
 #endif //ESCAPETECHNION_COMPANY_H

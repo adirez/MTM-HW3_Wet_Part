@@ -41,6 +41,14 @@ bool isValidEscaperParams(TechnionFaculty escaperFaculty, char *email,
 bool isValidCompanyParams(TechnionFaculty Faculty, char *email);
 
 /**
+ *
+ * @param num_ppl
+ * @param price
+ * @return
+ */
+bool isValidReservationParams(int num_ppl, int price);
+
+/**
  * receives a string representing operation hours in the format "hh-hh" and
  * returns the opening time and the closing time as integers
  * @param hours_str - the original string
@@ -65,13 +73,6 @@ bool getHoursFromStr(char *hours_str, int *opening_time, int *closing_time);
 bool getDayAndHourFromStr(char *src_str, int *day, int *hour);
 
 /**
- * receives an array and initializes the values to '0'
- * @param arr - the array to be reset
- * @param n - array length
- */
-void initializeArr(int *arr, int n);
-
-/**
  * receives room's difficulty and recommended number of people, escaper's skill
  * level and number of people for the reservation and returns a calculation of
  * the formula to find the best room
@@ -83,11 +84,3 @@ void initializeArr(int *arr, int n);
  */
 int calcRoomMatch(int room_num_ppl, int reservation_num_ppl,
                   int room_difficulty, int escaper_skill_level);
-
-/**
- *
- * @param escapeTechnion
- * @param Faculty
- * @return
- */
-int minIdInFaculty(EscapeTechnion escapeTechnion, TechnionFaculty Faculty);

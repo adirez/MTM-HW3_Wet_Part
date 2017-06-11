@@ -460,7 +460,7 @@ void escapeTechnionReportDay(EscapeTechnion escapeTechnion) {
     mtmPrintDayHeader(stdout, system_day, num_events);
 
     List new_reservation_list = listFilter(escapeTechnion->reservations,
-                                           isReservationNotDueDate,
+                                           isReservationRelevant,
                                            &system_day);
     listDestroy(escapeTechnion->reservations);
     escapeTechnion->reservations = new_reservation_list;
@@ -470,7 +470,7 @@ void escapeTechnionReportDay(EscapeTechnion escapeTechnion) {
     CompanyErrorCode errorCode3;
     RoomErrorCode errorCode4;
 
-    listSort(ended_reservations, reservationCompareHourAndId);
+    listSort(ended_reservations, reservationCompareForPrint);
 
     LIST_FOREACH(Reservation, iterator, ended_reservations) {
         Escaper escaper = reservationGetEscaper(iterator, &errorCode1);
@@ -509,8 +509,8 @@ static MtmErrorCode reserveRoom(EscapeTechnion escapeTechnion, Escaper escaper,
 
     int price = calculatePricePerPerson(company, room, escaper);
     price *= num_ppl;
-    Reservation reservation = reservationCreate(escaper, company, room, num_ppl,
-                                                day, hour, price);
+    Reservation reservation = reservationCreate(company, room, num_ppl, day,
+                                                hour, price, 0);
     if (reservation != NULL) {
         return MTM_OUT_OF_MEMORY;
     }

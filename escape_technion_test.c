@@ -13,7 +13,7 @@ bool testEscapeTechnionDestroy() {
 
     MtmErrorCode EscapeTechnionError;
     EscapeTechnion escapeTechnion = escapeTechnionCreate
-            (&EscapeTechnionError, stdin, stdout);
+            ();
     ASSERT_TEST(escapeTechnionDestroy(escapeTechnion) == MTM_SUCCESS);
 
     return true;
@@ -22,7 +22,7 @@ bool testEscapeTechnionDestroy() {
 bool testEscapeTechnionAddCompany() {
     MtmErrorCode EscapeTechnionError;
     EscapeTechnion escapeTechnion = escapeTechnionCreate
-            (&EscapeTechnionError, stdin, stdout);
+            ();
 
     ASSERT_TEST(escapeTechnionAddCompany(NULL, "adi@gmail", PHYSICS) ==
                 MTM_INVALID_PARAMETER);
@@ -52,7 +52,7 @@ bool testEscapeTechnionAddCompany() {
 bool testEscapeTechnionRemoveCompany() {
     MtmErrorCode EscapeTechnionError;
     EscapeTechnion escapeTechnion = escapeTechnionCreate
-            (&EscapeTechnionError, stdin, stdout);
+            ();
 
     escapeTechnionAddCompany(escapeTechnion, "adi@gmail", PHYSICS);
 
@@ -85,7 +85,7 @@ bool testEscapeTechnionRemoveCompany() {
 bool testEscapeTechnionAddRoom() {
     MtmErrorCode EscapeTechnionError;
     EscapeTechnion escapeTechnion = escapeTechnionCreate
-            (&EscapeTechnionError, stdin, stdout);
+            ();
 
     escapeTechnionAddCompany(escapeTechnion, "adi@gmail", PHYSICS);
     escapeTechnionAddCompany(escapeTechnion, "sha@hak", PHYSICS);
@@ -148,7 +148,7 @@ bool testEscapeTechnionAddRoom() {
 bool testEscapeTechnionRemoveRoom() {
     MtmErrorCode EscapeTechnionError;
     EscapeTechnion escapeTechnion = escapeTechnionCreate
-            (&EscapeTechnionError, stdin, stdout);
+            ();
 
     escapeTechnionAddCompany(escapeTechnion, "adi@gmail", PHYSICS);
 
@@ -192,7 +192,7 @@ bool testEscapeTechnionRemoveRoom() {
 bool testEscapeTechnionAddEscaper() {
     MtmErrorCode EscapeTechnionError;
     EscapeTechnion escapeTechnion = escapeTechnionCreate
-            (&EscapeTechnionError, stdin, stdout);
+            ();
 
     ASSERT_TEST(escapeTechnionAddEscaper(NULL, "adi@", 5, PHYSICS) ==
                 MTM_INVALID_PARAMETER);
@@ -227,7 +227,7 @@ bool testEscapeTechnionAddEscaper() {
 bool testEscapeTechnionRemoveEscaper() {
     MtmErrorCode EscapeTechnionError;
     EscapeTechnion escapeTechnion = escapeTechnionCreate
-            (&EscapeTechnionError, stdin, stdout);
+            ();
 
     ASSERT_TEST(escapeTechnionRemoveEscaper("adi@", NULL) ==
                 MTM_INVALID_PARAMETER);
@@ -259,7 +259,7 @@ bool testEscapeTechnionReservationReceived() {
     MtmErrorCode EscapeTechnionError;
 
     EscapeTechnion escapeTechnion = escapeTechnionCreate
-            (&EscapeTechnionError, stdin, stdout);
+            ();
 
     escapeTechnionAddCompany(escapeTechnion, "company@", PHYSICS);
     escapeTechnionAddRoom(escapeTechnion, "company@", 123, 12, 5, "10-20", 10);
@@ -340,7 +340,7 @@ bool testEscapeTechnionRecommendedRoom() {
     MtmErrorCode EscapeTechnionError;
 
     EscapeTechnion escapeTechnion = escapeTechnionCreate
-            (&EscapeTechnionError, stdin, stdout);
+            ();
 
     escapeTechnionAddEscaper(escapeTechnion, "escaper@", 5, CHEMISTRY);
 
@@ -423,7 +423,7 @@ bool testEscapeTechnionRecommendedRoom() {
     MtmErrorCode EscapeTechnionError;
 
     EscapeTechnion escapeTechnion = escapeTechnionCreate
-            (&EscapeTechnionError, stdin, stdout);
+            ();
 
     return true;
 }

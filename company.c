@@ -45,10 +45,11 @@ Company companyCreate(TechnionFaculty Faculty, char *email) {
     return company;
 }
 
-void companyDestroy(Company company) {
-    if (NULL == company) {
+void companyDestroy(SetElement element) {
+    if (NULL == element) {
         return;
     }
+    Company company = element;
     setDestroy(company->rooms);
     free(company->email);
     free(company);
@@ -177,7 +178,7 @@ bool isRoomIdInCompany(Company company, int room_id) {
 }
 
 Room mostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
-                         int P_r, int skill, int *result, int *faculty_distance,
+                         int P_e, int skill, int *result, int *faculty_distance,
                          int *room_id) {
     Room best_room = NULL;
     int best_result = INVALID_PARAMETER;
@@ -188,9 +189,9 @@ Room mostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
         return NULL;
     }
     while (NULL != room_iterator) {
-        int P_e = roomGetNumPpl(room_iterator);
+        int P_r = roomGetNumPpl(room_iterator);
         int difficulty = roomGetDifficulty(room_iterator);
-        int tmp_result = calcRoomMatch(P_e, P_r, difficulty, skill);
+        int tmp_result = calcRoomMatch(P_r, P_r, difficulty, skill);
         if (best_result == INVALID_PARAMETER || tmp_result < best_result) {
             best_room = room_iterator;
             best_result = tmp_result;
