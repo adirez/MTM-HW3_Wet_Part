@@ -72,6 +72,7 @@ bool testFacultyRemoveCompany() {
                 FACULTY_COMPANY_DOES_NOT_EXIST);
 
     facultyDestroy(faculty1);
+    facultyDestroy(faculty2);
     return true;
 }
 
@@ -221,9 +222,12 @@ bool testFacultyGetRoomByID() {
 
     ASSERT_TEST(roomGetID(room) == 23);
     ASSERT_TEST(roomGetNameFaculty(room) == PHYSICS);
-    ASSERT_TEST(strcmp(roomGetCompanyEmail(room, &roomError), "abc@") == 0);
+    char *email_test = roomGetCompanyEmail(room, &roomError);
+    ASSERT_TEST(strcmp(email_test, "abc@") == 0);
     ASSERT_TEST(roomGetDifficulty(room) == 9);
 
+    free(email_test);
+    facultyDestroy(faculty);
     return true;
 }
 
@@ -256,6 +260,7 @@ bool testFacultyMostRecommendedRoom() {
     int result, faculty_distance, id;
     FacultyErrorCode facultyError;
     EscaperErrorCode escaperError;
+    CompanyErrorCode companyError;
     Escaper escaper = escaperCreate("adi@", PHYSICS, 5, &escaperError);
     Faculty faculty = facultyCreate(PHYSICS, &facultyError);
 
@@ -272,28 +277,43 @@ bool testFacultyMostRecommendedRoom() {
 
     companyAddRoom(company11, 111, 4, 7, 10, 20, 2);
     companyAddRoom(company11, 112, 8, 3, 10, 15, 3);
-    companyAddRoom(company11, 113, 12, 5, 2, 4, 7);
+    companyAddRoom(company11, 113, 24, 5, 2, 4, 7);
 
     companyAddRoom(company12, 121, 4, 5, 10, 20, 10);
 
     companyAddRoom(company13, 131, 4, 5, 10, 20, 9);
     companyAddRoom(company13, 132, 8, 2, 10, 15, 3);
 
-    companyAddRoom(company14, 141, 4, 2, 10, 20, 1);
+    companyAddRoom(company14, 141, 40, 2, 10, 20, 1);
     companyAddRoom(company14, 142, 20, 2, 10, 15, 3);
     companyAddRoom(company14, 143, 4, 4, 10, 20, 8);
     companyAddRoom(company14, 144, 12, 0, 10, 15, 3);
 
     Company rooms_company;
     Room room;
+    room = facultyMostRecommendedRoom(faculty, escaper, PHYSICS, 0, 0, &result,
+                               &faculty_distance, &id, &rooms_company);
+    ASSERT_TEST(result == 5);
+    ASSERT_TEST(faculty_distance == 0);
+    ASSERT_TEST(id == 141);
+    ASSERT_TEST(roomGetPrice(room) == 40);
+    char *email_test1 = companyGetEmail(rooms_company, &companyError);
+    ASSERT_TEST(strcmp(email_test1, "1@4") == 0);
 
     room = facultyMostRecommendedRoom(faculty, escaper, PHYSICS, 5, 5, &result,
-                               &faculty_distance, &id, &rooms_company);
+                                      &faculty_distance, &id, &rooms_company);
 
-    printf("----%d, %d, %d----\n", result, faculty_distance, id);
-    roomGetDifficulty(room);
+    ASSERT_TEST(result == 4);
+    ASSERT_TEST(faculty_distance == 0);
+    ASSERT_TEST(id == 113);
+    ASSERT_TEST(roomGetPrice(room) == 24);
+    char *email_test2 = companyGetEmail(rooms_company, &companyError);
+    ASSERT_TEST(strcmp(email_test2, "1@1") == 0);
 
-
+    free(email_test1);
+    free(email_test2);
+    escaperDestroy(escaper);
+    facultyDestroy(faculty);
     return true;
 }
 

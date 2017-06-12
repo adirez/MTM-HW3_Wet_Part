@@ -204,7 +204,7 @@ Room companyMostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
             best_result = tmp_result;
             best_id = roomGetID(room_iterator);
         }
-        if (tmp_result == best_result ) {
+        if (tmp_result == best_result) {
             int temp_id = roomGetID(room_iterator);
             if (temp_id < best_id) {
                 best_room = room_iterator;

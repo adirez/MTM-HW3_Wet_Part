@@ -240,18 +240,18 @@ Room facultyMostRecommendedRoom(Faculty faculty, Escaper escaper,
 
         cur_recommended_room = companyMostRecommendedRoom(company_iterator,
                                                           escaperFaculty, P_e,
-                                                          skill, result,
-                                                          faculty_distance,
-                                                          room_id);
-        if (NULL == cur_recommended_room) {
-            company_iterator = setGetNext(faculty->companies);
-            continue;
-        }
+                                                          skill, &cur_result,
+                                                          &cur_faculty_distance,
+                                                          &cur_room_id);
         checkBetterRoom(escaper, cur_result, cur_room_id, cur_faculty_distance,
                         cur_recommended_room, &min_result, &min_room_id,
                         &min_faculty_distance, &most_recommended_room,
                         &most_recommended_company, company_iterator);
+        company_iterator = setGetNext(faculty->companies);
     }
+    *result = min_result;
+    *faculty_distance = min_faculty_distance;
+    *room_id = min_room_id;
     *cur_company = most_recommended_company;
     return most_recommended_room;
 }
