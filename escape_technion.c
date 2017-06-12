@@ -530,8 +530,8 @@ MtmErrorCode escapeTechnionReportDay(EscapeTechnion escapeTechnion,
     return MTM_SUCCESS;
 }
 
-MtmErrorCode escapeTechnionPrintFaculties(EscapeTechnion escapeTechnion,
-                                          FILE *output_channel) {
+MtmErrorCode escapeTechnionReportBest(EscapeTechnion escapeTechnion,
+                                      FILE *output_channel) {
     if (NULL == escapeTechnion || NULL == output_channel) {
         return MTM_NULL_PARAMETER; //TODO or MTM_CANNOT_OPEN_FILE?
     }

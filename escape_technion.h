@@ -203,5 +203,13 @@ MtmErrorCode escapeTechnionReportDay(EscapeTechnion escapeTechnion,
 Faculty getFacultyByName(EscapeTechnion escapeTechnion,
                          TechnionFaculty nameFaculty);
 
+/**
+ *
+ * @param escapeTechnion
+ * @param output_channel
+ * @return
+ */
+MtmErrorCode escapeTechnionReportBest(EscapeTechnion escapeTechnion,
+                                      FILE *output_channel);
 
 #endif //HW3_ESCAPETECHNION_H
