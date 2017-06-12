@@ -18,6 +18,7 @@ typedef struct Escaper_t *Escaper;
  */
 typedef enum {
     ESCAPER_SUCCESS,
+    ESCAPER_NULL_PARAMETER,
     ESCAPER_INVALID_PARAMETER,
     ESCAPER_OUT_OF_MEMORY
 } EscaperErrorCode;
@@ -34,6 +35,7 @@ typedef enum {
  * @param skill_level - the expertise of the escaper
  * @param escaperError - enum to get the result of the func:
  *                    ESCAPER_SUCCESS - escaper created successfully
+ *                    ESCAPER_NULL_PARAMETER - email is NULL
  *                    ESCAPER_INVALID_PARAMETER - one of the params are Invalid
  *                    ESCAPER_OUT_OF_MEMORY - Allocation problem occurred
  * @return Escaper - ptr to the new escaper if everything went well
@@ -49,14 +51,12 @@ Escaper escaperCreate(char *email, TechnionFaculty escaperFaculty,
 void escaperDestroy(SetElement element);
 
 /**
- * a comparison of two escapers by email
- * @param escaper1 - the first escaper
- * @param escaper2 - the second escaper
- * @return -1 - INVALID_PARAMETER - if one of the params are NULL
- * @return 1 - emails are different
- * @return 0 - emails are equal
+ * a comparison of two escapers by their email
+ * @param element1 - the first escaper
+ * @param element2 - the second escaper
+ * @return 0 if same, positive num if the first is greater, negative otherwise
  */
-int escaperCompareElements(SetElement escaper1, SetElement escaper2);
+int escaperCompareElements(SetElement element1, SetElement element2);
 
 /**
  * receives a source escaper element and copies it's data into a newly created
@@ -70,8 +70,8 @@ SetElement escaperCopyElement(SetElement src_escaper);
  * receives an escaper and returns the email listed in his profile
  * @param escaper - the ptr to the escaper
  * @param escaperError - enum to get the result of the func:
- *                    ESCAPER_SUCCESS - escaper created successfully
- *                    ESCAPER_INVALID_PARAMETER - one of the params are Invalid
+ *                    ESCAPER_SUCCESS - email returned successfully
+ *                    ESCAPER_NULL_PARAMETER - escaper is NULL
  *                    ESCAPER_OUT_OF_MEMORY - Allocation problem occurred
  * @return a pointer to the char* if the allocation worked and NULL if failed
  */

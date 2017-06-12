@@ -30,6 +30,9 @@ struct Room_t {
 Room roomCreate(TechnionFaculty roomFaculty, char *company_email, int id,
                 int price, int num_ppl, int open_time, int close_time,
                 int difficulty, RoomErrorCode *roomError) {
+    if(NULL == roomError){
+        return NULL;
+    }
     if (!isValidRoomParams(company_email, id, price, num_ppl, difficulty) ||
             !isValidFacultyName(roomFaculty)){
         *roomError = ROOM_INVALID_PARAMETER;
@@ -67,17 +70,14 @@ void roomDestroy(SetElement element) {
     free(room);
 }
 
-int roomCompareElements(SetElement room1, SetElement room2) {
-    if (NULL == room1 || NULL == room2) {
-        return INVALID_PARAMETER;
+int roomCompareElements(SetElement element1, SetElement element2) {
+    Room room1 = element1, room2 = element2;
+    int id_cmp = room1->id - room2->id;
+    if (id_cmp != 0){
+        return id_cmp;
     }
-    Room ptr1 = room1, ptr2 = room2;
-    int tmp_cmp = (ptr1->id) - (ptr2->id);
-    if (tmp_cmp == 0 && ptr1->roomFaculty == ptr2->roomFaculty) {
-        return 0;
-    } else {
-        return 1;
-    }
+    assert(id_cmp == 0);
+    return (int)room1->roomFaculty - (int)room2->roomFaculty;
 }
 
 
@@ -104,8 +104,11 @@ TechnionFaculty roomGetNameFaculty(Room room) {
 }
 
 char *roomGetCompanyEmail(Room room, RoomErrorCode *roomError) {
+    if (NULL == roomError){
+        return NULL;
+    }
     if (NULL == room) {
-        *roomError = ROOM_INVALID_PARAMETER;
+        *roomError = ROOM_NULL_PARAMETER;
         return NULL;
     }
     char *output = malloc(strlen(room->company_email) + 1);

@@ -11,7 +11,6 @@
 #define INVALID_PARAMETER -1
 
 struct Reservation_t {
-    TechnionFaculty Faculty;
     Escaper escaper;
     Company company;
     Room room;
@@ -26,17 +25,26 @@ struct Reservation_t {
 /**-----------------------FUNCTIONS-IMPLEMENTATIONS---------------------------*/
 /**...........................................................................*/
 
-
 Reservation reservationCreate(Escaper escaper, Company company, Room room,
-                              int num_ppl, int day, int hour, int price) {
-    assert(escaper != NULL && company != NULL && room != NULL);
-    assert(isValidReservationParams(num_ppl, price));
-
-    Reservation reservation = malloc(sizeof(*reservation));
-    if (NULL == reservation) {
+                              int num_ppl, int day, int hour, int price,
+                              ReservationErrorCode *reservationError) {
+    if(NULL == reservationError){
+        return NULL;
+    }
+    if (NULL == escaper || NULL == company || NULL == room){
+        *reservationError = RESERVATION_NULL_PARAMETER;
+        return NULL;
+    }
+    if(!isValidReservationParams(num_ppl, price)){
+        *reservationError = RESERVATION_INVALID_PARAMETER;
         return NULL;
     }
 
+    Reservation reservation = malloc(sizeof(*reservation));
+    if (NULL == reservation) {
+        *reservationError = RESERVATION_OUT_OF_MEMORY;
+        return NULL;
+    }
     reservation->escaper = escaper;
     reservation->company = company;
     reservation->room = room;
@@ -45,6 +53,7 @@ Reservation reservationCreate(Escaper escaper, Company company, Room room,
     reservation->day = day;
     reservation->hour = hour;
     reservation->price = price;
+    *reservationError = RESERVATION_SUCCESS;
     return reservation;
 }
 
@@ -56,15 +65,17 @@ void reservationDestroy(ListElement reservation) {
     free(reservation);
 }
 
-ListElement reservationCopyElement(ListElement src_element) {
-    if (NULL == src_element) {
+ListElement reservationCopyElement(ListElement src_reservation) {
+    if (NULL == src_reservation) {
         return NULL;
     }
-    Reservation ptr = src_element;
+    ReservationErrorCode reservationError;
+    Reservation ptr = src_reservation;
     Reservation reservation = reservationCreate(ptr->escaper, ptr->company,
                                                 ptr->room, ptr->num_ppl,
-                                                ptr->day,ptr->hour, ptr->price);
-    if (NULL == reservation) {
+                                                ptr->day, ptr->hour,
+                                                ptr->price, &reservationError);
+    if (reservationError != RESERVATION_SUCCESS) {
         return NULL;
     }
     return reservation;
@@ -91,6 +102,13 @@ Room reservationGetRoom(Reservation reservation) {
     return reservation->room;
 }
 
+int reservationGetNumPpl(Reservation reservation) {
+    if (NULL == reservation) {
+        return INVALID_PARAMETER;
+    }
+    return reservation->num_ppl;
+}
+
 int reservationGetDay(Reservation reservation) {
     if (NULL == reservation) {
         return INVALID_PARAMETER;
@@ -103,13 +121,6 @@ int reservationGetHour(Reservation reservation) {
         return INVALID_PARAMETER;
     }
     return reservation->hour;
-}
-
-int reservationGetNumPpl(Reservation reservation) {
-    if (NULL == reservation) {
-        return INVALID_PARAMETER;
-    }
-    return reservation->num_ppl;
 }
 
 int reservationGetPrice(Reservation reservation) {
@@ -135,24 +146,6 @@ bool isReservationRelevant(ListElement element, ListFilterKey cur_day) {
     return true;
 }
 
-int reservationCompareForPrint(ListElement element1, ListElement element2) {
-    Reservation reservation1 = element1, reservation2 = element2;
-    if (reservation1->hour < reservation2->hour){
-        return -1;
-    } else if(reservation1->hour > reservation2->hour){
-        return 1;
-    }
-    TechnionFaculty faculty1 = companyGetFaculty(reservation1->company);
-    TechnionFaculty faculty2 = companyGetFaculty(reservation2->company);
-    if((int)faculty1 < (int)faculty2){
-        return -1;
-    } else if((int)faculty1 > (int)faculty2){
-        return 1;
-    }
-
-    return 0; //TODO add the third critrea
-}
-
 int reservationCompareElements(ListElement element1, ListElement element2) {
     Reservation reservation1 = element1, reservation2 = element2;
     if (reservation1->day < reservation2->day){
@@ -163,8 +156,29 @@ int reservationCompareElements(ListElement element1, ListElement element2) {
     assert(reservation1->day == reservation2->day);
     if (reservation1->hour < reservation2->hour){
         return -1;
-    } else if(reservation1->hour == reservation2->hour){
+    } else if(reservation1->hour > reservation2->hour){
         return 1;
     }
     return 0;
 }
+
+int reservationCompareForPrint(ListElement element1, ListElement element2) {
+    int hour_cmp = reservationCompareElements(element1, element2);
+    if(hour_cmp != 0){
+        return hour_cmp;
+    }
+    Reservation reservation1 = element1, reservation2 = element2;
+
+    TechnionFaculty faculty1 = companyGetFaculty(reservation1->company);
+    TechnionFaculty faculty2 = companyGetFaculty(reservation2->company);
+    int faculty_cmp = (int)faculty1 - (int)faculty2;
+    if(faculty_cmp != 0){
+        return faculty_cmp;
+    }
+
+    Room room1 = reservation1->room;
+    Room room2 = reservation2->room;
+
+    return roomGetID(room1) - roomGetID(room2);
+}
+

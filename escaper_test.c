@@ -8,9 +8,10 @@
 
 
 bool testEscaperCreate() {
+    ASSERT_TEST(escaperCreate(NULL, PHYSICS, 5, NULL) == NULL);
     EscaperErrorCode errorCode;
     ASSERT_TEST(escaperCreate(NULL, PHYSICS, 5, &errorCode) == NULL);
-    ASSERT_TEST(errorCode == ESCAPER_INVALID_PARAMETER);
+    ASSERT_TEST(errorCode == ESCAPER_NULL_PARAMETER);
     ASSERT_TEST(escaperCreate("adi", PHYSICS, 5, &errorCode) == NULL);
     ASSERT_TEST(errorCode == ESCAPER_INVALID_PARAMETER);
     ASSERT_TEST(escaperCreate("adi@gmail", UNKNOWN, 5, &errorCode) == NULL);
@@ -36,19 +37,19 @@ bool testEscaperDestroy() {
 
 bool testEscaperCompareElements() {
     EscaperErrorCode errorCode;
-    Escaper escaper1 = escaperCreate("adi@gmail", PHYSICS, 5, &errorCode);
-    Escaper escaper2 = escaperCreate("adi@gmail", PHYSICS, 5, &errorCode);
-    Escaper escaper3 = escaperCreate("adi@gmai", PHYSICS, 5, &errorCode);
-
-    ASSERT_TEST(escaperCompareElements(NULL, escaper2) == -1);
-    ASSERT_TEST(escaperCompareElements(escaper1, NULL) == -1);
+    Escaper escaper1 = escaperCreate("abc@", PHYSICS, 5, &errorCode);
+    Escaper escaper2 = escaperCreate("abc@", PHYSICS, 5, &errorCode);
+    Escaper escaper3 = escaperCreate("b@", PHYSICS, 5, &errorCode);
+    Escaper escaper4 = escaperCreate("c@", PHYSICS, 5, &errorCode);
 
     ASSERT_TEST(escaperCompareElements(escaper1, escaper2) == 0);
-    ASSERT_TEST(escaperCompareElements(escaper1, escaper3) == 1);
+    ASSERT_TEST(escaperCompareElements(escaper1, escaper3) < 0);
+    ASSERT_TEST(escaperCompareElements(escaper4, escaper3) > 0);
 
     escaperDestroy(escaper1);
     escaperDestroy(escaper2);
     escaperDestroy(escaper3);
+    escaperDestroy(escaper4);
     return true;
 }
 
@@ -70,7 +71,7 @@ bool testEscaperGetEmail() {
     EscaperErrorCode errorCode;
     Escaper escaper = escaperCreate("adi@gmail", PHYSICS, 5, &errorCode);
     ASSERT_TEST(escaperGetEmail(NULL, &errorCode) == NULL);
-    ASSERT_TEST(errorCode == ESCAPER_INVALID_PARAMETER);
+    ASSERT_TEST(errorCode == ESCAPER_NULL_PARAMETER);
 
     char* email = escaperGetEmail(escaper, &errorCode);
     ASSERT_TEST(errorCode == ESCAPER_SUCCESS);

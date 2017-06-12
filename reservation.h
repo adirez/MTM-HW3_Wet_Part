@@ -16,6 +16,15 @@
  */
 typedef struct Reservation_t *Reservation;
 
+/**
+ * a type used to return error codes related to Room
+ */
+typedef enum {
+    RESERVATION_SUCCESS,
+    RESERVATION_NULL_PARAMETER,
+    RESERVATION_INVALID_PARAMETER,
+    RESERVATION_OUT_OF_MEMORY
+} ReservationErrorCode;
 
 /**...........................................................................*/
 /**-------------------------FUNCTIONS-DECLARATIONS----------------------------*/
@@ -33,12 +42,18 @@ typedef struct Reservation_t *Reservation;
  * @param day - the day of the reservation since beginning of time
  * @param hour - the hour the room is reserved for
  * @param price - the total amount to pay
+ * @param reservationError - enum to get the result of the func:
+ *                 RESERVATION_SUCCESS - reservation created successfully
+ *                 RESERVATION_NULL_PARAMETER - one of the params is NULL
+ *                 RESERVATION_INVALID_PARAMETER - one of the params is Invalid
+ *                 RESERVATION_OUT_OF_MEMORY - Allocation problem occurred
  * @return Reservation - a pointer to the successful reservation if everything
- *         went ok
+ *         went well
            NULL - if the allocation was not successful
  */
 Reservation reservationCreate(Escaper escaper, Company company, Room room,
-                              int num_ppl, int day, int hour, int price);
+                              int num_ppl, int day, int hour, int price,
+                              ReservationErrorCode *reservationError);
 
 /**
  * destroys a reservation and releases all relevant allocated memory.
@@ -49,11 +64,11 @@ void reservationDestroy(ListElement reservation);
 /**
  * receives a source reservation element and copies it into a newly
  * created reservation element
- * @param src_element - the source reservation that needs to be copied
+ * @param src_reservation - the source reservation that needs to be copied
  * @return pointer to the new allocated reservation or NULL if the allocation
  * failed
  */
-ListElement reservationCopyElement(ListElement src_element);
+ListElement reservationCopyElement(ListElement src_reservation);
 
 /**
  * receives a reservation type and returns a ptr to the escaper whom reserved it
@@ -77,6 +92,13 @@ Company reservationGetCompany(Reservation reservation);
 Room reservationGetRoom(Reservation reservation);
 
 /**
+ * returns the num of people of the reservation
+ * @param reservation - ptr to the reservation
+ * @return the num of people of the reservation or -1 if the reservation is NULL
+ */
+int reservationGetNumPpl(Reservation reservation);
+
+/**
  * returns the day of the reservation
  * @param reservation - ptr to the reservation
  * @return the day of the reservation or -1 if the reservation is NULL
@@ -91,13 +113,6 @@ int reservationGetDay(Reservation reservation);
 int reservationGetHour(Reservation reservation);
 
 /**
- * returns the num of people of the reservation
- * @param reservation - ptr to the reservation
- * @return the num of people of the reservation or -1 if the reservation is NULL
- */
-int reservationGetNumPpl(Reservation reservation);
-
-/**
  * returns the price of the reservation
  * @param reservation - ptr to the reservation
  * @return the price of the reservation or -1 if the reservation is NULL
@@ -105,44 +120,44 @@ int reservationGetNumPpl(Reservation reservation);
 int reservationGetPrice(Reservation reservation);
 
 /**
- * compare function to the List use, compares reservations by hour, faculty
- * priority and the smallest room ID in the faculty.
- * in use for the report day print
- * @param element1 - first reservation
- * @param element2 - second reservation
- * @return -1 if element1 should be first, 1 if element2 should be first
- */
-int reservationCompareForPrint(ListElement element1, ListElement element2);
-
-/**
  * filter function for the List use, checks if the reservation day is the
  * current day in the system, meaning that the reservation is already done.
  * in use for the report day print
  * @param element - the reservation to be checked
  * @param cur_day - the current day in the system
- * @return - true if this is the reservation due day, false otherwise
+ * @return true if this is the reservation due day, false otherwise
  */
 bool isReservationDueDate(ListElement element, ListFilterKey cur_day);
+
+/**
+ * compares between 2 reservations by their due date
+ * @param reservation1
+ * @param reservation2
+ * @return 0 if same, positive num if the first is greater, negative otherwise
+ */
+int reservationCompareElements(ListElement element1, ListElement element2);
 
 /**
  * filter function for the List use, checks if the reservation day is the
  * current day in the system, meaning that the reservation is already done.
  * in use for the report day to keep all the reservations that are stiill
  * relevant
- * @param element - the reservation to be checked
+ * @param reservation - the reservation to be checked
  * @param cur_day - the current day in the system
- * @return - true if the reservation is still relevant, false otherwise
+ * @return true if the reservation is still relevant, false otherwise
  */
 bool isReservationRelevant(ListElement element, ListFilterKey cur_day);
 
-//TODO: add comments
 /**
- *
- * @param element1
- * @param element2
- * @return
+ * compare function to the List use, compares reservations by hour, faculty
+ * priority and the smallest room ID in the faculty.
+ * in use for the report day print
+ * @param reservation1 - first reservation
+ * @param reservation2 - second reservation
+ * @return 0 if same, positive num if the first is greater, negative otherwise
  */
-int reservationCompareElements(ListElement element1, ListElement element2);
+int reservationCompareForPrint(ListElement element1, ListElement element2);
+
 
 
 #endif //HW3_RESERVATION_H

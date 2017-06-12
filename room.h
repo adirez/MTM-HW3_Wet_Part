@@ -18,6 +18,7 @@ typedef struct Room_t *Room;
  */
 typedef enum {
     ROOM_SUCCESS,
+    ROOM_NULL_PARAMETER,
     ROOM_INVALID_PARAMETER,
     ROOM_OUT_OF_MEMORY
 } RoomErrorCode;
@@ -41,7 +42,7 @@ typedef enum {
  * @param difficulty - the difficulty level of the room
  * @param roomError - enum to get the result of the func:
  *                    ROOM_SUCCESS - room created successfully
- *                    ROOM_INVALID_PARAMETER - one of the params are Invalid
+ *                    ROOM_INVALID_PARAMETER - one of the params is Invalid
  *                    ROOM_OUT_OF_MEMORY - Allocation problem occurred
  * @return Room - a pointer to the new room if everything went well
  *         NULL - if the allocation was not successful or company_email is NULL
@@ -59,13 +60,11 @@ void roomDestroy(SetElement element);
 
 /**
  * a comparison of two rooms by faculty and id
- * @param room1 - the first room
- * @param room2 - the second room
- * @return -1 - INVALID_PARAMETER - if one of the params is NULL
- * @return 1 - rooms are different
- * @return 0 - rooms are equal
+ * @param element1 - the first room
+ * @param element2 - the second room
+ * @return 0 if same, positive num if the first is greater, negative otherwise
  */
-int roomCompareElements(SetElement room1, SetElement room2);
+int roomCompareElements(SetElement element1, SetElement element2);
 
 /**
  * receives a source room element and copies it's data into a newly created
@@ -86,7 +85,10 @@ TechnionFaculty roomGetNameFaculty(Room room);
  * receives a room and returns the email of the company that the room is listed
  * under
  * @param room - the requested room
- * @return a pointer to the char* if the allocation worked and NULL if failed
+ * @param roomError - enum to get the result of the func:
+ *                    ROOM_SUCCESS - email returned successfully
+ *                    ROOM_NULL_PARAMETER - ptr to room is NULL
+ * @return a pointer to the email if the allocation worked and NULL if failed
  */
 char *roomGetCompanyEmail(Room room, RoomErrorCode *roomError);
 

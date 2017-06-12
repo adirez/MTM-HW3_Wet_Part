@@ -17,7 +17,6 @@ struct Company_t {
     Set rooms;
 };
 
-
 /**...........................................................................*/
 /**-----------------------FUNCTIONS-IMPLEMENTATIONS---------------------------*/
 /**...........................................................................*/
@@ -25,6 +24,13 @@ struct Company_t {
 
 Company companyCreate(TechnionFaculty Faculty, char *email,
                       CompanyErrorCode *companyError) {
+    if(NULL == companyError){
+        return NULL;
+    }
+    if(NULL == email){
+        *companyError = COMPANY_NULL_PARAMETER;
+        return NULL;
+    }
     if (!isValidCompanyParams(Faculty, email)) {
         *companyError = COMPANY_INVALID_PARAMETER;
         return NULL;
@@ -59,8 +65,10 @@ void companyDestroy(SetElement element) {
 
 CompanyErrorCode companyAddRoom(Company company, int id, int price, int num_ppl,
                                 int open_time, int close_time, int difficulty) {
-    if (NULL == company || !isValidRoomParams(company->email, id, price,
-                                              num_ppl, difficulty)) {
+    if (NULL == company){
+        return COMPANY_NULL_PARAMETER;
+    }
+    if(!isValidRoomParams(company->email, id, price, num_ppl, difficulty)) {
         return COMPANY_INVALID_PARAMETER;
     }
     RoomErrorCode roomError;
@@ -85,7 +93,7 @@ CompanyErrorCode companyAddRoom(Company company, int id, int price, int num_ppl,
 
 CompanyErrorCode companyRemoveRoom(Company company, Room room) {
     if (NULL == company || NULL == room) {
-        return COMPANY_INVALID_PARAMETER;
+        return COMPANY_NULL_PARAMETER;
     }
     SetResult RemoveResult = setRemove(company->rooms, room);
     if (RemoveResult == SET_ITEM_DOES_NOT_EXIST) {
@@ -94,18 +102,10 @@ CompanyErrorCode companyRemoveRoom(Company company, Room room) {
     return COMPANY_SUCCESS;
 }
 
-int companyCompareElements(SetElement company1, SetElement company2) {
-    if (NULL == company1 || NULL == company2) {
-        return INVALID_PARAMETER;
-    }
-    Company ptr1 = company1, ptr2 = company2;
+int companyCompareElements(SetElement element1, SetElement element2) {
+    Company company1 = element1, company2 = element2;
 
-    int tmp_cmp = strcmp(ptr1->email, ptr2->email);
-    if (tmp_cmp == 0) {
-        return 0;
-    } else {
-        return 1;
-    }
+    return strcmp(company1->email, company2->email);
 }
 
 SetElement companyCopyElement(SetElement src_company) {
@@ -123,8 +123,11 @@ SetElement companyCopyElement(SetElement src_company) {
 }
 
 char *companyGetEmail(Company company, CompanyErrorCode *companyError) {
-    if (NULL == company) {
-        *companyError = COMPANY_INVALID_PARAMETER;
+    if (NULL == companyError) {
+        return NULL;
+    }
+    if (NULL == company){
+        *companyError = COMPANY_NULL_PARAMETER;
         return NULL;
     }
     char *email = malloc(strlen(company->email) + 1);

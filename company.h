@@ -19,10 +19,11 @@ typedef struct Company_t *Company;
  */
 typedef enum {
     COMPANY_SUCCESS,
-    COMPANY_ROOM_ALREADY_EXISTS,
-    COMPANY_ROOM_DOES_NOT_EXIST,
+    COMPANY_NULL_PARAMETER,
     COMPANY_INVALID_PARAMETER,
-    COMPANY_OUT_OF_MEMORY
+    COMPANY_OUT_OF_MEMORY,
+    COMPANY_ROOM_ALREADY_EXISTS,
+    COMPANY_ROOM_DOES_NOT_EXIST
 } CompanyErrorCode;
 
 /**
@@ -33,11 +34,11 @@ typedef enum {
  * @param Faculty - the name of the faculty that the company is listed under
  * @param companyError - enum to get the result of the func:
  *                     COMPANY_SUCCESS - company created successfully
- *                     COMPANY_INVALID_PARAMETER - one of the params are Invalid
+ *                     COMPANY_NULL_PARAMETER - if email is NULL
+ *                     COMPANY_INVALID_PARAMETER - one of the params is Invalid
  *                     COMPANY_OUT_OF_MEMORY - Allocation problem occurred
  * @return Company - a pointer to the successfully created company if everything
- *         went well
- *         NULL - if the allocation was not successful or email is NULL
+ *         went well NULL otherwise
  */
 Company companyCreate(TechnionFaculty Faculty, char *email,
                       CompanyErrorCode *companyError);
@@ -60,6 +61,7 @@ void companyDestroy(SetElement element);
  * @param working_hrs - start time and close time of the room
  * @param difficulty - the difficulty level of the room
  * @return COMPANY_SUCCESS - the function finished with no errors
+ *         COMPANY_NULL_PARAMETER - company is NULL
  *         COMPANY_INVALID_PARAMETER - if company is NULL
  *         COMPANY_MEMORY_PROBLEM - the room allocation was not successful
  *         COMPANY_ROOM_ALREADY_EXISTS - room with same id under that company
@@ -75,20 +77,18 @@ CompanyErrorCode companyAddRoom(Company company, int id, int price,
  * @param room - the room which needs to be removed from the company
  * @return COMPANY_SUCCESS - the room was removed successfully
  *         COMPANY_ROOM_DOES_NOT_EXIST - the room does not exist in the company
- *         COMPANY_INVALID_PARAMETER - one of the parameters was invalid
+ *         COMPANY_NULL_PARAMETER - company ot room are NULL
  *         reservation
  */
 CompanyErrorCode companyRemoveRoom(Company company, Room room);
 
 /**
  * a comparison of two companies by email
- * @param company1 - the first company
- * @param company2 - the second company
- * @return -1 - INVALID_PARAMETER
- * @return 1 - emails are different
- * @return 0 - emails are equal
+ * @param element1 - the first company
+ * @param element2 - the second company
+ * @return 0 if same, positive num if the first is greater, negative otherwise
  */
-int companyCompareElements(SetElement company1, SetElement company2);
+int companyCompareElements(SetElement element1, SetElement element2);
 
 /**
  * receives a source company element and copies it's data into a newly created
@@ -99,8 +99,12 @@ int companyCompareElements(SetElement company1, SetElement company2);
 SetElement companyCopyElement(SetElement src_company);
 
 /**
- * receives a company and returns it's email
+ * receives a company and returns its email
  * @param company - the requested company
+ * @param companyError - enum to get the result of the func:
+ *                     COMPANY_SUCCESS - email returned successfully
+ *                     COMPANY_NULL_PARAMETER - if company is NULL
+ *                     COMPANY_OUT_OF_MEMORY - Allocation problem occurred
  * @return a pointer to the char* if the allocation worked and NULL if failed
  */
 char *companyGetEmail(Company company, CompanyErrorCode *companyError);

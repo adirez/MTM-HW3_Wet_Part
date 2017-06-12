@@ -8,6 +8,8 @@
 
 
 bool testRoomCreate() {
+    ASSERT_TEST(roomCreate(PHYSICS , "adi@g", 123, 4, 20, 1, 2, 1, NULL)
+                == NULL);
     RoomErrorCode roomError;
 
     ASSERT_TEST(roomCreate(UNKNOWN , "adi@g", 123, 4, 20, 1, 2, 1, &roomError)
@@ -62,12 +64,12 @@ bool testRoomCompareElements() {
     roomDestroy(room2);
     Room room3 = roomCreate(BIOLOGY, "adi@gmail", 123, 12, 20, 1, 2, 1,
                             &roomError);
-    ASSERT_TEST(roomCompareElements(room1, room3) != 0);
+    ASSERT_TEST(roomCompareElements(room1, room3) < 0);
     roomDestroy(room3);
 
     Room room4 = roomCreate(PHYSICS, "adi@gmail", 12, 12, 20, 1, 2, 1,
                             &roomError);
-    ASSERT_TEST(roomCompareElements(room1, room4) != 0);
+    ASSERT_TEST(roomCompareElements(room1, room4) > 0);
     roomDestroy(room4);
 
     roomDestroy(room1);
@@ -105,7 +107,7 @@ bool testRoomGetNameFaculty(){
 bool testRoomGetCompanyEmail() {
     RoomErrorCode roomError;
     ASSERT_TEST(roomGetCompanyEmail(NULL, &roomError) == NULL);
-    ASSERT_TEST(roomError == ROOM_INVALID_PARAMETER);
+    ASSERT_TEST(roomError == ROOM_NULL_PARAMETER);
 
     Room room = roomCreate(PHYSICS ,"adi@gmail", 123, 12, 20, 1, 2, 1,
                             &roomError);

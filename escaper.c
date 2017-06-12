@@ -24,10 +24,16 @@ struct Escaper_t {
 
 Escaper escaperCreate(char *email, TechnionFaculty escaperFaculty,
                       int skill_level, EscaperErrorCode *escaperError) {
-    if(NULL == email || !isValidEscaperParams(escaperFaculty, email,
-                                            skill_level)){
-        *escaperError = ESCAPER_INVALID_PARAMETER;
+    if(NULL == escaperError){
         return NULL;
+    }
+    if(NULL == email){
+        *escaperError = ESCAPER_NULL_PARAMETER;
+        return NULL;
+    }
+    if(!isValidEscaperParams(escaperFaculty, email, skill_level)){
+    *escaperError = ESCAPER_INVALID_PARAMETER;
+    return NULL;
     }
     Escaper escaper = malloc(sizeof(*escaper));
     if (NULL == escaper) {
@@ -59,17 +65,9 @@ void escaperDestroy(SetElement element) {
 }
 
 
-int escaperCompareElements(SetElement escaper1, SetElement escaper2) {
-    if (NULL == escaper1 || NULL == escaper2) {
-        return INVALID_PARAMETER;
-    }
-    Escaper ptr1 = escaper1, ptr2 = escaper2;
-    int tmp_cmp = strcmp(ptr1->email, ptr2->email);
-    if (tmp_cmp == 0) {
-        return 0;
-    } else {
-        return 1;
-    }
+int escaperCompareElements(SetElement element1, SetElement element2) {
+    Escaper escaper1 = element1, escaper2 = element2;
+    return  strcmp(escaper1->email, escaper2->email);
 }
 
 SetElement escaperCopyElement(SetElement src_escaper) {
@@ -87,8 +85,11 @@ SetElement escaperCopyElement(SetElement src_escaper) {
 }
 
 char *escaperGetEmail(Escaper escaper, EscaperErrorCode *escaperError) {
+    if(NULL == escaperError){
+        return NULL;
+    }
     if (NULL == escaper) {
-        *escaperError = ESCAPER_INVALID_PARAMETER;
+        *escaperError = ESCAPER_NULL_PARAMETER;
         return NULL;
     }
     char *email = malloc(strlen(escaper->email) + 1);
