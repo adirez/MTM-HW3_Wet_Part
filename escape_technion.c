@@ -19,6 +19,19 @@ struct EscapeTechnion_t {
 };
 
 /**
+ *
+ * @param escapeTechnion
+ * @return
+ */
+static MtmErrorCode initializeFaculties(EscapeTechnion escapeTechnion);
+
+/**
+ *
+ * @param escapeTechnion
+ */
+static void destroyFaculties(EscapeTechnion escapeTechnion);
+
+/**
  * receives an email and an escapeTechnion system and checks if the email
  * already exists in the system wheather in another escaper or company
  * @param escapeTechnion - the system to iterate through
@@ -161,6 +174,12 @@ EscapeTechnion escapeTechnionCreate() {
     if (NULL == escapeTechnion->faculties) {
         free(escapeTechnion);
         return NULL;
+    }
+
+    MtmErrorCode errorCode = initializeFaculties(escapeTechnion);
+    assert(errorCode != MTM_INVALID_PARAMETER);
+    if (errorCode == MTM_OUT_OF_MEMORY) {
+        return MTM_OUT_OF_MEMORY;
     }
 
     escapeTechnion->escapers = setCreate(escaperCopyElement, escaperDestroy,
@@ -480,6 +499,40 @@ void escapeTechnionReportDay(EscapeTechnion escapeTechnion,FILE* output_channel)
 /**...........................................................................*/
 
 
+static MtmErrorCode initializeFaculties(EscapeTechnion escapeTechnion) {
+    if (NULL == escapeTechnion) {
+        return MTM_INVALID_PARAMETER;
+    }
+
+    for (TechnionFaculty idx = 0; idx < UNKNOWN; (int)idx++) {
+        Faculty faculty = facultyCreate(idx);
+        if (NULL == faculty) {
+            destroyFaculties(escapeTechnion);
+            return MTM_OUT_OF_MEMORY;
+        }
+
+        SetResult setResult = setAdd(escapeTechnion->faculties, faculty);
+        facultyDestroy(faculty);
+
+        assert(setResult != SET_NULL_ARGUMENT &&
+               setResult != SET_ITEM_ALREADY_EXISTS);
+
+        if (setResult == SET_OUT_OF_MEMORY) {
+            destroyFaculties(escapeTechnion);
+            return MTM_OUT_OF_MEMORY;
+        }
+    }
+
+    return MTM_SUCCESS;
+}
+
+static void destroyFaculties(EscapeTechnion escapeTechnion) {
+    if (NULL == escapeTechnion) {
+        return;
+    }
+
+    setDestroy(escapeTechnion->faculties);
+}
 static MtmErrorCode reserveRoom(EscapeTechnion escapeTechnion, Escaper escaper,
                                 Company company, Room room, int num_ppl,
                                 int day, int hour) {
