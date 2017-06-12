@@ -58,7 +58,13 @@ FacultyErrorCode facultyAddCompany(Faculty faculty, char *email) {
         return FACULTY_INVALID_PARAMETER;
     }
 
-    Company company = companyCreate(faculty->Name, email);
+    CompanyErrorCode companyError;
+    Company company = companyCreate(faculty->Name, email, &companyError);
+    if (companyError == COMPANY_INVALID_PARAMETER) {
+        return FACULTY_INVALID_PARAMETER;
+    } else if (companyError == COMPANY_OUT_OF_MEMORY) {
+        return FACULTY_OUT_OF_MEMORY;
+    }
 
     if (NULL == company) {
         return  FACULTY_OUT_OF_MEMORY;

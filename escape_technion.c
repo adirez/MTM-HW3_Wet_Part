@@ -198,7 +198,7 @@ EscapeTechnion escapeTechnionCreate() {
     MtmErrorCode errorCode = initializeFaculties(escapeTechnion);
     assert(errorCode != MTM_INVALID_PARAMETER);
     if (errorCode == MTM_OUT_OF_MEMORY) {
-        return MTM_OUT_OF_MEMORY;
+        return NULL;
     }
 
     escapeTechnion->escapers = setCreate(escaperCopyElement, escaperDestroy,
@@ -278,7 +278,9 @@ MtmErrorCode escapeTechnionRemoveCompany(EscapeTechnion escapeTechnion,
     }
 
     FacultyErrorCode errorCode = facultyRemoveCompany(company_faculty, company);
-    assert(FACULTY_SUCCESS == errorCode);
+    if (errorCode == FACULTY_INVALID_PARAMETER) {
+        return MTM_INVALID_PARAMETER;
+    }
 
     return MTM_SUCCESS;
 }
@@ -357,8 +359,11 @@ MtmErrorCode escapeTechnionAddEscaper(EscapeTechnion escapeTechnion,
         return MTM_EMAIL_ALREADY_EXISTS;
     }
 
-    Escaper escaper = escaperCreate(email, nameFaculty, skill);
-    if (NULL == escaper) {
+    EscaperErrorCode escaperError;
+    Escaper escaper = escaperCreate(email, nameFaculty, skill, &escaperError);
+    assert(escaperError != ESCAPER_INVALID_PARAMETER);
+
+    if (escaperError == ESCAPER_OUT_OF_MEMORY) {
         return MTM_OUT_OF_MEMORY;
     }
 
@@ -483,22 +488,25 @@ MtmErrorCode escapeTechnionReportDay(EscapeTechnion escapeTechnion,
                                          isReservationDueDate, &system_day);
     num_events = listGetSize(ended_reservations);
     mtmPrintDayHeader(stdout, system_day, num_events);
-
     List new_reservation_list = listFilter(escapeTechnion->reservations,
-                                           isReservationRelevant,
-                                           &system_day);
+                                           isReservationRelevant, &system_day);
     listDestroy(escapeTechnion->reservations);
     escapeTechnion->reservations = new_reservation_list;
     listSort(ended_reservations, reservationCompareForPrint);
-
     LIST_FOREACH(Reservation, iterator, ended_reservations) {
         Escaper escaper = reservationGetEscaper(iterator);
-        char *escaper_email = escaperGetEmail(escaper);
+        EscaperErrorCode escaperError;
+        char *escaper_email = escaperGetEmail(escaper, &escaperError);
+        if (escaperError == ESCAPER_OUT_OF_MEMORY) {
+            return MTM_OUT_OF_MEMORY;
+        }
         int escaper_skill = escaperGetSkillLevel(escaper);
         TechnionFaculty escaper_Faculty = escaperGetNameFaculty(escaper);
         Company company = reservationGetCompany(iterator);
-        char *company_email = companyGetEmail(company);
-        if (NULL == company_email) {
+        CompanyErrorCode companyError;
+        char *company_email = companyGetEmail(company, &companyError);
+        if (companyError == COMPANY_OUT_OF_MEMORY) {
+            free(escaper_email);
             return MTM_OUT_OF_MEMORY;
         }
         TechnionFaculty company_faculty = companyGetFaculty(company);
@@ -508,12 +516,12 @@ MtmErrorCode escapeTechnionReportDay(EscapeTechnion escapeTechnion,
         int hour = reservationGetHour(iterator);
         int num_ppl = reservationGetNumPpl(iterator);
         int price = reservationGetPrice(iterator);
-
         Faculty tmpFaculty = getFacultyByName(escapeTechnion, company_faculty);
         facultyIncEarnings(tmpFaculty, price);
         mtmPrintOrder(stdout, escaper_email, escaper_skill,
                       escaper_Faculty, company_email, company_faculty,
                       room_id, hour, room_difficulty, num_ppl, price);
+        free(escaper_email);
         free(company_email);
     }
     listDestroy(ended_reservations);
