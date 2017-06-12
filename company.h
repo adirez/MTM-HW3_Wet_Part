@@ -31,11 +31,16 @@ typedef enum {
  * @param email - the email address of the company which will be used
  *        to identify the company.
  * @param Faculty - the name of the faculty that the company is listed under
+ * @param companyError - enum to get the result of the func:
+ *                     COMPANY_SUCCESS - company created successfully
+ *                     COMPANY_INVALID_PARAMETER - one of the params are Invalid
+ *                     COMPANY_OUT_OF_MEMORY - Allocation problem occurred
  * @return Company - a pointer to the successfully created company if everything
  *         went well
  *         NULL - if the allocation was not successful or email is NULL
  */
-Company companyCreate(TechnionFaculty Faculty, char *email);
+Company companyCreate(TechnionFaculty Faculty, char *email,
+                      CompanyErrorCode *companyError);
 
 /**
  * destroys a company and all of it's components. releases all relevant
@@ -98,11 +103,15 @@ SetElement companyCopyElement(SetElement src_company);
  * @param company - the requested company
  * @return a pointer to the char* if the allocation worked and NULL if failed
  */
-char *companyGetEmail(Company company);
+char *companyGetEmail(Company company, CompanyErrorCode *companyError);
 
 /**
  * receives a company and returns the faculty it's under
  * @param company - the requested company
+ * @param companyError - enum to get the result of the func:
+ *                     COMPANY_SUCCESS - company created successfully
+ *                     COMPANY_INVALID_PARAMETER - one of the params are Invalid
+ *                     COMPANY_OUT_OF_MEMORY - Allocation problem occurred
  * @return the faculty the company's listed in or UNKNOWN if an error was found
  */
 TechnionFaculty companyGetFaculty(Company company);
@@ -116,6 +125,22 @@ TechnionFaculty companyGetFaculty(Company company);
  *         false - if the emails are different
  */
 bool isCompanyEmailEqual(Company company, char *email);
+
+/**
+ * searches for a room in the company by its ID and returns it if exists
+ * @param company - ptr to the company
+ * @param id - the room ID that we are looking for
+ * @return the room if we found it and NULL is it is not in the company or
+ *         the company is NULL
+ */
+Room companyGetRoomByID(Company company, int id);
+
+/**
+ * receives a company and returns the smallest room id in the company
+ * @param company - ptr to the company
+ * @return the smallest id room in the company
+ */
+int companyGetMinRoomID(Company company);
 
 /**
  * receives a company, faculty and an escaper with his reservation details and
@@ -136,22 +161,5 @@ Room companyMostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
                                 int P_e, int skill, int *result,
                                 int *faculty_distance,
                                 int *room_id);
-
-/**
- * searches for a room in the company by its ID and returns it if exists
- * @param company - ptr to the company
- * @param id - the room ID that we are looking for
- * @return the room if we found it and NULL is it is not in the company or
- *         the company is NULL
- */
-Room companyGetRoomByID(Company company, int id);
-
-//TODO: add comments
-/**
- *
- * @param company
- * @return
- */
-int companyGetMinRoomID(Company company);
 
 #endif //ESCAPETECHNION_COMPANY_H

@@ -13,6 +13,14 @@
  */
 typedef struct Escaper_t *Escaper;
 
+/**
+ * a type used to return error codes related to Escaper
+ */
+typedef enum {
+    ESCAPER_SUCCESS,
+    ESCAPER_INVALID_PARAMETER,
+    ESCAPER_OUT_OF_MEMORY
+} EscaperErrorCode;
 
 /**...........................................................................*/
 /**-------------------------FUNCTIONS-DECLARATIONS----------------------------*/
@@ -24,11 +32,15 @@ typedef struct Escaper_t *Escaper;
  * @param email - the email of the escaper to be created
  * @param Faculty - the Faculty the escaper is listed in
  * @param skill_level - the expertise of the escaper
+ * @param escaperError - enum to get the result of the func:
+ *                    ESCAPER_SUCCESS - escaper created successfully
+ *                    ESCAPER_INVALID_PARAMETER - one of the params are Invalid
+ *                    ESCAPER_OUT_OF_MEMORY - Allocation problem occurred
  * @return Escaper - ptr to the new escaper if everything went well
  *         NULL - if the allocation was not successful or if email is NULL
  */
 Escaper escaperCreate(char *email, TechnionFaculty escaperFaculty,
-                      int skill_level);
+                      int skill_level, EscaperErrorCode *escaperError);
 
 /**
  * destroys an escaper and and releases all relevant allocated memory.
@@ -44,7 +56,7 @@ void escaperDestroy(SetElement element);
  * @return 1 - emails are different
  * @return 0 - emails are equal
  */
-int escaperCompareElements(SetElement escaper_1, SetElement escaper_2);
+int escaperCompareElements(SetElement escaper1, SetElement escaper2);
 
 /**
  * receives a source escaper element and copies it's data into a newly created
@@ -57,9 +69,13 @@ SetElement escaperCopyElement(SetElement src_escaper);
 /**
  * receives an escaper and returns the email listed in his profile
  * @param escaper - the ptr to the escaper
+ * @param escaperError - enum to get the result of the func:
+ *                    ESCAPER_SUCCESS - escaper created successfully
+ *                    ESCAPER_INVALID_PARAMETER - one of the params are Invalid
+ *                    ESCAPER_OUT_OF_MEMORY - Allocation problem occurred
  * @return a pointer to the char* if the allocation worked and NULL if failed
  */
-char *escaperGetEmail(Escaper escaper);
+char *escaperGetEmail(Escaper escaper, EscaperErrorCode *escaperError);
 
 /**
  * receives an escaper and returns the faculty he's listed in

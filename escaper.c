@@ -23,24 +23,28 @@ struct Escaper_t {
 
 
 Escaper escaperCreate(char *email, TechnionFaculty escaperFaculty,
-                      int skill_level) {
-    assert(isValidEscaperParams(escaperFaculty, email, skill_level));
-    if (NULL == email){
+                      int skill_level, EscaperErrorCode *escaperError) {
+    if(NULL == email || !isValidEscaperParams(escaperFaculty, email,
+                                            skill_level)){
+        *escaperError = ESCAPER_INVALID_PARAMETER;
         return NULL;
     }
     Escaper escaper = malloc(sizeof(*escaper));
     if (NULL == escaper) {
+        *escaperError = ESCAPER_OUT_OF_MEMORY;
         return NULL;
     }
 
     escaper->email = malloc(strlen(email) + 1);
     if (NULL == escaper->email) {
         free(escaper);
+        *escaperError = ESCAPER_OUT_OF_MEMORY;
         return NULL;
     }
     strcpy(escaper->email, email);
     escaper->escaperFaculty = escaperFaculty;
     escaper->skill_level = skill_level;
+    *escaperError = ESCAPER_SUCCESS;
     return escaper;
 }
 
@@ -55,11 +59,11 @@ void escaperDestroy(SetElement element) {
 }
 
 
-int escaperCompareElements(SetElement escaper_1, SetElement escaper_2) {
-    if (NULL == escaper_1 || NULL == escaper_2) {
+int escaperCompareElements(SetElement escaper1, SetElement escaper2) {
+    if (NULL == escaper1 || NULL == escaper2) {
         return INVALID_PARAMETER;
     }
-    Escaper ptr1 = escaper_1, ptr2 = escaper_2;
+    Escaper ptr1 = escaper1, ptr2 = escaper2;
     int tmp_cmp = strcmp(ptr1->email, ptr2->email);
     if (tmp_cmp == 0) {
         return 0;
@@ -72,21 +76,28 @@ SetElement escaperCopyElement(SetElement src_escaper) {
     if (NULL == src_escaper) {
         return NULL;
     }
-    Escaper ptr = src_escaper;
+    EscaperErrorCode escaperError;
+    Escaper ptr = src_escaper; //to make the code clearer
     Escaper escaper = escaperCreate(ptr->email, ptr->escaperFaculty,
-                                    ptr->skill_level);
+                                 ptr->skill_level, &escaperError);
+    if(escaperError != ESCAPER_SUCCESS){
+        return NULL;
+    }
     return escaper;
 }
 
-char *escaperGetEmail(Escaper escaper) {
+char *escaperGetEmail(Escaper escaper, EscaperErrorCode *escaperError) {
     if (NULL == escaper) {
+        *escaperError = ESCAPER_INVALID_PARAMETER;
         return NULL;
     }
     char *email = malloc(strlen(escaper->email) + 1);
     if (NULL == email) {
+        *escaperError = ESCAPER_OUT_OF_MEMORY;
         return NULL;
     }
     strcpy(email, escaper->email);
+    *escaperError = ESCAPER_SUCCESS;
     return email;
 }
 

@@ -224,7 +224,7 @@ int calcRoomMatch(int room_num_ppl, int reservation_num_ppl,
 
 
 
-/*void checkBetterRoom(Escaper escaper, int cur_result, int cur_room_id,
+void checkBetterRoom(Escaper escaper, int cur_result, int cur_room_id,
                      int cur_faculty_diff, Room cur_recommended_room,
                      int *min_result, int *min_room_id,
                      int *min_faculty_diff, Room *most_recommended_room,
@@ -257,7 +257,7 @@ int calcRoomMatch(int room_num_ppl, int reservation_num_ppl,
             }
         }
     }
-}*/
+}
 
 /**...........................................................................*/
 /**--------------------------STATIC-FUNCTIONS---------------------------------*/

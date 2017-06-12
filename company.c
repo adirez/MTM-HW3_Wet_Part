@@ -23,13 +23,15 @@ struct Company_t {
 /**...........................................................................*/
 
 
-Company companyCreate(TechnionFaculty Faculty, char *email) {
-    assert(isValidCompanyParams(Faculty, email));
-    if (NULL == email) {
+Company companyCreate(TechnionFaculty Faculty, char *email,
+                      CompanyErrorCode *companyError) {
+    if (!isValidCompanyParams(Faculty, email)) {
+        *companyError = COMPANY_INVALID_PARAMETER;
         return NULL;
     }
     Company company = malloc(sizeof(*company));
     if (NULL == company) {
+        *companyError = COMPANY_OUT_OF_MEMORY;
         return NULL;
     }
 
@@ -41,6 +43,7 @@ Company companyCreate(TechnionFaculty Faculty, char *email) {
     strcpy(company->email, email);
     company->companyFaculty = Faculty;
     company->rooms = setCreate(roomCopyElement,roomDestroy,roomCompareElements);
+    *companyError = COMPANY_SUCCESS;
     return company;
 }
 
@@ -54,16 +57,19 @@ void companyDestroy(SetElement element) {
     free(company);
 }
 
-CompanyErrorCode companyAddRoom(Company company, int id, int price,
-                                int num_ppl, int open_time, int close_time,
-                                int difficulty) {
-    if (NULL == company) {
+CompanyErrorCode companyAddRoom(Company company, int id, int price, int num_ppl,
+                                int open_time, int close_time, int difficulty) {
+    if (NULL == company || !isValidRoomParams(company->email, id, price,
+                                              num_ppl, difficulty)) {
         return COMPANY_INVALID_PARAMETER;
     }
-    assert(isValidRoomParams(company->email, id, price, num_ppl, difficulty));
+    RoomErrorCode roomError;
     Room room = roomCreate(company->companyFaculty, company->email, id, price,
-                           num_ppl, open_time, close_time, difficulty);
+                        num_ppl, open_time, close_time, difficulty, &roomError);
     if (NULL == room) {
+        if (roomError == INVALID_PARAMETER) {
+            return COMPANY_INVALID_PARAMETER;
+        }
         return COMPANY_OUT_OF_MEMORY;
     }
 
@@ -106,20 +112,28 @@ SetElement companyCopyElement(SetElement src_company) {
     if (NULL == src_company) {
         return NULL;
     }
+    CompanyErrorCode companyError;
     Company ptr = src_company;
-    Company company = companyCreate(ptr->companyFaculty, ptr->email);
+    Company company = companyCreate(ptr->companyFaculty, ptr->email,
+                                    &companyError);
+    if (companyError != COMPANY_SUCCESS) {
+        return NULL;
+    }
     return company;
 }
 
-char *companyGetEmail(Company company) {
+char *companyGetEmail(Company company, CompanyErrorCode *companyError) {
     if (NULL == company) {
+        *companyError = COMPANY_INVALID_PARAMETER;
         return NULL;
     }
     char *email = malloc(strlen(company->email) + 1);
     if (NULL == email) {
+        *companyError = COMPANY_OUT_OF_MEMORY;
         return NULL;
     }
     strcpy(email, company->email);
+    *companyError = COMPANY_SUCCESS;
     return email;
 }
 
@@ -138,43 +152,6 @@ bool isCompanyEmailEqual(Company company, char *email) {
         return true;
     }
     return false;
-}
-
-Room companyMostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
-                                int P_e, int skill, int *result,
-                                int *faculty_distance,
-                                int *room_id) {
-    Room best_room = NULL;
-    int best_result = INVALID_PARAMETER;
-    int best_id = INVALID_PARAMETER;
-    int best_distance = abs((int)escaperFaculty-(int)(company->companyFaculty));
-    Room room_iterator = setGetFirst(company->rooms);
-    if (NULL == room_iterator) {
-        return NULL;
-    }
-    while (NULL != room_iterator) {
-        int P_r = roomGetNumPpl(room_iterator);
-        int difficulty = roomGetDifficulty(room_iterator);
-        int tmp_result = calcRoomMatch(P_r, P_r, difficulty, skill);
-        if (best_result == INVALID_PARAMETER || tmp_result < best_result) {
-            best_room = room_iterator;
-            best_result = tmp_result;
-            best_id = roomGetID(room_iterator);
-        }
-        if (tmp_result == best_result ) {
-            int temp_id = roomGetID(room_iterator);
-            if (temp_id < best_id) {
-                best_room = room_iterator;
-                best_result = tmp_result;
-                best_id = temp_id;
-            }
-        }
-        room_iterator = setGetNext(company->rooms);
-    }
-    *result = best_result;
-    *faculty_distance = best_distance;
-    *room_id = best_id;
-    return best_room;
 }
 
 int companyGetMinRoomID(Company company) {
@@ -206,4 +183,41 @@ Room companyGetRoomByID(Company company, int id){
         room_iterator = setGetNext(company->rooms);
     }
     return NULL;
+}
+
+Room companyMostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
+                                int P_e, int skill, int *result,
+                                int *faculty_distance,
+                                int *room_id) {
+    Room best_room = NULL;
+    int best_result = INVALID_PARAMETER;
+    int best_id = INVALID_PARAMETER;
+    int best_distance = abs((int)escaperFaculty-(int)(company->companyFaculty));
+    Room room_iterator = setGetFirst(company->rooms);
+    if (NULL == room_iterator) {
+        return NULL;
+    }
+    while (NULL != room_iterator) {
+        int P_r = roomGetNumPpl(room_iterator);
+        int difficulty = roomGetDifficulty(room_iterator);
+        int tmp_result = calcRoomMatch(P_e, P_r, difficulty, skill);
+        if (best_result == INVALID_PARAMETER || tmp_result < best_result) {
+            best_room = room_iterator;
+            best_result = tmp_result;
+            best_id = roomGetID(room_iterator);
+        }
+        if (tmp_result == best_result ) {
+            int temp_id = roomGetID(room_iterator);
+            if (temp_id < best_id) {
+                best_room = room_iterator;
+                best_result = tmp_result;
+                best_id = temp_id;
+            }
+        }
+        room_iterator = setGetNext(company->rooms);
+    }
+    *result = best_result;
+    *faculty_distance = best_distance;
+    *room_id = best_id;
+    return best_room;
 }

@@ -24,12 +24,12 @@ bool testEscaperCreate() {
 }
 
 bool testEscaperDestroy() {
-    ASSERT_TEST(escaperDestroy(NULL) == ESCAPER_INVALID_PARAMETER);
+    escaperDestroy(NULL);
 
     EscaperErrorCode errorCode;
     Escaper escaper = escaperCreate("adi@gmail", PHYSICS, 5, &errorCode);
     ASSERT_TEST(errorCode == ESCAPER_SUCCESS);
-    ASSERT_TEST(escaperDestroy(escaper) == ESCAPER_SUCCESS);
+    escaperDestroy(escaper);
 
     return true;
 }
@@ -81,15 +81,12 @@ bool testEscaperGetEmail() {
     return true;
 }
 
-bool testEscaperGetFaculty() {
+bool testEscaperGetNameFaculty() {
     EscaperErrorCode errorCode;
     Escaper escaper = escaperCreate("adi@gmail", PHYSICS, 5, &errorCode);
-    ASSERT_TEST(escaperGetFaculty(NULL, &errorCode) == UNKNOWN);
-    ASSERT_TEST(errorCode == ESCAPER_INVALID_PARAMETER);
+    ASSERT_TEST(escaperGetNameFaculty(NULL) == UNKNOWN);
 
-    TechnionFaculty faculty = escaperGetFaculty(escaper, &errorCode);
-    ASSERT_TEST(errorCode == ESCAPER_SUCCESS);
-    ASSERT_TEST(faculty == PHYSICS);
+    ASSERT_TEST(escaperGetNameFaculty(escaper) == PHYSICS);
 
     escaperDestroy(escaper);
     return true;
@@ -97,12 +94,9 @@ bool testEscaperGetFaculty() {
 bool testEscaperGetSkillLevel() {
     EscaperErrorCode errorCode;
     Escaper escaper = escaperCreate("adi@gmail", PHYSICS, 5, &errorCode);
-    ASSERT_TEST(escaperGetSkillLevel(NULL, &errorCode) == -1);
-    ASSERT_TEST(errorCode == ESCAPER_INVALID_PARAMETER);
+    ASSERT_TEST(escaperGetSkillLevel(NULL) == -1);
 
-    int skill_level = escaperGetSkillLevel(escaper, &errorCode);
-    ASSERT_TEST(errorCode == ESCAPER_SUCCESS);
-    ASSERT_TEST(skill_level == 5);
+    ASSERT_TEST(escaperGetSkillLevel(escaper) == 5);
 
     escaperDestroy(escaper);
     return true;
@@ -112,9 +106,9 @@ bool testIsEscaperWithEmail() {
     EscaperErrorCode errorCode;
     Escaper escaper = escaperCreate("adi@gmail", PHYSICS, 5, &errorCode);
 
-    ASSERT_TEST(isEscaperWithEmail(NULL, "adi@gmail") == false);
-    ASSERT_TEST(isEscaperWithEmail(escaper, NULL) == false);
-    ASSERT_TEST(isEscaperWithEmail(escaper, "adi@gmail") == true);
+    ASSERT_TEST(isEscaperEmailEqual(NULL, "adi@gmail") == false);
+    ASSERT_TEST(isEscaperEmailEqual(escaper, NULL) == false);
+    ASSERT_TEST(isEscaperEmailEqual(escaper, "adi@gmail") == true);
 
     escaperDestroy(escaper);
     return true;
@@ -127,7 +121,7 @@ int main(int argv, char **arc) {
     RUN_TEST(testEscaperCompareElements);
     RUN_TEST(testEscaperCopyElement);
     RUN_TEST(testEscaperGetEmail);
-    RUN_TEST(testEscaperGetFaculty);
+    RUN_TEST(testEscaperGetNameFaculty);
     RUN_TEST(testEscaperGetSkillLevel);
     RUN_TEST(testIsEscaperWithEmail);
 
