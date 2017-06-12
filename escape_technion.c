@@ -478,6 +478,9 @@ void escapeTechnionReportDay(EscapeTechnion escapeTechnion,FILE* output_channel)
         TechnionFaculty escaper_Faculty = escaperGetNameFaculty(escaper);
         Company company = reservationGetCompany(iterator);
         char *company_email = companyGetEmail(company);
+        if (NULL == company_email) {
+            return; //TODO what are we supposed to do..?
+        }
         TechnionFaculty company_faculty = companyGetFaculty(company);
         Room room = reservationGetRoom(iterator);
         int room_id = roomGetID(room);
@@ -485,9 +488,13 @@ void escapeTechnionReportDay(EscapeTechnion escapeTechnion,FILE* output_channel)
         int hour = reservationGetHour(iterator);
         int num_ppl = reservationGetNumPpl(iterator);
         int price = reservationGetPrice(iterator);
+
+        Faculty tmpFaculty = getFacultyByName(escapeTechnion, company_faculty);
+        facultyIncEarnings(tmpFaculty, price);
         mtmPrintOrder(stdout, escaper_email, escaper_skill,
                       escaper_Faculty, company_email, company_faculty,
                       room_id, hour, room_difficulty, num_ppl, price);
+        free(company_email);
     }
     listDestroy(ended_reservations);
 
