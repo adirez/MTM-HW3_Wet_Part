@@ -149,7 +149,6 @@ static MtmErrorCode findClosestTime(EscapeTechnion escapeTechnion, Room room,
 static Company getCompanyByEmail(EscapeTechnion escapeTechnion, char *email,
                                 Faculty *company_faculty);
 
-
 /**
  *
  * @param escapeTechnion
@@ -159,6 +158,26 @@ static Company getCompanyByEmail(EscapeTechnion escapeTechnion, char *email,
  */
 static Room getRoomByID(EscapeTechnion escapeTechnion,
                         TechnionFaculty nameFaculty, int id);
+
+static Faculty getBetterFaculty(Faculty faculty_1, int earnings_1,
+                                Faculty faculty_2, int earnings_2);
+
+static void findBestFaculties(Faculty *cur_first, int *first_earnings,
+                              Faculty *cur_second, int *second_earnings,
+                              Faculty *cur_third, int *third_earnings,
+                              Faculty faculty, int faculty_earnings);
+
+static int getEscapeTechnionEarnings(EscapeTechnion escapeTechnion);
+
+
+static void escapeTechnionBestFaculties(EscapeTechnion escapeTechnion,
+                                        Faculty *first_faculty,
+                                        int *first_faculty_earnings,
+                                        Faculty *second_faculty,
+                                        int *second_faculty_earnings,
+                                        Faculty *third_faculty,
+                                        int *third_faculty_earnings);
+
 
 /**---------------------------------------------------------------------------*/
 
@@ -454,9 +473,10 @@ MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
                        most_recommended_room, num_ppl, day, hour);
 }
 
-void escapeTechnionReportDay(EscapeTechnion escapeTechnion,FILE* output_channel) {
-    if (escapeTechnion == NULL) {
-        return;
+MtmErrorCode escapeTechnionReportDay(EscapeTechnion escapeTechnion,
+                                     FILE *output_channel) {
+    if (NULL == escapeTechnion || NULL == output_channel) {
+        return MTM_NULL_PARAMETER; //TODO or MTM_CANNOT_OPEN_FILE?
     }
     int system_day = escapeTechnion->current_day, num_events;
     List ended_reservations = listFilter(escapeTechnion->reservations,
@@ -479,7 +499,7 @@ void escapeTechnionReportDay(EscapeTechnion escapeTechnion,FILE* output_channel)
         Company company = reservationGetCompany(iterator);
         char *company_email = companyGetEmail(company);
         if (NULL == company_email) {
-            return; //TODO what are we supposed to do..?
+            return MTM_OUT_OF_MEMORY;
         }
         TechnionFaculty company_faculty = companyGetFaculty(company);
         Room room = reservationGetRoom(iterator);
@@ -497,9 +517,42 @@ void escapeTechnionReportDay(EscapeTechnion escapeTechnion,FILE* output_channel)
         free(company_email);
     }
     listDestroy(ended_reservations);
-
+    mtmPrintDayFooter(output_channel, escapeTechnion->current_day);
     escapeTechnion->current_day += 1;
+    return MTM_SUCCESS;
 }
+
+MtmErrorCode escapeTechnionPrintFaculties(EscapeTechnion escapeTechnion,
+                                          FILE *output_channel) {
+    if (NULL == escapeTechnion || NULL == output_channel) {
+        return MTM_NULL_PARAMETER; //TODO or MTM_CANNOT_OPEN_FILE?
+    }
+
+    int num_faculties = (int)UNKNOWN;
+    int num_days = escapeTechnion->current_day;
+    int total_revenue = getEscapeTechnionEarnings(escapeTechnion);
+    mtmPrintFacultiesHeader(output_channel, num_faculties, num_days,
+                            total_revenue);
+    Faculty faculty1, faculty2, faculty3;
+    int earnings1, earnings2, earnings3;
+    escapeTechnionBestFaculties(escapeTechnion, &faculty1, &earnings1,
+                                &faculty2, &earnings2, &faculty3, &earnings3);
+    if (NULL != faculty1) {
+        TechnionFaculty nameFaculty1 = facultyGetName(faculty1);
+        mtmPrintFaculty(output_channel, nameFaculty1, earnings1);
+    }
+    if (NULL != faculty2) {
+        TechnionFaculty nameFaculty2 = facultyGetName(faculty2);
+        mtmPrintFaculty(output_channel, nameFaculty2, earnings2);
+    }
+    if (NULL != faculty3) {
+        TechnionFaculty nameFaculty3 = facultyGetName(faculty3);
+        mtmPrintFaculty(output_channel, nameFaculty3, earnings3);
+    }
+    mtmPrintFacultiesFooter(output_channel);
+    return MTM_SUCCESS;
+}
+
 
 /**...........................................................................*/
 /**--------------------------STATIC-FUNCTIONS---------------------------------*/
@@ -511,8 +564,8 @@ static MtmErrorCode initializeFaculties(EscapeTechnion escapeTechnion) {
         return MTM_INVALID_PARAMETER;
     }
 
-    for (TechnionFaculty idx = 0; idx < UNKNOWN; (int)idx++) {
-        Faculty faculty = facultyCreate(idx);
+    for (int idx = 0; idx < (int)UNKNOWN; idx++) {
+        Faculty faculty = facultyCreate((TechnionFaculty)idx);
         if (NULL == faculty) {
             destroyFaculties(escapeTechnion);
             return MTM_OUT_OF_MEMORY;
@@ -812,3 +865,118 @@ static Room getRoomByID(EscapeTechnion escapeTechnion,
     Company company;
     return facultyGetRoomByID(faculty, &company, id);
 }
+
+static void escapeTechnionBestFaculties(EscapeTechnion escapeTechnion,
+                                        Faculty *first_faculty,
+                                        int *first_faculty_earnings,
+                                        Faculty *second_faculty,
+                                        int *second_faculty_earnings,
+                                        Faculty *third_faculty,
+                                        int *third_faculty_earnings) {
+    int faculty_1_earnings = INVALID_PARAMETER,
+        faculty_2_earnings = INVALID_PARAMETER,
+        faculty_3_earnings = INVALID_PARAMETER;
+    Faculty faculty_1 = NULL, faculty_2 = NULL, faculty_3 = NULL;
+    Faculty faculty_iterator = setGetFirst(escapeTechnion->faculties);
+    while (NULL != faculty_iterator) {
+        int tmp_earnings = facultyGetEarnings(faculty_iterator);
+        findBestFaculties(&faculty_1, &faculty_1_earnings,
+                          &faculty_2, &faculty_2_earnings,
+                          &faculty_3, &faculty_3_earnings,
+                          faculty_iterator, tmp_earnings);
+        faculty_iterator = setGetNext(escapeTechnion->faculties);
+    }
+
+    *first_faculty = faculty_1;
+    *first_faculty_earnings = faculty_1_earnings;
+    *second_faculty = faculty_2;
+    *second_faculty_earnings = faculty_2_earnings;
+    *third_faculty = faculty_3;
+    *third_faculty_earnings = faculty_2_earnings;
+    return;
+}
+
+static void findBestFaculties(Faculty *cur_first, int *first_earnings,
+                               Faculty *cur_second, int *second_earnings,
+                               Faculty *cur_third, int *third_earnings,
+                               Faculty faculty, int faculty_earnings) {
+    assert(NULL != faculty && faculty_earnings >= 0);
+    if (NULL == *cur_first) {
+        *cur_first = faculty;
+        *first_earnings = faculty_earnings;
+        return;
+    }
+
+    if (getBetterFaculty(*cur_first, *first_earnings, faculty, faculty_earnings) == faculty) {
+
+        *cur_third = *cur_second;
+        *third_earnings = *second_earnings;
+
+        *cur_second = *cur_first;
+        *second_earnings = *first_earnings;
+
+        *cur_first = faculty;
+        *first_earnings = faculty_earnings;
+        return;
+    }
+
+    if (getBetterFaculty(*cur_second, *second_earnings, faculty, faculty_earnings) == faculty) {
+
+        *cur_third = *cur_second;
+        *third_earnings = *second_earnings;
+
+        *cur_second = faculty;
+        *second_earnings = faculty_earnings;
+        return;
+    }
+
+    if (getBetterFaculty(*cur_third, *third_earnings, faculty, faculty_earnings) == faculty) {
+
+        *cur_third = faculty;
+        *third_earnings = faculty_earnings;
+        return;
+    }
+    return;
+}
+
+static Faculty getBetterFaculty(Faculty faculty_1, int earnings_1,
+                                 Faculty faculty_2, int earnings_2) {
+    assert(! (NULL == faculty_1 && NULL == faculty_2));
+    if (NULL == faculty_1) {
+        return faculty_2;
+    } else if (NULL == faculty_2) {
+        return faculty_1;
+    }
+
+    if (earnings_1 > earnings_2) {
+        return faculty_1;
+    } else if (earnings_1 < earnings_2) {
+        return faculty_2;
+    }
+
+    TechnionFaculty nameFaculty1 = facultyGetName(faculty_1);
+    TechnionFaculty nameFaculty2 = facultyGetName(faculty_2);
+
+    if ((int)nameFaculty1 < (int)nameFaculty2) {
+        return faculty_1;
+    }
+
+    return faculty_2;
+}
+
+static int getEscapeTechnionEarnings(EscapeTechnion escapeTechnion) {
+    if (NULL == escapeTechnion) {
+        return INVALID_PARAMETER;
+    }
+
+    int total_earnings = 0;
+    Faculty faculty_iterator = setGetFirst(escapeTechnion->faculties);
+    while (NULL != faculty_iterator) {
+        int faculty_earnings = facultyGetEarnings(faculty_iterator);
+        total_earnings += faculty_earnings;
+        faculty_iterator = setGetNext(escapeTechnion->faculties);
+    }
+
+    return total_earnings;
+}
+

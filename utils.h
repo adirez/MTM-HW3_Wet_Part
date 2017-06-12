@@ -123,11 +123,11 @@ int calcRoomMatch(int room_num_ppl, int reservation_num_ppl,
  * @param most_recommended_room
  * @param most_recommended_company
  * @param cur_company
- *//*
+ */
 
 void checkBetterRoom(Escaper escaper, int cur_result, int cur_room_id,
                      int cur_faculty_diff, Room cur_recommended_room,
                      int *min_result, int *min_room_id,
                      int *min_faculty_diff, Room *most_recommended_room,
                      Company *most_recommended_company,
-                     Company cur_company);*/
+                     Company cur_company);
