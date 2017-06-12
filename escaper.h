@@ -55,6 +55,7 @@ void escaperDestroy(SetElement element);
  * @param element1 - the first escaper
  * @param element2 - the second escaper
  * @return 0 if same, positive num if the first is greater, negative otherwise
+ *         if one of the elements is NULL returns -1
  */
 int escaperCompareElements(SetElement element1, SetElement element2);
 

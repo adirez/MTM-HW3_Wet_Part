@@ -95,14 +95,17 @@ CompanyErrorCode companyRemoveRoom(Company company, Room room) {
     if (NULL == company || NULL == room) {
         return COMPANY_NULL_PARAMETER;
     }
-    SetResult RemoveResult = setRemove(company->rooms, room);
-    if (RemoveResult == SET_ITEM_DOES_NOT_EXIST) {
+    SetResult removeResult = setRemove(company->rooms, room);
+    if (removeResult == SET_ITEM_DOES_NOT_EXIST) {
         return COMPANY_ROOM_DOES_NOT_EXIST;
     }
     return COMPANY_SUCCESS;
 }
 
 int companyCompareElements(SetElement element1, SetElement element2) {
+    if (NULL == element1 || NULL == element2){
+        return INVALID_PARAMETER;
+    }
     Company company1 = element1, company2 = element2;
 
     return strcmp(company1->email, company2->email);
@@ -119,6 +122,14 @@ SetElement companyCopyElement(SetElement src_company) {
     if (companyError != COMPANY_SUCCESS) {
         return NULL;
     }
+
+    setDestroy(company->rooms);
+    company->rooms = setCopy(ptr->rooms);
+    if (NULL == company->rooms){
+        companyDestroy(company);
+        return NULL;
+    }
+
     return company;
 }
 
@@ -155,22 +166,6 @@ bool isCompanyEmailEqual(Company company, char *email) {
         return true;
     }
     return false;
-}
-
-int companyGetMinRoomID(Company company) {
-    if (NULL == company) {
-        return  INVALID_PARAMETER;
-    }
-    int min_id = INVALID_PARAMETER;
-    Room room_iterator = setGetFirst(company->rooms);
-    while (NULL != room_iterator) {
-        int tmp_id = roomGetID(room_iterator);
-        if (tmp_id < min_id || min_id == INVALID_PARAMETER) {
-            min_id = tmp_id;
-        }
-        room_iterator = setGetNext(company->rooms);
-    }
-    return min_id;
 }
 
 Room companyGetRoomByID(Company company, int id){

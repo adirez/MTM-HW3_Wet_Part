@@ -57,9 +57,9 @@ Reservation reservationCreate(Escaper escaper, Company company, Room room,
 
 /**
  * destroys a reservation and releases all relevant allocated memory.
- * @param reservation - a pointer to the relevant reservation to be destroyed
+ * @param element - a pointer to the relevant reservation to be destroyed
  */
-void reservationDestroy(ListElement reservation);
+void reservationDestroy(ListElement element);
 
 /**
  * receives a source reservation element and copies it into a newly
@@ -130,14 +130,6 @@ int reservationGetPrice(Reservation reservation);
 bool isReservationDueDate(ListElement element, ListFilterKey cur_day);
 
 /**
- * compares between 2 reservations by their due date
- * @param reservation1
- * @param reservation2
- * @return 0 if same, positive num if the first is greater, negative otherwise
- */
-int reservationCompareElements(ListElement element1, ListElement element2);
-
-/**
  * filter function for the List use, checks if the reservation day is the
  * current day in the system, meaning that the reservation is already done.
  * in use for the report day to keep all the reservations that are stiill
@@ -149,12 +141,22 @@ int reservationCompareElements(ListElement element1, ListElement element2);
 bool isReservationRelevant(ListElement element, ListFilterKey cur_day);
 
 /**
+ * compares between 2 reservations by their due date
+ * @param reservation1
+ * @param reservation2
+ * @return 0 if same, positive num if the first is greater, negative otherwise
+ *          if one of the elements is NULL returns -1
+ */
+int reservationCompareElements(ListElement element1, ListElement element2);
+
+/**
  * compare function to the List use, compares reservations by hour, faculty
  * priority and the smallest room ID in the faculty.
  * in use for the report day print
  * @param reservation1 - first reservation
  * @param reservation2 - second reservation
  * @return 0 if same, positive num if the first is greater, negative otherwise
+ *         if one of the elements is NULL returns -1
  */
 int reservationCompareForPrint(ListElement element1, ListElement element2);
 

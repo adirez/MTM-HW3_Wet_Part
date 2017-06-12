@@ -66,6 +66,9 @@ void escaperDestroy(SetElement element) {
 
 
 int escaperCompareElements(SetElement element1, SetElement element2) {
+    if (NULL == element1 || NULL == element2){
+        return INVALID_PARAMETER;
+    }
     Escaper escaper1 = element1, escaper2 = element2;
     return  strcmp(escaper1->email, escaper2->email);
 }

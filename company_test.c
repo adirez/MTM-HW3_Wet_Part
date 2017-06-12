@@ -65,20 +65,26 @@ bool testCompanyAddRoom() {
 
 bool testCompanyRemoveRoom() {
     CompanyErrorCode companyError;
-    Company company = companyCreate(PHYSICS, "te@st", &companyError);
-    companyAddRoom(company, 123, 12, 20, 1, 2, 1);
+    Company company1 = companyCreate(PHYSICS, "te@st", &companyError);
+    companyAddRoom(company1, 123, 12, 20, 1, 2, 1);
 
-    Room room = companyGetRoomByID(company, 123);
+    Room room = companyGetRoomByID(company1, 123);
 
-    ASSERT_TEST(companyRemoveRoom(company, room) == COMPANY_SUCCESS);
+    ASSERT_TEST(companyRemoveRoom(company1, room) == COMPANY_SUCCESS);
 
-    ASSERT_TEST(companyGetRoomByID(company, 123) == NULL);
+    ASSERT_TEST(companyGetRoomByID(company1, 123) == NULL);
 
     ASSERT_TEST(companyRemoveRoom(NULL, room) == COMPANY_NULL_PARAMETER);
-    ASSERT_TEST(companyRemoveRoom(company, NULL) == COMPANY_NULL_PARAMETER);
-    ASSERT_TEST(companyRemoveRoom(company, room) == COMPANY_ROOM_DOES_NOT_EXIST);
+    ASSERT_TEST(companyRemoveRoom(company1, NULL) == COMPANY_NULL_PARAMETER);
 
-    companyDestroy(company);
+    Company company2 = companyCreate(BIOLOGY, "@st", &companyError);
+    companyAddRoom(company2, 123, 12, 20, 1, 2, 1);
+
+    ASSERT_TEST(companyRemoveRoom(company1, room) ==
+                        COMPANY_ROOM_DOES_NOT_EXIST);
+
+    companyDestroy(company1);
+    companyDestroy(company2);
     return true;
 }
 
@@ -106,9 +112,19 @@ bool testCompanyCopyElement() {
 
     CompanyErrorCode companyError;
     Company company1 = companyCreate(PHYSICS, "te@st", &companyError);
+    companyAddRoom(company1, 10, 4, 5, 10, 20, 1);
+    companyAddRoom(company1, 15, 8, 2, 10, 15, 3);
+    companyAddRoom(company1, 20, 12, 1, 2, 4, 7);
     Company company2 = companyCopyElement(company1);
 
     ASSERT_TEST(companyCompareElements(company1, company2) == 0);
+
+    Room room1 = companyGetRoomByID(company2, 10);
+    ASSERT_TEST(room1 != NULL);
+    Room room2 = companyGetRoomByID(company2, 20);
+    ASSERT_TEST(room2 != NULL);
+    Room room3 = companyGetRoomByID(company2, 15);
+    ASSERT_TEST(room3 != NULL);
 
     companyDestroy(company1);
     companyDestroy(company2);
@@ -181,26 +197,6 @@ bool testCompanyGetRoomByID() {
     return true;
 }
 
-bool testCompanyGetMinRoomID() {
-    CompanyErrorCode companyError;
-    Company company = companyCreate(PHYSICS, "te@st", &companyError);
-    companyAddRoom(company, 20, 4, 5, 10, 20, 1);
-    companyAddRoom(company, 15, 8, 2, 10, 15, 3);
-    companyAddRoom(company, 10, 12, 1, 2, 4, 7);
-
-    ASSERT_TEST(companyGetMinRoomID(company) == 10);
-
-    Room room1 = companyGetRoomByID(company, 20);
-    Room room2 = companyGetRoomByID(company, 15);
-    Room room3 = companyGetRoomByID(company, 10);
-
-    companyRemoveRoom(company, room1);
-    companyRemoveRoom(company, room2);
-    companyRemoveRoom(company, room3);
-    companyDestroy(company);
-    return true;
-}
-
 bool testCompanyMostRecommendedRoom() {
     CompanyErrorCode companyError;
     int result, faculty_distance, id;
@@ -264,7 +260,6 @@ int main(int argv, char **arc) {
     RUN_TEST(testCompanyGetFaculty);
     RUN_TEST(testIsCompanyEmailEqual);
     RUN_TEST(testCompanyGetRoomByID);
-    RUN_TEST(testCompanyGetMinRoomID);
     RUN_TEST(testCompanyMostRecommendedRoom);
 
     return 0;

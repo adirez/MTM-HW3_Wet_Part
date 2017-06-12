@@ -58,11 +58,11 @@ Reservation reservationCreate(Escaper escaper, Company company, Room room,
 }
 
 
-void reservationDestroy(ListElement reservation) {
-    if(NULL == reservation){
+void reservationDestroy(ListElement element) {
+    if(NULL == element){
         return;
     }
-    free(reservation);
+    free(element);
 }
 
 ListElement reservationCopyElement(ListElement src_reservation) {
@@ -147,6 +147,9 @@ bool isReservationRelevant(ListElement element, ListFilterKey cur_day) {
 }
 
 int reservationCompareElements(ListElement element1, ListElement element2) {
+    if (NULL == element1 || NULL == element2){
+        return INVALID_PARAMETER;
+    }
     Reservation reservation1 = element1, reservation2 = element2;
     if (reservation1->day < reservation2->day){
         return -1;
@@ -163,6 +166,9 @@ int reservationCompareElements(ListElement element1, ListElement element2) {
 }
 
 int reservationCompareForPrint(ListElement element1, ListElement element2) {
+    if (NULL == element1 || NULL == element2){
+        return INVALID_PARAMETER;
+    }
     int hour_cmp = reservationCompareElements(element1, element2);
     if(hour_cmp != 0){
         return hour_cmp;

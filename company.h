@@ -87,6 +87,7 @@ CompanyErrorCode companyRemoveRoom(Company company, Room room);
  * @param element1 - the first company
  * @param element2 - the second company
  * @return 0 if same, positive num if the first is greater, negative otherwise
+ *         if one of the elements is NULL returns -1
  */
 int companyCompareElements(SetElement element1, SetElement element2);
 
@@ -138,13 +139,6 @@ bool isCompanyEmailEqual(Company company, char *email);
  *         the company is NULL
  */
 Room companyGetRoomByID(Company company, int id);
-
-/**
- * receives a company and returns the smallest room id in the company
- * @param company - ptr to the company
- * @return the smallest id room in the company
- */
-int companyGetMinRoomID(Company company);
 
 /**
  * receives a company, faculty and an escaper with his reservation details and
