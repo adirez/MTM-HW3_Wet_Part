@@ -140,9 +140,10 @@ bool isCompanyEmailEqual(Company company, char *email) {
     return false;
 }
 
-Room mostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
-                         int P_e, int skill, int *result, int *faculty_distance,
-                         int *room_id) {
+Room companyMostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
+                                int P_e, int skill, int *result,
+                                int *faculty_distance,
+                                int *room_id) {
     Room best_room = NULL;
     int best_result = INVALID_PARAMETER;
     int best_id = INVALID_PARAMETER;

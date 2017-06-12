@@ -183,16 +183,13 @@ MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
  * @param room_id
  * @return
  */
-Room mostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
-                         int P_e, int skill, int *result, int *faculty_distance,
-                         int *room_id);
-//TODO: add comments
-/**
- *
- * @param escapeTechnion
- * @param output_channel
- */
-void escapeTechnionReportDay(EscapeTechnion escapeTechnion, FILE* output_channel);
+Room companyMostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
+                                int P_e, int skill,
+                                int *result, int *faculty_distance,
+                                int *room_id);
+
+
+void escapeTechnionReportDay(EscapeTechnion escapeTechnion);
 
 /**
  * receives an escapeTechnion system and a faculty name and iterates through all
@@ -204,14 +201,5 @@ void escapeTechnionReportDay(EscapeTechnion escapeTechnion, FILE* output_channel
 Faculty getFacultyByName(EscapeTechnion escapeTechnion,
                          TechnionFaculty nameFaculty);
 
-/**
- *
- * @param escapeTechnion
- * @param nameFaculty
- * @param id
- * @return
- */
-static Room getRoomByID(EscapeTechnion escapeTechnion,
-                        TechnionFaculty nameFaculty, int id);
 
 #endif //HW3_ESCAPETECHNION_H

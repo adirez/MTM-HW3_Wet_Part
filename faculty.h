@@ -8,6 +8,7 @@
 #include "mtm_ex3.h"
 #include "set.h"
 #include "company.h"
+#include "escaper.h"
 
 /**
  * Faculty will be implemented in this file as a set
@@ -143,6 +144,27 @@ Room facultyGetRoomByID(Faculty faculty, Company *company, int id);
  * otherwise
  */
 bool isCompanyEmailFaculty(Faculty faculty, char *email);
+
+/**
+ * iterates through a faculty to find which room would be the most recommended
+ * room for the escaper
+ * @param faculty - the faculty to iterate through
+ * @param escaper - the escaper to find the room for
+ * @param escaperFaculty - the faculty of the escaper
+ * @param P_e - the number of people for the reservation
+ * @param skill - the skill level of the escaper
+ * @param result - a pointer to receive the result through
+ * @param faculty_distance - a pointer to receive the faculty distance through
+ * @param room_id - a pointer to receive the room id through
+ * @return a pointer to the most recommended room in faculty if found or NULL
+ *         if not found
+ */
+Room facultyMostRecommendedRoom(Faculty faculty, Escaper escaper,
+                                TechnionFaculty escaperFaculty, int P_e,
+                                int skill, int *result, int *faculty_distance,
+                                int *room_id, Company *cur_company);
+
+
 
 
 

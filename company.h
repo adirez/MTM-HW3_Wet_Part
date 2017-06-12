@@ -132,9 +132,10 @@ bool isCompanyEmailEqual(Company company, char *email);
  * @param room_id - a pointer to return the room with the minimal id found
  * @return a pointer to the most recommended room found
  */
-Room mostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
-                         int P_e, int skill, int *result, int *faculty_distance,
-                         int *room_id);
+Room companyMostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
+                                int P_e, int skill, int *result,
+                                int *faculty_distance,
+                                int *room_id);
 
 /**
  * searches for a room in the company by its ID and returns it if exists

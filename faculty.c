@@ -222,3 +222,34 @@ bool isCompanyEmailFaculty(Faculty faculty, char *email) {
     }
     return false;
 }
+
+Room facultyMostRecommendedRoom(Faculty faculty, Escaper escaper,
+                                TechnionFaculty escaperFaculty, int P_e,
+                                int skill, int *result, int *faculty_distance,
+                                int *room_id, Company *cur_company) {
+    int min_result = INVALID_PARAMETER, cur_result = INVALID_PARAMETER,
+        min_room_id =INVALID_PARAMETER, min_faculty_distance =INVALID_PARAMETER,
+        cur_room_id =INVALID_PARAMETER, cur_faculty_distance =INVALID_PARAMETER;
+    Room cur_recommended_room = NULL, most_recommended_room = NULL;
+    Company company_iterator, most_recommended_company = NULL;
+    company_iterator = setGetFirst(faculty->companies);
+    while (NULL != company_iterator) {
+
+        cur_recommended_room = companyMostRecommendedRoom(company_iterator,
+                                                          escaperFaculty, P_e,
+                                                          skill, result,
+                                                          faculty_distance,
+                                                          room_id);
+        if (NULL == cur_recommended_room) {
+            company_iterator = setGetNext(faculty->companies);
+            continue;
+        }
+        checkBetterRoom(escaper, cur_result, cur_room_id, cur_faculty_distance,
+                        cur_recommended_room, &min_result, &min_room_id,
+                        &min_faculty_distance, &most_recommended_room,
+                        &most_recommended_company, company_iterator);
+    }
+    *cur_company = most_recommended_company;
+    return most_recommended_room;
+}
+

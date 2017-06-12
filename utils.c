@@ -225,6 +225,42 @@ int calcRoomMatch(int room_num_ppl, int reservation_num_ppl,
 }
 
 
+
+void checkBetterRoom(Escaper escaper, int cur_result, int cur_room_id,
+                     int cur_faculty_diff, Room cur_recommended_room,
+                     int *min_result, int *min_room_id,
+                     int *min_faculty_diff, Room *most_recommended_room,
+                     Company *most_recommended_company,
+                     Company cur_company) {
+    if (cur_result < *min_result || *min_result == INVALID_PARAMETER) {
+        *most_recommended_company = cur_company;
+        *most_recommended_room = cur_recommended_room;
+        *min_result = cur_result;
+        *min_faculty_diff = cur_faculty_diff;
+        *min_room_id = cur_room_id;
+    } else if (cur_result == *min_result) {
+        if (cur_faculty_diff < *min_faculty_diff ||
+            *min_faculty_diff == INVALID_PARAMETER) {
+            *most_recommended_company = cur_company;
+            *most_recommended_room = cur_recommended_room;
+            *min_faculty_diff = cur_faculty_diff;
+            *min_room_id = cur_room_id;
+        } else if (cur_faculty_diff == *min_faculty_diff) {
+            TechnionFaculty curFaculty = companyGetFaculty(cur_company);
+            TechnionFaculty escFaculty = escaperGetNameFaculty(escaper);
+            if ((curFaculty == escFaculty) && (cur_room_id < *min_room_id)) {
+                *most_recommended_company = cur_company;
+                *most_recommended_room = cur_recommended_room;
+                *min_room_id = cur_room_id;
+            } else if ((int) curFaculty < (int) escFaculty) {
+                *most_recommended_company = cur_company;
+                *most_recommended_room = cur_recommended_room;
+                *min_room_id = cur_room_id;
+            }
+        }
+    }
+}
+
 /**...........................................................................*/
 /**--------------------------STATIC-FUNCTIONS---------------------------------*/
 /**...........................................................................*/

@@ -99,3 +99,24 @@ bool isValidEmail(char *email);
  *         false - it is not mentioned in the listed faculties
  */
 bool isValidFacultyName(TechnionFaculty Faculty);
+
+/**
+ *
+ * @param escaper
+ * @param cur_result
+ * @param cur_room_id
+ * @param cur_faculty_diff
+ * @param cur_recommended_room
+ * @param min_result
+ * @param min_room_id
+ * @param min_faculty_diff
+ * @param most_recommended_room
+ * @param most_recommended_company
+ * @param cur_company
+ */
+void checkBetterRoom(Escaper escaper, int cur_result, int cur_room_id,
+                     int cur_faculty_diff, Room cur_recommended_room,
+                     int *min_result, int *min_room_id,
+                     int *min_faculty_diff, Room *most_recommended_room,
+                     Company *most_recommended_company,
+                     Company cur_company);
