@@ -3,7 +3,7 @@ project(Wet_Part)
 
 set(CMAKE_C_STANDARD 99)
 
-SET(GCC_COVERAGE_COMPILE_FLAGS "-Wall -pedantic-errors -Werror")
+SET(GCC_COVERAGE_COMPILE_FLAGS "-Wall -pedantic-errors -Werror -DNDEBUG")
 SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
 
 set(SOURCE_FILES mtm_ex3.h test_utilities.h set.h list.h utils.c utils.h

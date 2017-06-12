@@ -571,9 +571,10 @@ static MtmErrorCode initializeFaculties(EscapeTechnion escapeTechnion) {
     if (NULL == escapeTechnion) {
         return MTM_INVALID_PARAMETER;
     }
+    FacultyErrorCode facultyError;
 
     for (int idx = 0; idx < (int)UNKNOWN; idx++) {
-        Faculty faculty = facultyCreate((TechnionFaculty)idx);
+        Faculty faculty = facultyCreate((TechnionFaculty)idx, &facultyError);
         if (NULL == faculty) {
             destroyFaculties(escapeTechnion);
             return MTM_OUT_OF_MEMORY;
@@ -608,9 +609,10 @@ static MtmErrorCode reserveRoom(EscapeTechnion escapeTechnion, Escaper escaper,
                    NULL != room);
     int price = calculatePricePerPerson(escaper, room);
     price *= num_ppl;
+    ReservationErrorCode reservationError;
     Reservation reservation = reservationCreate(escaper, company, room, num_ppl,
-                                                day, hour, price);
-    if (reservation != NULL) {
+                                           day, hour, price, &reservationError);
+    if (reservation == NULL) {
         return MTM_OUT_OF_MEMORY;
     }
     if (listInsertLast(escapeTechnion->reservations, reservation) ==
@@ -780,8 +782,8 @@ static bool isRoomAvailable(EscapeTechnion escapeTechnion, Room room,
 
         if (tmp_room == room) {
             int tmp_day, tmp_hour;
-            tmp_day = reservationGetHour(reservation_iterator);
-            tmp_hour = reservationGetDay(reservation_iterator);
+            tmp_day = reservationGetDay(reservation_iterator);
+            tmp_hour = reservationGetHour(reservation_iterator);
             if (tmp_day == reservation_day && tmp_hour == reservation_hour) {
                 return false;
             }
@@ -846,8 +848,10 @@ static Company getCompanyByEmail(EscapeTechnion escapeTechnion, char *email,
     assert(email != NULL);
     Faculty faculty_iterator = setGetFirst(escapeTechnion->faculties);
 
+    FacultyErrorCode facultyError;
     while(NULL != faculty_iterator){
-        Company company = facultyGetCompanyByEmail(faculty_iterator, email);
+        Company company = facultyGetCompanyByEmail(faculty_iterator, email,
+                                                   &facultyError);
         if(NULL != company){
             *company_faculty = faculty_iterator;
             return company;

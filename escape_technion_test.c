@@ -6,7 +6,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-//TODO: add test create with different inout channels
 
 bool testEscapeTechnionCreateAndDestroy() {
     escapeTechnionDestroy(NULL);
