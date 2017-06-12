@@ -102,7 +102,7 @@ bool isValidEmail(char *email) {
 
 
 bool isValidFacultyName(TechnionFaculty Faculty) {
-    if (Faculty < CIVIL_ENGINEERING || Faculty >= UNKNOWN) {
+    if (Faculty < (TechnionFaculty)0 || Faculty >= UNKNOWN) {
         return false;
     }
 

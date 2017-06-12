@@ -30,9 +30,8 @@ struct Room_t {
 Room roomCreate(TechnionFaculty roomFaculty, char *company_email, int id,
                 int price, int num_ppl, int open_time, int close_time,
                 int difficulty) {
-    assert(isValidRoomParams(company_email, id, price, num_ppl, difficulty));
-    assert(isValidFacultyName(roomFaculty));
-    if(NULL == company_email){
+    if (!isValidRoomParams(company_email, id, price, num_ppl, difficulty) ||
+            !isValidFacultyName(roomFaculty)){
         return NULL;
     }
     Room room = malloc(sizeof(*room));
@@ -62,7 +61,7 @@ void roomDestroy(SetElement element) {
     }
     Room room = element;
     free(room->company_email);
-    roomDestroy(room);
+    free(room);
 }
 
 int roomCompareElements(SetElement room1, SetElement room2) {

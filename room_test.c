@@ -8,47 +8,42 @@
 
 
 bool testRoomCreate() {
-    RoomErrorCode errorCode;
 
-    ASSERT_TEST(roomCreate(NULL, 123, 4, 20, 1, 2, 1, &errorCode) == NULL);
-    ASSERT_TEST(errorCode == ROOM_INVALID_PARAMETER);
-    ASSERT_TEST(roomCreate("adi", 123, 4, 20, 1, 2, 1, &errorCode) == NULL);
-    ASSERT_TEST(errorCode == ROOM_INVALID_PARAMETER);
-    ASSERT_TEST(roomCreate("adi@g", 0, 4, 20, 1, 2, 1, &errorCode) == NULL);
-    ASSERT_TEST(errorCode == ROOM_INVALID_PARAMETER);
-    ASSERT_TEST(roomCreate("adi@g", 123, 10, 20, 1, 2, 1, &errorCode) == NULL);
-    ASSERT_TEST(errorCode == ROOM_INVALID_PARAMETER);
-    ASSERT_TEST(roomCreate("adi@g", 123, 4, -10, 1, 2, 1, &errorCode) == NULL);
-    ASSERT_TEST(errorCode == ROOM_INVALID_PARAMETER);
-    ASSERT_TEST(roomCreate("adi@g", 123, 4, 20, 1, 2, 11, &errorCode) == NULL);
-    ASSERT_TEST(errorCode == ROOM_INVALID_PARAMETER);
+    ASSERT_TEST(roomCreate(UNKNOWN , "adi@g", 123, 4, 20, 1, 2, 1) == NULL);
+    ASSERT_TEST(roomCreate(PHYSICS , NULL, 123, 4, 20, 1, 2, 1) == NULL);
+    ASSERT_TEST(roomCreate(PHYSICS, "adi", 123, 4, 20, 1, 2, 1) == NULL);
+    ASSERT_TEST(roomCreate(PHYSICS, "adi@g", 0, 4, 20, 1, 2, 1) == NULL);
+    ASSERT_TEST(roomCreate(PHYSICS, "adi@g", 123, 10, 20, 1, 2, 1) == NULL);
+    ASSERT_TEST(roomCreate(PHYSICS, "adi@g", 123, 4, -10, 1, 2, 1) == NULL);
+    ASSERT_TEST(roomCreate(PHYSICS, "adi@g", 123, 4, 20, 1, 2, 11) == NULL);
 
+    Room room = roomCreate(PHYSICS ,"adi@gmail", 123, 12, 20, 1, 2, 1);
+    ASSERT_TEST(room != NULL);
+
+    roomDestroy(room);
     return true;
 }
 
 bool testRoomDestroy() {
-    ASSERT_TEST(roomDestroy(NULL) == ROOM_INVALID_PARAMETER);
+    roomDestroy(NULL);
 
-    RoomErrorCode errorCode;
-    Room room = roomCreate("adi@gmail", 123, 12, 20, 1, 2, 1, &errorCode);
-    ASSERT_TEST(errorCode == ROOM_SUCCESS);
-    ASSERT_TEST(roomDestroy(room) == ROOM_SUCCESS);
+    Room room = roomCreate(PHYSICS ,"adi@gmail", 123, 12, 20, 1, 2, 1);
+    roomDestroy(room);
 
     return true;
 }
 
 bool testRoomCompareElements() {
-    RoomErrorCode errorCode;
-    Room room1 = roomCreate("adi@gmail", 123, 12, 20, 1, 2, 1, &errorCode);
-    Room room2 = roomCreate("adi@gmail", 123, 12, 20, 1, 2, 1, &errorCode);
+    Room room1 = roomCreate(PHYSICS ,"adi@gmail", 123, 12, 20, 1, 2, 1);
+    Room room2 = roomCreate(PHYSICS ,"adi@gmail", 123, 12, 20, 1, 2, 1);
     ASSERT_TEST(roomCompareElements(room1, room2) == 0);
 
     roomDestroy(room2);
-    Room room3 = roomCreate("adi@gmai", 123, 12, 20, 1, 2, 1, &errorCode);
+    Room room3 = roomCreate(BIOLOGY, "adi@gmail", 123, 12, 20, 1, 2, 1);
     ASSERT_TEST(roomCompareElements(room1, room3) != 0);
     roomDestroy(room3);
 
-    Room room4 = roomCreate("adi@gmail", 12, 12, 20, 1, 2, 1, &errorCode);
+    Room room4 = roomCreate(PHYSICS, "adi@gmail", 12, 12, 20, 1, 2, 1);
     ASSERT_TEST(roomCompareElements(room1, room4) != 0);
     roomDestroy(room4);
 
@@ -59,8 +54,7 @@ bool testRoomCompareElements() {
 bool testRoomCopyElement() {
     ASSERT_TEST(roomCopyElement(NULL) == NULL);
 
-    RoomErrorCode errorCode;
-    Room room1 = roomCreate("adi@gmail", 123, 12, 20, 1, 2, 1, &errorCode);
+    Room room1 = roomCreate(PHYSICS ,"adi@gmail", 123, 12, 20, 1, 2, 1);
     Room room2 = roomCopyElement(room1);
 
     ASSERT_TEST(roomCompareElements(room1, room2) == 0);
@@ -71,13 +65,10 @@ bool testRoomCopyElement() {
 }
 
 bool testRoomGetCompanyEmail() {
-    RoomErrorCode errorCode;
-    ASSERT_TEST(roomGetCompanyEmail(NULL, &errorCode) == NULL);
-    ASSERT_TEST(errorCode == ROOM_INVALID_PARAMETER);
+    ASSERT_TEST(roomGetCompanyEmail(NULL) == NULL);
 
-    Room room = roomCreate("adi@gmail", 123, 12, 20, 1, 2, 1, &errorCode);
-    char *email = roomGetCompanyEmail(room, &errorCode);
-    ASSERT_TEST(errorCode == ROOM_SUCCESS);
+    Room room = roomCreate(PHYSICS ,"adi@gmail", 123, 12, 20, 1, 2, 1);
+    char *email = roomGetCompanyEmail(room);
     ASSERT_TEST(strcmp(email, "adi@gmail") == 0);
 
     free(email);
@@ -86,13 +77,10 @@ bool testRoomGetCompanyEmail() {
 }
 
 bool testRoomGetID() {
-    RoomErrorCode errorCode;
-    ASSERT_TEST(roomGetID(NULL, &errorCode) == -1);
-    ASSERT_TEST(errorCode == ROOM_INVALID_PARAMETER);
+    ASSERT_TEST(roomGetID(NULL) == -1);
 
-    Room room = roomCreate("adi@gmail", 123, 12, 20, 1, 2, 1, &errorCode);
-    int id = roomGetID(room, &errorCode);
-    ASSERT_TEST(errorCode == ROOM_SUCCESS);
+    Room room = roomCreate(PHYSICS ,"adi@gmail", 123, 12, 20, 1, 2, 1);
+    int id = roomGetID(room);
     ASSERT_TEST(id == 123);
 
     roomDestroy(room);
@@ -100,13 +88,10 @@ bool testRoomGetID() {
 }
 
 bool testRoomGetPrice() {
-    RoomErrorCode errorCode;
-    ASSERT_TEST(roomGetPrice(NULL, &errorCode) == -1);
-    ASSERT_TEST(errorCode == ROOM_INVALID_PARAMETER);
+    ASSERT_TEST(roomGetPrice(NULL) == -1);
 
-    Room room = roomCreate("adi@gmail", 123, 12, 20, 1, 2, 1, &errorCode);
-    int price = roomGetPrice(room, &errorCode);
-    ASSERT_TEST(errorCode == ROOM_SUCCESS);
+    Room room = roomCreate(PHYSICS ,"adi@gmail", 123, 12, 20, 1, 2, 1);
+    int price = roomGetPrice(room);
     ASSERT_TEST(price == 12);
 
     roomDestroy(room);
@@ -114,13 +99,10 @@ bool testRoomGetPrice() {
 }
 
 bool testRoomGetNumPpl() {
-    RoomErrorCode errorCode;
-    ASSERT_TEST(roomGetNumPpl(NULL, &errorCode) == -1);
-    ASSERT_TEST(errorCode == ROOM_INVALID_PARAMETER);
+    ASSERT_TEST(roomGetNumPpl(NULL) == -1);
 
-    Room room = roomCreate("adi@gmail", 123, 12, 20, 1, 2, 1, &errorCode);
-    int num_ppl = roomGetNumPpl(room, &errorCode);
-    ASSERT_TEST(errorCode == ROOM_SUCCESS);
+    Room room = roomCreate(PHYSICS ,"adi@gmail", 123, 12, 20, 1, 2, 1);
+    int num_ppl = roomGetNumPpl(room);
     ASSERT_TEST(num_ppl == 20);
 
     roomDestroy(room);
@@ -129,13 +111,10 @@ bool testRoomGetNumPpl() {
 
 
 bool testRoomGetDifficulty() {
-    RoomErrorCode errorCode;
-    ASSERT_TEST(roomGetDifficulty(NULL, &errorCode) == -1);
-    ASSERT_TEST(errorCode == ROOM_INVALID_PARAMETER);
+    ASSERT_TEST(roomGetDifficulty(NULL) == -1);
 
-    Room room = roomCreate("adi@gmail", 123, 12, 20, 1, 2, 1, &errorCode);
-    int difficulty = roomGetDifficulty(room, &errorCode);
-    ASSERT_TEST(errorCode == ROOM_SUCCESS);
+    Room room = roomCreate(PHYSICS ,"adi@gmail", 123, 12, 20, 1, 2, 1);
+    int difficulty = roomGetDifficulty(room);
     ASSERT_TEST(difficulty == 1);
 
     roomDestroy(room);
@@ -143,13 +122,10 @@ bool testRoomGetDifficulty() {
 }
 
 bool testRoomGetOpeningTime() {
-    RoomErrorCode errorCode;
-    ASSERT_TEST(roomGetOpeningTime(NULL, &errorCode) == -1);
-    ASSERT_TEST(errorCode == ROOM_INVALID_PARAMETER);
+    ASSERT_TEST(roomGetOpeningTime(NULL) == -1);
 
-    Room room = roomCreate("adi@gmail", 123, 12, 20, 1, 2, 1, &errorCode);
-    int opening = roomGetOpeningTime(room, &errorCode);
-    ASSERT_TEST(errorCode == ROOM_SUCCESS);
+    Room room = roomCreate(PHYSICS ,"adi@gmail", 123, 12, 20, 1, 2, 1);
+    int opening = roomGetOpeningTime(room);
     ASSERT_TEST(opening == 1);
 
     roomDestroy(room);
@@ -157,13 +133,10 @@ bool testRoomGetOpeningTime() {
 }
 
 bool testRoomGetClosingTime() {
-    RoomErrorCode errorCode;
-    ASSERT_TEST(roomGetClosingTime(NULL, &errorCode) == -1);
-    ASSERT_TEST(errorCode == ROOM_INVALID_PARAMETER);
+    ASSERT_TEST(roomGetClosingTime(NULL) == -1);
 
-    Room room = roomCreate("adi@gmail", 123, 12, 20, 1, 2, 1, &errorCode);
-    int closing = roomGetClosingTime(room, &errorCode);
-    ASSERT_TEST(errorCode == ROOM_SUCCESS);
+    Room room = roomCreate(PHYSICS ,"adi@gmail", 123, 12, 20, 1, 2, 1);
+    int closing = roomGetClosingTime(room);
     ASSERT_TEST(closing == 2);
 
     roomDestroy(room);
@@ -171,15 +144,11 @@ bool testRoomGetClosingTime() {
 }
 
 bool testIsRoomID() {
-    RoomErrorCode errorCode;
-    ASSERT_TEST(isRoomID(NULL, 123, &errorCode) == false);
-    ASSERT_TEST(errorCode == ROOM_INVALID_PARAMETER);
+    ASSERT_TEST(isRoomID(NULL, 123) == false);
 
-    Room room = roomCreate("adi@gmail", 123, 12, 20, 1, 2, 1, &errorCode);
-    ASSERT_TEST(isRoomID(room, 123, &errorCode) == true);
-    ASSERT_TEST(errorCode == ROOM_SUCCESS);
-    ASSERT_TEST(isRoomID(room, 12, &errorCode) == false);
-    ASSERT_TEST(errorCode == ROOM_SUCCESS);
+    Room room = roomCreate(PHYSICS ,"adi@gmail", 123, 12, 20, 1, 2, 1);
+    ASSERT_TEST(isRoomID(room, 123) == true);
+    ASSERT_TEST(isRoomID(room, 12) == false);
 
     roomDestroy(room);
     return true;
