@@ -20,33 +20,40 @@ typedef struct Faculty_t *Faculty;
  */
 typedef enum {
     FACULTY_SUCCESS,
-    FACULTY_COMPANY_ALREADY_EXISTS,
-    FACULTY_COMPANY_DOES_NOT_EXIST,
+    FACULTY_NULL_PARAMETER,
     FACULTY_INVALID_PARAMETER,
     FACULTY_OUT_OF_MEMORY,
+    FACULTY_COMPANY_ALREADY_EXISTS,
+    FACULTY_COMPANY_DOES_NOT_EXIST
 } FacultyErrorCode;
 
 
 /**
  * receives a faculty name and initializes a faculty with the specified name
  * @param FacultyName - the name of the faculty
+ * @param facultyError - enum to get the result of the func:
+ *                      FACULTY_SUCCESS - faculty created successfully
+ *                      FACULTY_INVALID_PARAMETER - if nameFaculty is invalid
+ *                      FACULTY_OUT_OF_MEMORY - Allocation problem occurred
  * @return a pointer to the created faculty if succeeded or NULL if the
- *         the allocation failed
+ *         the allocation failed or nameFaculty is invalid
  */
-Faculty facultyCreate(TechnionFaculty nameFaculty);
+Faculty facultyCreate(TechnionFaculty nameFaculty,
+                      FacultyErrorCode *facultyError);
 
 /**
  * receives a faculty and destroys it, including all of the internal companies
- * @param faculty - the faculty to be destroyed
+ * @param element - the faculty to be destroyed
  */
-void facultyDestroy(SetElement faculty);
+void facultyDestroy(SetElement element);
 
 /**
  * receives a faculty and a company email adds the company to the faculty
  * @param faculty - the faculty to list the room in
  * @param email - the email of the company to be added
  * @return FACULTY_SUCCESS - if the function succeeded
- *         FACULTY_INVALID_PARAMETER - if a null parameter was received
+ *  *      FACULTY_NULL_PARAMETER - if a null parameter was received
+ *         FACULTY_INVALID_PARAMETER - if invalid email was received
  *         FACULTY_OUT_OF_MEMORY - if an allocation failed
  *         FACULTY_COMPANY_ALREADY_EXISTS - if the company to be created is
  *         already listed
@@ -58,7 +65,7 @@ FacultyErrorCode facultyAddCompany(Faculty faculty, char *email);
  * @param faculty - the faculty to remove the company from
  * @param company - the company to remove from the faculty
  * @return FACULTY_SUCCESS - if the function succeeded
- *         FACULTY_INVALID_PARAMETER - if a NULL was received as an input
+ *         FACULTY_NULL_PARAMETER - if a NULL parameter was received
  *         FACULTY_COMPANY_DOES_NOT_EXIST - if the company to be removed wasn't
  *         found in the faculty
  */
@@ -66,13 +73,12 @@ FacultyErrorCode facultyRemoveCompany(Faculty faculty, Company company);
 
 /**
  * receives two faculty elements and returns a comparison result
- * @param faculty_1 - the first faculty element
- * @param faculty_2 - the second faculty element
- * @return 0 - if the faculties are identical (by name)
- *         1 - if the faculties are different (by name)
- *         -1 / INVALID_PARAMETER - if a NULL was received as an input
+ * @param element1 - the first faculty element
+ * @param element2 - the second faculty element
+ * @return 0 if same, positive num if the first is greater, negative otherwise
+ *         if one of the elements is NULL returns -1
  */
-int facultyCompareElements(SetElement faculty_1, SetElement faculty_2);
+int facultyCompareElements(SetElement element1, SetElement element2);
 
 /**
  * receives a faculty element and copies it, including all of the elements and
@@ -82,15 +88,6 @@ int facultyCompareElements(SetElement faculty_1, SetElement faculty_2);
  *         allocation failed
  */
 SetElement facultyCopyElement(SetElement src_faculty);
-
-/**
- * receives a faculty and returns the value of the minimum room id within the
- * faculty
- * @param faculty - the faculty to iterate through
- * @return the value of the minimum room ID or -1 / INVALID_PARAMETER if no room
- *         was found in the faculty
- */
-int facultyGetMinRoomID(Faculty faculty);
 
 /**
  * receives a faculty and returns it's name
@@ -119,11 +116,16 @@ void facultyIncEarnings(Faculty faculty, int earnings);
  * receives a faculty and an email address and checks through all of the
  * companies in the faculty
  * @param faculty - the faculty to check the companies in
- * @param email - the email address to look for in the companies
- * @return true - if the email address was found
- *         false - if the email address wasn't found
+ * @return FACULTY_SUCCESS - if the function succeeded
+ *         FACULTY_NULL_PARAMETER - if a NULL parameter was received
+ *         FACULTY_INVALID_PARAMETER - if the email sent in invalid
+ *         FACULTY_COMPANY_DOES_NOT_EXIST - if the company to be removed wasn't
+ *         found in the faculty
+ * @return ptr to the wanted company or NULL if one of the params is NULL or
+ * the company is not found in the faculty
  */
-Company facultyGetCompanyByEmail(Faculty faculty, char *email);
+Company facultyGetCompanyByEmail(Faculty faculty, char *email,
+                                 FacultyErrorCode *facultyError);
 
 /**
  * receives a faculty and a room id and searches for the room id in the faculty

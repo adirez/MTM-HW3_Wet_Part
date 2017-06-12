@@ -409,6 +409,58 @@ bool testEscapeTechnionRecommendedRoom() {
     return true;
 }*/
 
+
+/*int result, faculty_distance, id;
+FacultyErrorCode facultyError;
+CompanyErrorCode companyError;
+Faculty faculty1 = facultyCreate(PHYSICS, &facultyError);
+Faculty faculty2 = facultyCreate(BIOLOGY, &facultyError);
+Faculty faculty3 = facultyCreate(MEDICINE, &facultyError);
+
+facultyAddCompany(faculty1, "1@1");
+facultyAddCompany(faculty1, "1@2");
+facultyAddCompany(faculty1, "1@3");
+
+Company company11 = facultyGetCompanyByEmail(faculty1, "1@1", &facultyError);
+Company company12 = facultyGetCompanyByEmail(faculty1, "1@2", &facultyError);
+Company company13 = facultyGetCompanyByEmail(faculty1, "1@3", &facultyError);
+
+facultyAddCompany(faculty2, "2@1");
+facultyAddCompany(faculty2, "2@2");
+facultyAddCompany(faculty2, "2@3");
+
+Company company21 = facultyGetCompanyByEmail(faculty2, "2@1", &facultyError);
+Company company22 = facultyGetCompanyByEmail(faculty2, "2@2", &facultyError);
+
+facultyAddCompany(faculty3, "3@1");
+
+Company company31 = facultyGetCompanyByEmail(faculty2, "3@1", &facultyError);
+
+companyAddRoom(company11, 20, 4, 5, 10, 20, 1);
+companyAddRoom(company11, 15, 8, 2, 10, 15, 3);
+companyAddRoom(company11, 10, 12, 1, 2, 4, 7);
+
+companyAddRoom(company12, 20, 4, 5, 10, 20, 1);
+
+companyAddRoom(company13, 20, 4, 5, 10, 20, 1);
+companyAddRoom(company13, 15, 8, 2, 10, 15, 3);
+
+companyAddRoom(company21, 20, 4, 5, 10, 20, 1);
+companyAddRoom(company21, 15, 8, 2, 10, 15, 3);
+companyAddRoom(company21, 10, 12, 1, 2, 4, 7);
+companyAddRoom(company21, 10, 12, 1, 2, 4, 7);
+companyAddRoom(company21, 10, 12, 1, 2, 4, 7);
+
+companyAddRoom(company22, 20, 4, 5, 10, 20, 1);
+companyAddRoom(company22, 15, 8, 2, 10, 15, 3);
+companyAddRoom(company22, 10, 12, 1, 2, 4, 7);
+
+companyAddRoom(company31, 10, 12, 1, 2, 4, 7);
+companyAddRoom(company31, 10, 12, 1, 2, 4, 7);
+
+facultyMostRecommendedRoom()*/
+
+
 int main(int argv, char **arc) {
 
     RUN_TEST(testEscapeTechnionCreateAndDestroy);

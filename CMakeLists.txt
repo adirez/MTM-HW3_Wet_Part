@@ -3,13 +3,12 @@ project(Wet_Part)
 
 set(CMAKE_C_STANDARD 99)
 
-SET(GCC_COVERAGE_COMPILE_FLAGS "-Wall -pedantic-errors -DNDEBUG")
+SET(GCC_COVERAGE_COMPILE_FLAGS "-Wall -pedantic-errors -Werror")
 SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
 
-set(SOURCE_FILES list.h mtm_ex3.h set.h company.h room.h escaper.h company.c
-        room.c escaper.c faculty.c faculty.h reservation.h reservation.c
-        escape_technion.h escape_technion.c utils.c utils.h
-        test_utilities.h main.c)
+set(SOURCE_FILES mtm_ex3.h test_utilities.h set.h list.h utils.c utils.h
+         room.c room.h company.c company.h escaper.c escaper.h reservation.c
+        reservation.h faculty.c faculty.h faculty_test.c)
 add_executable(Wet_Part ${SOURCE_FILES})
 
 target_link_libraries(Wet_Part ${CMAKE_SOURCE_DIR}/libmtm.a)

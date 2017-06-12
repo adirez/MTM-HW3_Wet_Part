@@ -71,6 +71,9 @@ void roomDestroy(SetElement element) {
 }
 
 int roomCompareElements(SetElement element1, SetElement element2) {
+    if (NULL == element1 || NULL == element2){
+        return INVALID_PARAMETER;
+    }
     Room room1 = element1, room2 = element2;
     int id_cmp = room1->id - room2->id;
     if (id_cmp != 0){

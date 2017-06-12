@@ -63,6 +63,7 @@ void roomDestroy(SetElement element);
  * @param element1 - the first room
  * @param element2 - the second room
  * @return 0 if same, positive num if the first is greater, negative otherwise
+ *         if one of the elements is NULL returns -1
  */
 int roomCompareElements(SetElement element1, SetElement element2);
 

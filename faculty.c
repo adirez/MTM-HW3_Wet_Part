@@ -22,39 +22,51 @@ struct Faculty_t {
 /**...........................................................................*/
 
 
-Faculty facultyCreate(TechnionFaculty nameFaculty) {
-    assert(isValidFacultyName(nameFaculty));
+Faculty facultyCreate(TechnionFaculty nameFaculty,
+                      FacultyErrorCode *facultyError) {
+    if (NULL == facultyError){
+        return NULL;
+    }
+    if (!isValidFacultyName(nameFaculty)){
+        *facultyError = FACULTY_INVALID_PARAMETER;
+        return NULL;
+    }
     Faculty faculty = malloc(sizeof(*faculty));
     if (NULL == faculty) {
+        *facultyError = FACULTY_OUT_OF_MEMORY;
         return NULL;
     }
 
-    faculty->companies = setCreate(facultyCopyElement, facultyDestroy,
-                                   facultyCompareElements);
+    faculty->companies = setCreate(companyCopyElement, companyDestroy,
+                                   companyCompareElements);
 
     if (NULL == faculty->companies) {
         free(faculty);
+        *facultyError = FACULTY_OUT_OF_MEMORY;
         return NULL;
     }
 
     faculty->Name = nameFaculty;
     faculty->earnings = 0;
+    *facultyError = FACULTY_SUCCESS;
     return faculty;
 }
 
-void facultyDestroy(SetElement faculty) {
-    if (NULL == faculty) {
+void facultyDestroy(SetElement element) {
+    if (NULL == element) {
         return;
     }
-
-    Faculty ptr = faculty;
-    setDestroy(ptr->companies);
-    free(ptr);
+    Faculty faculty = element;
+    setDestroy(faculty->companies);
+    free(faculty);
     return;
 }
 
 FacultyErrorCode facultyAddCompany(Faculty faculty, char *email) {
     if (NULL == faculty || NULL == email) {
+        return FACULTY_NULL_PARAMETER;
+    }
+    if (!isValidEmail(email)){
         return FACULTY_INVALID_PARAMETER;
     }
 
@@ -85,7 +97,7 @@ FacultyErrorCode facultyAddCompany(Faculty faculty, char *email) {
 
 FacultyErrorCode facultyRemoveCompany(Faculty faculty, Company company) {
     if (NULL == faculty || NULL == company) {
-        return FACULTY_INVALID_PARAMETER;
+        return FACULTY_NULL_PARAMETER;
     }
 
     SetResult setResult = setRemove(faculty->companies, company);
@@ -98,65 +110,36 @@ FacultyErrorCode facultyRemoveCompany(Faculty faculty, Company company) {
     return FACULTY_SUCCESS;
 }
 
-int facultyCompareElements(SetElement faculty_1, SetElement faculty_2) {
-    if (NULL == faculty_1 || NULL == faculty_2) {
+int facultyCompareElements(SetElement element1, SetElement element2) {
+    if (NULL == element1 || NULL == element2){
         return INVALID_PARAMETER;
     }
-
-    Faculty ptr1 = faculty_1, ptr2 = faculty_2;
-
-    int name_1 = (int)(ptr1->Name), name_2 = (int)(ptr2->Name);
-
-    if (name_1 == name_2) {
-        return 0;
-    }
-
-    return 1;
+    Faculty faculty1 = element1, faculty2 = element2;
+    return (int)(faculty1->Name) - (int)(faculty2->Name);
 }
 
 SetElement facultyCopyElement(SetElement src_faculty) {
     if (NULL == src_faculty) {
         return NULL;
     }
+    Faculty ptr = src_faculty;
 
-    Faculty ptr1 = src_faculty;
-    TechnionFaculty src_name = ptr1->Name;
-
-    Faculty faculty = facultyCreate(src_name);
+    FacultyErrorCode facultyError;
+    Faculty faculty = facultyCreate(ptr->Name, &facultyError);
     if (NULL == faculty) {
         return NULL;
     }
 
-    Set companies = setCopy(ptr1->companies);
-    if (NULL == companies) {
+    setDestroy(faculty->companies);
+    faculty->companies = setCopy(ptr->companies);
+    if (NULL == faculty->companies) {
         facultyDestroy(faculty);
         return NULL;
     }
 
-    faculty->Name = ptr1->Name;
-    faculty->companies = companies;
-    faculty->earnings = ptr1->earnings;
+    faculty->earnings = ptr->earnings;
 
     return faculty;
-}
-
-int facultyGetMinRoomID(Faculty faculty) {
-    if (NULL == faculty) {
-        return INVALID_PARAMETER;
-    }
-
-    int min_id = INVALID_PARAMETER;
-    Company company_iterator = setGetFirst(faculty->companies);
-
-    while (NULL != company_iterator) {
-        int tmp_id = companyGetMinRoomID(company_iterator);
-        if (tmp_id < min_id || min_id == INVALID_PARAMETER) {
-            min_id = tmp_id;
-        }
-        company_iterator = setGetNext(faculty->companies);
-    }
-
-    return min_id;
 }
 
 TechnionFaculty facultyGetName(Faculty faculty) {
@@ -179,8 +162,17 @@ void facultyIncEarnings(Faculty faculty, int earnings) {
     faculty->earnings += earnings;
 }
 
-Company facultyGetCompanyByEmail(Faculty faculty, char *email) {
+Company facultyGetCompanyByEmail(Faculty faculty, char *email,
+                                 FacultyErrorCode *facultyError) {
+    if(NULL == facultyError){
+        return NULL;
+    }
     if (NULL == faculty || NULL == email) {
+        *facultyError = FACULTY_NULL_PARAMETER;
+        return NULL;
+    }
+    if(!isValidEmail(email)){
+        *facultyError = FACULTY_INVALID_PARAMETER;
         return NULL;
     }
 
@@ -188,15 +180,20 @@ Company facultyGetCompanyByEmail(Faculty faculty, char *email) {
 
     while (NULL != company_iterator) {
         if (isCompanyEmailEqual(company_iterator, email)) {
+            *facultyError = FACULTY_SUCCESS;
             return company_iterator;
         }
 
         company_iterator = setGetNext(faculty->companies);
     }
+    *facultyError = FACULTY_COMPANY_DOES_NOT_EXIST;
     return NULL;
 }
 
 Room facultyGetRoomByID(Faculty faculty, Company *company, int id) {
+    if(NULL == company){
+        return NULL;
+    }
     *company = NULL;
     if (NULL == faculty || id <= 0) {
         return NULL;
