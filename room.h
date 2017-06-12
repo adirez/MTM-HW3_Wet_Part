@@ -13,6 +13,15 @@
  */
 typedef struct Room_t *Room;
 
+/**
+ * a type used to return error codes related to Room
+ */
+typedef enum {
+    ROOM_SUCCESS,
+    ROOM_INVALID_PARAMETER,
+    ROOM_OUT_OF_MEMORY
+} RoomErrorCode;
+
 
 /**...........................................................................*/
 /**-------------------------FUNCTIONS-DECLARATIONS----------------------------*/
@@ -30,11 +39,16 @@ typedef struct Room_t *Room;
  * @param open_time - the calculated opening time
  * @param close_time - the calculated closing time
  * @param difficulty - the difficulty level of the room
+ * @param roomError - enum to get the result of the func:
+ *                    ROOM_SUCCESS - room created successfully
+ *                    ROOM_INVALID_PARAMETER - one of the params are Invalid
+ *                    ROOM_OUT_OF_MEMORY - Allocation problem occurred
  * @return Room - a pointer to the new room if everything went well
  *         NULL - if the allocation was not successful or company_email is NULL
  */
-Room roomCreate(TechnionFaculty roomFaculty, char *company_email, int id, int price,
-                int num_ppl, int open_time, int close_time, int difficulty);
+Room roomCreate(TechnionFaculty roomFaculty, char *company_email, int id,
+                int price, int num_ppl, int open_time, int close_time,
+                int difficulty, RoomErrorCode *roomError);
 
 /**
  * destroys a room and all of it's components. releases all relevant
@@ -74,7 +88,7 @@ TechnionFaculty roomGetNameFaculty(Room room);
  * @param room - the requested room
  * @return a pointer to the char* if the allocation worked and NULL if failed
  */
-char *roomGetCompanyEmail(Room room);
+char *roomGetCompanyEmail(Room room, RoomErrorCode *roomError);
 
 /**
  * receives a room and returns it's ID

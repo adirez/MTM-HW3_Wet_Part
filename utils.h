@@ -10,40 +10,64 @@
 /**-------------------------FUNCTIONS-DECLARATIONS----------------------------*/
 /**...........................................................................*/
 
-//TODO: add comments
 /**
- *
- * @param roomFaculty
- * @param company_email
- * @param id
- * @param price
- * @param num_ppl
- * @param difficulty
- * @return
+ * receives an email and checks if it's valid
+ * @param email - the email address to be checked
+ * @return true - contains only one '@'
+ *         false - containes more / less than one '@' or NULL
+ */
+bool isValidEmail(char *email);
+/**
+ * receives a faculty name and checks if it's valid
+ * @param Faculty - the faculty name to be checked
+ * @return true - if it's mentioned in the listed faculties enum
+ *         false - it is not mentioned in the listed faculties
+ */
+bool isValidFacultyName(TechnionFaculty Faculty);
+
+/**
+ * receives paramas that a room needs to be inserted to the system and check if
+ * they are all in the right values
+ * @param company_email - the company's email that the room is in
+ *                        checks if the email has exactly 1 @ sign
+ * @param id - the id of the room, checks if the id is a positive number
+ * @param price - the price per person for entering the room - checks if the
+ *                price is a positive number and multiply of 4
+ * @param num_ppl - the recommended number of people to enter the room at once
+ *                  checks if a positive number
+ * @param difficulty - the difficulty of the room, checks if between 1 to 10
+ * @return true if all the params are at the correct values false otherwise
  */
 bool isValidRoomParams(char *company_email, int id, int price, int num_ppl,
                        int difficulty);
 /**
- *
- * @param email
- * @param escaperFaculty
- * @param skill_level
- * @return
+ * receives paramas that an escaper needs to be inserted to the system and
+ * check if they are all in the right values
+ * @param email - the escapers email, needs to have exactly 1 @ sign
+ * @param escaperFaculty - the name of the faculty of the escaper
+ *                         checks if its in the right values in the enum given
+ *                         at the before the program begins
+ * @param skill_level - the skill level of the escaper - checks if between 1
+ * to 10
+ * @return true if all the params are at the correct values false otherwise
  */
 bool isValidEscaperParams(TechnionFaculty escaperFaculty, char *email,
                           int skill_level);
 /**
- *
- * @param email
- * @param Faculty
- * @return
+ * receives paramas that a company needs to be inserted to the system and
+ * check if they are all in the right values
+ * @param companyFaculty - the faculty name to be checked, checks if it's
+ *                         mentioned in the listed faculties enum
+ * @param email - the company's email, needs to have exactly 1 @ sign
+ * @return true if all the params are at the correct values false otherwise
  */
-bool isValidCompanyParams(TechnionFaculty Faculty, char *email);
+bool isValidCompanyParams(TechnionFaculty companyFaculty, char *email);
 
 /**
- *
- * @param num_ppl
- * @param price
+ * receives paramas that a reservation needs to be inserted to the system and
+ * check if they are all in the right values
+ * @param num_ppl - number of people in the reservation - checks if positive
+ * @param price - the price to be paid, checks if positive and multiply of 4
  * @return
  */
 bool isValidReservationParams(int num_ppl, int price);
@@ -85,21 +109,7 @@ bool getDayAndHourFromStr(char *src_str, int *day, int *hour);
 int calcRoomMatch(int room_num_ppl, int reservation_num_ppl,
                   int room_difficulty, int escaper_skill_level);
 
-/**
- * receives an email and checks if it's valid
- * @param email - the email address to be checked
- * @return true - contains only one '@'
- *         false - containes more / less than one '@' or NULL
- */
-bool isValidEmail(char *email);
-/**
- * receives a faculty name and checks if it's valid
- * @param Faculty - the faculty name to be checked
- * @return true - if it's mentioned in the listed faculties
- *         false - it is not mentioned in the listed faculties
- */
-bool isValidFacultyName(TechnionFaculty Faculty);
-
+//TODO: add comments
 /**
  *
  * @param escaper
@@ -113,10 +123,11 @@ bool isValidFacultyName(TechnionFaculty Faculty);
  * @param most_recommended_room
  * @param most_recommended_company
  * @param cur_company
- */
+ *//*
+
 void checkBetterRoom(Escaper escaper, int cur_result, int cur_room_id,
                      int cur_faculty_diff, Room cur_recommended_room,
                      int *min_result, int *min_room_id,
                      int *min_faculty_diff, Room *most_recommended_room,
                      Company *most_recommended_company,
-                     Company cur_company);
+                     Company cur_company);*/

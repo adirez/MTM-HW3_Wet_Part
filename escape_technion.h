@@ -189,7 +189,7 @@ Room companyMostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
                                 int *room_id);
 
 
-void escapeTechnionReportDay(EscapeTechnion escapeTechnion);
+void escapeTechnionReportDay(EscapeTechnion escapeTechnion,FILE* output_channel);
 
 /**
  * receives an escapeTechnion system and a faculty name and iterates through all

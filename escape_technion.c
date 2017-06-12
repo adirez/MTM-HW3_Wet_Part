@@ -185,6 +185,9 @@ EscapeTechnion escapeTechnionCreate() {
 }
 
 void escapeTechnionDestroy(EscapeTechnion escapeTechnion) {
+    if (NULL == escapeTechnion){
+        return;
+    }
     listDestroy(escapeTechnion->reservations);
     setDestroy(escapeTechnion->escapers);
     setDestroy(escapeTechnion->faculties);
@@ -388,13 +391,13 @@ MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
         return MTM_INVALID_PARAMETER;
     }
 
-    Escaper escaper = findEscaper(escaper_email, escapeTechnion);
+    Escaper escaper = findEscaper(escapeTechnion, escaper_email);
     if(escaper == NULL){
         return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
     }
 
     int skill = escaperGetSkillLevel(escaper);
-    TechnionFaculty escapersFaculty = escaperGetFaculty(escaper);
+    TechnionFaculty escapersFaculty = escaperGetNameFaculty(escaper);
     int min_result = INVALID_PARAMETER, min_faculty_diff = INVALID_PARAMETER,
         min_room_id = INVALID_PARAMETER, cur_result = INVALID_PARAMETER,
         cur_faculty_diff = INVALID_PARAMETER, cur_room_id = INVALID_PARAMETER;

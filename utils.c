@@ -32,7 +32,7 @@ static bool isValidPrice(int price);
 
 /**
  * receives a difficulty level of a room or a skill level of an escaper and
- * checks if the value is valid
+ * checks if the value is between 1 to 10
  * @param difficulty_or_skill - the input value of the skill / difficulty
  * @return true - if it's between the min level and the max level
  *         false - if it's not in the scale
@@ -44,39 +44,6 @@ static bool isValidDifficultyOrSkill(int difficulty_or_skill);
 /**...........................................................................*/
 /**-----------------------FUNCTIONS-IMPLEMENTATIONS---------------------------*/
 /**...........................................................................*/
-
-
-bool isValidRoomParams(char *company_email, int id, int price, int num_ppl,
-                       int difficulty) {
-    if(!isValidEmail(company_email) || !isValidPrice(price) ||
-       !isValidDifficultyOrSkill(difficulty) || id <= 0 || num_ppl <= 0){
-        return false;
-    }
-    return true;
-}
-
-bool isValidEscaperParams(TechnionFaculty escaperFaculty, char *email,
-                          int skill_level) {
-    if(!isValidFacultyName(escaperFaculty) || !isValidEmail(email) ||
-       !isValidDifficultyOrSkill(skill_level)){
-        return false;
-    }
-    return true;
-}
-
-bool isValidCompanyParams(TechnionFaculty Faculty, char *email) {
-    if(!isValidFacultyName(Faculty) || !isValidEmail(email)){
-        return false;
-    }
-    return true;
-}
-
-bool isValidReservationParams(int num_ppl, int price) {
-    if(!isValidPrice(price) || num_ppl <= 0){
-        return false;
-    }
-    return true;
-}
 
 bool isValidEmail(char *email) {
     if (NULL == email) {
@@ -106,6 +73,38 @@ bool isValidFacultyName(TechnionFaculty Faculty) {
         return false;
     }
 
+    return true;
+}
+
+bool isValidRoomParams(char *company_email, int id, int price, int num_ppl,
+                       int difficulty) {
+    if(!isValidEmail(company_email) || !isValidPrice(price) ||
+       !isValidDifficultyOrSkill(difficulty) || id <= 0 || num_ppl <= 0){
+        return false;
+    }
+    return true;
+}
+
+bool isValidEscaperParams(TechnionFaculty escaperFaculty, char *email,
+                          int skill_level) {
+    if(!isValidFacultyName(escaperFaculty) || !isValidEmail(email) ||
+       !isValidDifficultyOrSkill(skill_level)){
+        return false;
+    }
+    return true;
+}
+
+bool isValidCompanyParams(TechnionFaculty companyFaculty, char *email) {
+    if(!isValidFacultyName(companyFaculty) || !isValidEmail(email)){
+        return false;
+    }
+    return true;
+}
+
+bool isValidReservationParams(int num_ppl, int price) {
+    if(!isValidPrice(price) || num_ppl <= 0){
+        return false;
+    }
     return true;
 }
 
@@ -173,7 +172,6 @@ static bool isThereHyphen(char *src_str) {
 
 static bool isLegalDayHourInput(char *src_str) {
     for (int i = 0; src_str[i] != '\0'; ++i) {
-        //TODO: check if space and tabs and stuff are legal
         if ((src_str[i] < MIN_NUMBER || src_str[i] > MAX_NUMBER) &&
             src_str[i] != HYPHEN) {
             return false;
@@ -226,7 +224,7 @@ int calcRoomMatch(int room_num_ppl, int reservation_num_ppl,
 
 
 
-void checkBetterRoom(Escaper escaper, int cur_result, int cur_room_id,
+/*void checkBetterRoom(Escaper escaper, int cur_result, int cur_room_id,
                      int cur_faculty_diff, Room cur_recommended_room,
                      int *min_result, int *min_room_id,
                      int *min_faculty_diff, Room *most_recommended_room,
@@ -259,7 +257,7 @@ void checkBetterRoom(Escaper escaper, int cur_result, int cur_room_id,
             }
         }
     }
-}
+}*/
 
 /**...........................................................................*/
 /**--------------------------STATIC-FUNCTIONS---------------------------------*/

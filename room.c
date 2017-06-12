@@ -29,13 +29,15 @@ struct Room_t {
 
 Room roomCreate(TechnionFaculty roomFaculty, char *company_email, int id,
                 int price, int num_ppl, int open_time, int close_time,
-                int difficulty) {
+                int difficulty, RoomErrorCode *roomError) {
     if (!isValidRoomParams(company_email, id, price, num_ppl, difficulty) ||
             !isValidFacultyName(roomFaculty)){
+        *roomError = ROOM_INVALID_PARAMETER;
         return NULL;
     }
     Room room = malloc(sizeof(*room));
     if (NULL == room) {
+        *roomError = ROOM_OUT_OF_MEMORY;
         return NULL;
     }
 
@@ -52,6 +54,7 @@ Room roomCreate(TechnionFaculty roomFaculty, char *company_email, int id,
     room->open_time = open_time;
     room->close_time = close_time;
     room->difficulty = difficulty;
+    *roomError = ROOM_SUCCESS;
     return room;
 }
 
@@ -82,10 +85,14 @@ SetElement roomCopyElement(SetElement src_room) {
     if (NULL == src_room) {
         return NULL;
     }
+    RoomErrorCode roomError;
     Room ptr = src_room; //to make the code clearer
     Room room = roomCreate(ptr->roomFaculty, ptr->company_email, ptr->id,
                            ptr->price, ptr->num_ppl, ptr->open_time,
-                           ptr->close_time, ptr->difficulty);
+                           ptr->close_time, ptr->difficulty, &roomError);
+    if(roomError != ROOM_SUCCESS){
+        return NULL;
+    }
     return room;
 }
 
@@ -96,15 +103,18 @@ TechnionFaculty roomGetNameFaculty(Room room) {
     return room->roomFaculty;
 }
 
-char *roomGetCompanyEmail(Room room) {
+char *roomGetCompanyEmail(Room room, RoomErrorCode *roomError) {
     if (NULL == room) {
+        *roomError = ROOM_INVALID_PARAMETER;
         return NULL;
     }
     char *output = malloc(strlen(room->company_email) + 1);
     if (NULL == output) {
+        *roomError = ROOM_OUT_OF_MEMORY;
         return NULL;
     }
     strcpy(output, room->company_email);
+    *roomError = ROOM_SUCCESS;
     return output;
 }
 
