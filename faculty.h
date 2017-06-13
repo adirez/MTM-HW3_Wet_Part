@@ -24,7 +24,8 @@ typedef enum {
     FACULTY_INVALID_PARAMETER,
     FACULTY_OUT_OF_MEMORY,
     FACULTY_COMPANY_ALREADY_EXISTS,
-    FACULTY_COMPANY_DOES_NOT_EXIST
+    FACULTY_COMPANY_DOES_NOT_EXIST,
+    FACULTY_ID_DOES_NOT_EXIST
 } FacultyErrorCode;
 
 
@@ -116,11 +117,12 @@ void facultyIncEarnings(Faculty faculty, int earnings);
  * receives a faculty and an email address and checks through all of the
  * companies in the faculty
  * @param faculty - the faculty to check the companies in
- * @return FACULTY_SUCCESS - if the function succeeded
- *         FACULTY_NULL_PARAMETER - if a NULL parameter was received
- *         FACULTY_INVALID_PARAMETER - if the email sent in invalid
- *         FACULTY_COMPANY_DOES_NOT_EXIST - if the company to be removed wasn't
- *         found in the faculty
+ * @param facultyError - enum to get the result of the func:
+ *        FACULTY_SUCCESS - if the function succeeded
+ *        FACULTY_NULL_PARAMETER - if a NULL parameter was received
+ *        FACULTY_INVALID_PARAMETER - if the email sent in invalid
+ *        FACULTY_COMPANY_DOES_NOT_EXIST - if the company to be removed wasn't
+ *        found in the faculty
  * @return ptr to the wanted company or NULL if one of the params is NULL or
  * the company is not found in the faculty
  */
@@ -132,10 +134,16 @@ Company facultyGetCompanyByEmail(Faculty faculty, char *email,
  * @param faculty - the faculty to to search for the room in
  * @param company - ptr to company to get the room's company back
  * @param id - the room id to look for
+ * @param facultyError - enum to get the result of the func:
+ *        FACULTY_SUCCESS - if the room was found
+ *        FACULTY_NULL_PARAMETER - if a NULL parameter was received
+ *        FACULTY_INVALID_PARAMETER - if the id id not positive
+ *        FACULTY_ID_DOES_NOT_EXIST - if the room id wasn't found in the faculty
  * @return a pointer to the room if found and updates the company ptr to the
  * room's company or NULL if not found in both
  */
-Room facultyGetRoomByID(Faculty faculty, Company *company, int id);
+Room facultyGetRoomByID(Faculty faculty, Company *company, int id,
+                        FacultyErrorCode *facultyError);
 
 /**
  * receives a faculty and an email and check whether there is a company with

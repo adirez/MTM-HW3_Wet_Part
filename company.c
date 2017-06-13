@@ -24,10 +24,10 @@ struct Company_t {
 
 Company companyCreate(TechnionFaculty Faculty, char *email,
                       CompanyErrorCode *companyError) {
-    if(NULL == companyError){
+    if(NULL == companyError) {
         return NULL;
     }
-    if(NULL == email){
+    if(NULL == email) {
         *companyError = COMPANY_NULL_PARAMETER;
         return NULL;
     }
@@ -75,7 +75,7 @@ CompanyErrorCode companyAddRoom(Company company, int id, int price, int num_ppl,
     Room room = roomCreate(company->companyFaculty, company->email, id, price,
                         num_ppl, open_time, close_time, difficulty, &roomError);
     if (NULL == room) {
-        if (roomError == INVALID_PARAMETER) {
+        if (INVALID_PARAMETER == roomError) {
             return COMPANY_INVALID_PARAMETER;
         }
         return COMPANY_OUT_OF_MEMORY;
@@ -83,9 +83,9 @@ CompanyErrorCode companyAddRoom(Company company, int id, int price, int num_ppl,
 
     SetResult addResult = setAdd(company->rooms, room);
     roomDestroy(room);
-    if (addResult == SET_ITEM_ALREADY_EXISTS) {
+    if (SET_ITEM_ALREADY_EXISTS == addResult) {
         return COMPANY_ROOM_ALREADY_EXISTS;
-    } else if (addResult == SET_OUT_OF_MEMORY) {
+    } else if (SET_OUT_OF_MEMORY == addResult) {
         return COMPANY_OUT_OF_MEMORY;
     }
     return COMPANY_SUCCESS;

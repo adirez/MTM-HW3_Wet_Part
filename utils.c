@@ -101,13 +101,6 @@ bool isValidCompanyParams(TechnionFaculty companyFaculty, char *email) {
     return true;
 }
 
-bool isValidReservationParams(int num_ppl, int price) {
-    if(!isValidPrice(price) || num_ppl <= 0){
-        return false;
-    }
-    return true;
-}
-
 bool getHoursFromStr(char *hours_str, int *opening_time, int *closing_time) {
     int tmp_opening = 0, tmp_closing = 0;
     if (NULL == hours_str || strlen(hours_str) != HOURS_STR_LEN) {

@@ -35,11 +35,10 @@ Reservation reservationCreate(Escaper escaper, Company company, Room room,
         *reservationError = RESERVATION_NULL_PARAMETER;
         return NULL;
     }
-    //TODO: price is after calculation here and might be not multiply 4
-   /* if(!isValidReservationParams(num_ppl, price)){
+    if (num_ppl <= 0){
         *reservationError = RESERVATION_INVALID_PARAMETER;
         return NULL;
-    }*/
+    }
 
     Reservation reservation = malloc(sizeof(*reservation));
     if (NULL == reservation) {
@@ -54,6 +53,7 @@ Reservation reservationCreate(Escaper escaper, Company company, Room room,
     reservation->day = day;
     reservation->hour = hour;
     reservation->price = price;
+
     *reservationError = RESERVATION_SUCCESS;
     return reservation;
 }

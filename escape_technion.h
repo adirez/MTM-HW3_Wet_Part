@@ -217,16 +217,6 @@ EscapeTechnionErrorCode escapeTechnionReportDay(EscapeTechnion escapeTechnion,
 
 
 /**
- * receives an escapeTechnion system and a faculty name and iterates through all
- * the faculties in the system to find a faculty with a matching name
- * @param escapeTechnion - the system to iterate through
- * @param nameFaculty - the faculty name to look for
- * @return a pointer to the faculty if found or NULL if not found
- */
-Faculty getFacultyByName(EscapeTechnion escapeTechnion,
-                         TechnionFaculty nameFaculty);
-
-/**
  *
  * @param escapeTechnion
  * @param output_channel

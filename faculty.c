@@ -72,9 +72,9 @@ FacultyErrorCode facultyAddCompany(Faculty faculty, char *email) {
 
     CompanyErrorCode companyError;
     Company company = companyCreate(faculty->Name, email, &companyError);
-    if (companyError == COMPANY_INVALID_PARAMETER) {
+    if (COMPANY_INVALID_PARAMETER == companyError) {
         return FACULTY_INVALID_PARAMETER;
-    } else if (companyError == COMPANY_OUT_OF_MEMORY) {
+    } else if (COMPANY_OUT_OF_MEMORY == companyError) {
         return FACULTY_OUT_OF_MEMORY;
     }
 
@@ -85,10 +85,10 @@ FacultyErrorCode facultyAddCompany(Faculty faculty, char *email) {
     SetResult setResult = setAdd(faculty->companies, company);
     companyDestroy(company);
 
-    assert(setResult != SET_NULL_ARGUMENT);
-    if (setResult == SET_ITEM_ALREADY_EXISTS) {
+    assert(SET_NULL_ARGUMENT != setResult);
+    if (SET_ITEM_ALREADY_EXISTS == setResult) {
         return FACULTY_COMPANY_ALREADY_EXISTS;
-    } else if (setResult == SET_OUT_OF_MEMORY) {
+    } else if (SET_OUT_OF_MEMORY == setResult) {
         return FACULTY_OUT_OF_MEMORY;
     }
 
@@ -101,9 +101,9 @@ FacultyErrorCode facultyRemoveCompany(Faculty faculty, Company company) {
     }
 
     SetResult setResult = setRemove(faculty->companies, company);
-    assert(setResult != SET_NULL_ARGUMENT);
+    assert(SET_NULL_ARGUMENT != setResult);
 
-    if (setResult == SET_ITEM_DOES_NOT_EXIST) {
+    if (SET_ITEM_DOES_NOT_EXIST == setResult) {
         return FACULTY_COMPANY_DOES_NOT_EXIST;
     }
 
@@ -190,12 +190,18 @@ Company facultyGetCompanyByEmail(Faculty faculty, char *email,
     return NULL;
 }
 
-Room facultyGetRoomByID(Faculty faculty, Company *company, int id) {
-    if(NULL == company){
+Room facultyGetRoomByID(Faculty faculty, Company *company, int id,
+                        FacultyErrorCode *facultyError) {
+    if (NULL == facultyError){
+        return NULL;
+    }
+    if (NULL == company || NULL == faculty){
+        *facultyError = FACULTY_NULL_PARAMETER;
         return NULL;
     }
     *company = NULL;
-    if (NULL == faculty || id <= 0) {
+    if (id <= 0) {
+        *facultyError = FACULTY_INVALID_PARAMETER;
         return NULL;
     }
 
@@ -204,11 +210,13 @@ Room facultyGetRoomByID(Faculty faculty, Company *company, int id) {
     {
         Room room = companyGetRoomByID(company_iterator, id);
         if (NULL != room) {
+            *facultyError = FACULTY_SUCCESS;
             *company = company_iterator;
             return room;
         }
         company_iterator = setGetNext(faculty->companies);
     }
+    *facultyError = FACULTY_ID_DOES_NOT_EXIST;
     return NULL;
 }
 
@@ -233,16 +241,17 @@ Room facultyMostRecommendedRoom(Faculty faculty, Escaper escaper,
     int min_result = INVALID_PARAMETER, cur_result = INVALID_PARAMETER,
         min_room_id =INVALID_PARAMETER, min_faculty_distance =INVALID_PARAMETER,
         cur_room_id =INVALID_PARAMETER, cur_faculty_distance =INVALID_PARAMETER;
+
     Room cur_recommended_room = NULL, most_recommended_room = NULL;
     Company company_iterator, most_recommended_company = NULL;
+
     company_iterator = setGetFirst(faculty->companies);
     while (NULL != company_iterator) {
 
         cur_recommended_room = companyMostRecommendedRoom(company_iterator,
-                                                          escaperFaculty, P_e,
-                                                          skill, &cur_result,
-                                                          &cur_faculty_distance,
-                                                          &cur_room_id);
+                                      escaperFaculty, P_e, skill, &cur_result,
+                                      &cur_faculty_distance, &cur_room_id);
+
         checkBetterRoom(escaper, cur_result, cur_room_id, cur_faculty_distance,
                         cur_recommended_room, &min_result, &min_room_id,
                         &min_faculty_distance, &most_recommended_room,
@@ -253,6 +262,7 @@ Room facultyMostRecommendedRoom(Faculty faculty, Escaper escaper,
     *faculty_distance = min_faculty_distance;
     *room_id = min_room_id;
     *cur_company = most_recommended_company;
+
     return most_recommended_room;
 }
 

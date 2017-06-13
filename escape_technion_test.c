@@ -19,7 +19,7 @@ bool testEscapeTechnionAddCompany() {
     EscapeTechnion escapeTechnion = escapeTechnionCreate();
 
     ASSERT_TEST(escapeTechnionAddCompany(NULL, PHYSICS,"adi@gmail") ==
-                ESCAPE_TECHNION_INVALID_PARAMETER);
+                ESCAPE_TECHNION_NULL_PARAMETER);
     ASSERT_TEST(escapeTechnionAddCompany(escapeTechnion, PHYSICS,"adigmail") ==
                 ESCAPE_TECHNION_INVALID_PARAMETER);
     ASSERT_TEST(escapeTechnionAddCompany(escapeTechnion, PHYSICS,"adi@gma@") ==
@@ -55,7 +55,7 @@ bool testEscapeTechnionRemoveCompany() {
     ASSERT_TEST(escapeTechnionRemoveCompany(escapeTechnion, "@@") ==
                 ESCAPE_TECHNION_INVALID_PARAMETER);
     ASSERT_TEST(escapeTechnionRemoveCompany(NULL, "adi@gmail") ==
-                ESCAPE_TECHNION_INVALID_PARAMETER);
+                ESCAPE_TECHNION_NULL_PARAMETER);
     ASSERT_TEST(escapeTechnionRemoveCompany(escapeTechnion, "adi@gmail") ==
                 ESCAPE_TECHNION_SUCCESS);
 
@@ -81,7 +81,7 @@ bool testEscapeTechnionAddRoom() {
     escapeTechnionAddCompany(escapeTechnion, PHYSICS, "sha@hak");
 
     ASSERT_TEST(escapeTechnionAddRoom(NULL, "adi@gmail", 123, 12,
-                5, "10-20", 10) == ESCAPE_TECHNION_INVALID_PARAMETER);
+                5, "10-20", 10) == ESCAPE_TECHNION_NULL_PARAMETER);
     ASSERT_TEST(escapeTechnionAddRoom(escapeTechnion, "adi@gmail@", 123, 12,
                 5, "10-20", 10) == ESCAPE_TECHNION_INVALID_PARAMETER);
     ASSERT_TEST(escapeTechnionAddRoom(escapeTechnion, "", 123, 12,
@@ -144,7 +144,7 @@ bool testEscapeTechnionRemoveRoom() {
     escapeTechnionAddRoom(escapeTechnion, "adi@gmail", 123, 12, 5, "10-20", 10);
 
     ASSERT_TEST(escapeTechnionRemoveRoom(NULL, 123, PHYSICS) ==
-                ESCAPE_TECHNION_INVALID_PARAMETER);
+                ESCAPE_TECHNION_NULL_PARAMETER);
     ASSERT_TEST(escapeTechnionRemoveRoom(escapeTechnion, 0, PHYSICS) ==
                 ESCAPE_TECHNION_INVALID_PARAMETER);
     ASSERT_TEST(escapeTechnionRemoveRoom(escapeTechnion, -1, PHYSICS) ==
@@ -182,7 +182,7 @@ bool testEscapeTechnionAddEscaper() {
     EscapeTechnion escapeTechnion = escapeTechnionCreate();
 
     ASSERT_TEST(escapeTechnionAddEscaper(NULL, "adi@", 5, PHYSICS) ==
-                ESCAPE_TECHNION_INVALID_PARAMETER);
+                ESCAPE_TECHNION_NULL_PARAMETER);
     ASSERT_TEST(escapeTechnionAddEscaper(escapeTechnion, "", 5, PHYSICS) ==
                 ESCAPE_TECHNION_INVALID_PARAMETER);
     ASSERT_TEST(escapeTechnionAddEscaper(escapeTechnion, "adi@@", 5, PHYSICS) ==
@@ -215,7 +215,7 @@ bool testEscapeTechnionRemoveEscaper() {
     EscapeTechnion escapeTechnion = escapeTechnionCreate();
 
     ASSERT_TEST(escapeTechnionRemoveEscaper(NULL, "adi@") ==
-                ESCAPE_TECHNION_INVALID_PARAMETER);
+                ESCAPE_TECHNION_NULL_PARAMETER);
     ASSERT_TEST(escapeTechnionRemoveEscaper(escapeTechnion, "@ad@i@") ==
                 ESCAPE_TECHNION_INVALID_PARAMETER);
     ASSERT_TEST(escapeTechnionRemoveEscaper(escapeTechnion, "@adi@") ==
@@ -252,7 +252,7 @@ bool testEscapeTechnionReservationReceived() {
 
     //test Illegal params
     ASSERT_TEST(escapeTechnionReservationReceived(escapeTechnion, NULL, 123,
-                PHYSICS, "3-4", 5) == ESCAPE_TECHNION_INVALID_PARAMETER);
+                PHYSICS, "3-4", 5) == ESCAPE_TECHNION_NULL_PARAMETER);
     ASSERT_TEST(escapeTechnionReservationReceived(escapeTechnion,
                 "a@di@gmail", 123, PHYSICS, "3-4", 5) ==
                         ESCAPE_TECHNION_INVALID_PARAMETER);
@@ -275,7 +275,7 @@ bool testEscapeTechnionReservationReceived() {
     ASSERT_TEST(escapeTechnionReservationReceived(escapeTechnion, "adi@gmail",
                 123, PHYSICS, "3-4", -1) == ESCAPE_TECHNION_INVALID_PARAMETER);
     ASSERT_TEST(escapeTechnionReservationReceived(NULL, "adi@gmail", 123,
-                PHYSICS, "3-4", 5) == ESCAPE_TECHNION_INVALID_PARAMETER);
+                PHYSICS, "3-4", 5) == ESCAPE_TECHNION_NULL_PARAMETER);
 
 
     //test wrong email
@@ -329,7 +329,7 @@ bool testEscapeTechnionRecommendedRoom() {
     ASSERT_TEST(escapeTechnionRecommendedRoom(escapeTechnion, 5, "@@") ==
                 ESCAPE_TECHNION_INVALID_PARAMETER);
     ASSERT_TEST(escapeTechnionRecommendedRoom(escapeTechnion, 5, NULL) ==
-                ESCAPE_TECHNION_INVALID_PARAMETER);
+                ESCAPE_TECHNION_NULL_PARAMETER);
     ASSERT_TEST(escapeTechnionRecommendedRoom(escapeTechnion, 5, "") ==
                 ESCAPE_TECHNION_INVALID_PARAMETER);
     ASSERT_TEST(escapeTechnionRecommendedRoom(escapeTechnion, 0, "escaper@") ==
@@ -337,7 +337,7 @@ bool testEscapeTechnionRecommendedRoom() {
     ASSERT_TEST(escapeTechnionRecommendedRoom(escapeTechnion, -1, "escaper@")
                 == ESCAPE_TECHNION_INVALID_PARAMETER);
     ASSERT_TEST(escapeTechnionRecommendedRoom(NULL, 5, "escaper@") ==
-                ESCAPE_TECHNION_INVALID_PARAMETER);
+                ESCAPE_TECHNION_NULL_PARAMETER);
 
     ASSERT_TEST(escapeTechnionRecommendedRoom(escapeTechnion, 5, "not@exist") ==
                 ESCAPE_TECHNION_CLIENT_EMAIL_DOES_NOT_EXIST);
