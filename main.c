@@ -458,8 +458,8 @@ static MtmErrorCode getCompanyAdd(EscapeTechnion escapeTechnion, char *delim) {
     int faculty_num = atoi(company_faculty_str);
     TechnionFaculty nameFaculty = (TechnionFaculty)faculty_num;
     EscapeTechnionErrorCode errorCode = escapeTechnionAddCompany(escapeTechnion,
-                                                                 nameFaculty,
-                                                                 company_email);
+                                                                 company_email,
+                                                                 nameFaculty);
     return convertEscapeTechnionError(errorCode);
 }
 
@@ -508,8 +508,8 @@ static MtmErrorCode getRoomRemove(EscapeTechnion escapeTechnion, char *delim) {
     int room_id = atoi(room_id_str);
 
     EscapeTechnionErrorCode errorCode = escapeTechnionRemoveRoom(escapeTechnion,
-                                                                 room_id,
-                                                                 nameFaculty);
+                                                                 nameFaculty,
+                                                                 room_id);
     return convertEscapeTechnionError(errorCode);
 }
 
@@ -526,8 +526,8 @@ static MtmErrorCode getEscaperAdd(EscapeTechnion escapeTechnion, char *delim) {
 
     EscapeTechnionErrorCode errorCode = escapeTechnionAddEscaper(escapeTechnion,
                                                                  escaper_email,
-                                                                 skill_level,
-                                                                 nameFaculty);
+                                                                 nameFaculty,
+                                                                 skill_level);
     return convertEscapeTechnionError(errorCode);
 }
 
@@ -558,7 +558,7 @@ static MtmErrorCode getEscaperOrder(EscapeTechnion escapeTechnion, char *delim) 
 
     EscapeTechnionErrorCode errorCode;
     errorCode = escapeTechnionReservationReceived(escapeTechnion, escaper_email,
-                                                  room_id, nameFaculty,
+                                                  nameFaculty, room_id,
                                                   reservation_time, num_ppl);
     return convertEscapeTechnionError(errorCode);
 }
@@ -571,8 +571,8 @@ static MtmErrorCode getEscaperRecommend(EscapeTechnion escapeTechnion,
     int num_ppl = atoi(num_ppl_str);
 
     EscapeTechnionErrorCode errorCode;
-    errorCode = escapeTechnionRecommendedRoom(escapeTechnion, num_ppl,
-                                              escaper_email);
+    errorCode = escapeTechnionRecommendedRoom(escapeTechnion, escaper_email,
+                                              num_ppl);
     return convertEscapeTechnionError(errorCode);
 }
 

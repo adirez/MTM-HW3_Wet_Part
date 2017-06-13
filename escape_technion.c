@@ -630,7 +630,7 @@ EscapeTechnionErrorCode escapeTechnionReportDay(EscapeTechnion escapeTechnion,
     List ended_reservations = listFilter(escapeTechnion->reservations,
                                          isReservationDueDate, &system_day);
     num_events = listGetSize(ended_reservations);
-    mtmPrintDayHeader(stdout, system_day, num_events);
+    mtmPrintDayHeader(output_channel, system_day, num_events);
     List new_reservation_list = listFilter(escapeTechnion->reservations,
                                            isReservationRelevant, &system_day);
     listDestroy(escapeTechnion->reservations);
@@ -662,7 +662,7 @@ EscapeTechnionErrorCode escapeTechnionReportDay(EscapeTechnion escapeTechnion,
 
         Faculty tmpFaculty = getFacultyByName(escapeTechnion, company_faculty);
         facultyIncEarnings(tmpFaculty, price);
-        mtmPrintOrder(stdout, escaper_email, escaper_skill,
+        mtmPrintOrder(output_channel, escaper_email, escaper_skill,
                       escaperFaculty, company_email, company_faculty,
                       room_id, hour, room_difficulty, num_ppl, price);
         free(escaper_email);
@@ -1038,24 +1038,24 @@ static void escapeTechnionBestFaculties(EscapeTechnion escapeTechnion,
     int faculty_1_earnings = INVALID_PARAMETER,
         faculty_2_earnings = INVALID_PARAMETER,
         faculty_3_earnings = INVALID_PARAMETER;
-    Faculty faculty_1 = NULL, faculty_2 = NULL, faculty_3 = NULL;
+    Faculty faculty1 = NULL, faculty2 = NULL, faculty3 = NULL;
 
     Faculty faculty_iterator = setGetFirst(escapeTechnion->faculties);
     while (NULL != faculty_iterator) {
         int tmp_earnings = facultyGetEarnings(faculty_iterator);
-        findBestFaculties(&faculty_1, &faculty_1_earnings,
-                          &faculty_2, &faculty_2_earnings,
-                          &faculty_3, &faculty_3_earnings,
+        findBestFaculties(&faculty1, &faculty_1_earnings,
+                          &faculty2, &faculty_2_earnings,
+                          &faculty3, &faculty_3_earnings,
                           faculty_iterator, tmp_earnings);
         faculty_iterator = setGetNext(escapeTechnion->faculties);
     }
 
-    *first_faculty = faculty_1;
+    *first_faculty = faculty1;
     *first_faculty_earnings = faculty_1_earnings;
-    *second_faculty = faculty_2;
+    *second_faculty = faculty2;
     *second_faculty_earnings = faculty_2_earnings;
-    *third_faculty = faculty_3;
-    *third_faculty_earnings = faculty_2_earnings;
+    *third_faculty = faculty3;
+    *third_faculty_earnings = faculty_3_earnings;
     return;
 }
 
