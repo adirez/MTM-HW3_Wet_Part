@@ -2,6 +2,14 @@
 // Created by Shahak on 07/06/2017.
 //
 
+
+
+/**...........................................................................*/
+/**---------------------------DEFINES-&-INCLUDES------------------------------*/
+/**...........................................................................*/
+
+
+
 #ifndef HW3_ESCAPETECHNION_H
 #define HW3_ESCAPETECHNION_H
 
@@ -10,6 +18,13 @@
 #include "room.h"
 #include "escaper.h"
 #include "reservation.h"
+
+
+/**...........................................................................*/
+/**-----------------------------STRUCTURE-------------------------------------*/
+/**...........................................................................*/
+
+
 
 /**
  * EscapeTechnion will be implemented in this flie.
@@ -20,9 +35,7 @@ typedef struct EscapeTechnion_t *EscapeTechnion;
  * a type to used to return error codes related to escape technion systems
  */
 typedef enum {
-    ESCAPE_TECHNION_OUT_OF_MEMORY, // You should exit program after this error
-    ESCAPE_TECHNION_INVALID_COMMAND_LINE_PARAMETERS, // You should exit program after this error
-    ESCAPE_TECHNION_CANNOT_OPEN_FILE, // You should exit program after this error
+    ESCAPE_TECHNION_OUT_OF_MEMORY,
     ESCAPE_TECHNION_NULL_PARAMETER,
     ESCAPE_TECHNION_INVALID_PARAMETER,
     ESCAPE_TECHNION_EMAIL_ALREADY_EXISTS,
@@ -36,6 +49,7 @@ typedef enum {
     ESCAPE_TECHNION_NO_ROOMS_AVAILABLE,
     ESCAPE_TECHNION_SUCCESS,
 } EscapeTechnionErrorCode;
+
 
 /**...........................................................................*/
 /**-------------------------FUNCTIONS-DECLARATIONS----------------------------*/
@@ -54,8 +68,8 @@ EscapeTechnion escapeTechnionCreate();
  * receives an escapeTechnion type and destroys it, including releasing all
  * allocated memory from internal fields
  * @param escapeTechnion - the type to be destroyed
- * @return MTM_SUCCESS - if the function worked ok
- *         MTM_NULL_PARAMETER - if the argument was NULL
+ * @return ESCAPE_TECHNION_SUCCESS - if the function worked ok
+ *         ESCAPE_TECHNION_NULL_PARAMETER - if the argument was NULL
  */
 void escapeTechnionDestroy(EscapeTechnion escapeTechnion);
 
@@ -65,10 +79,11 @@ void escapeTechnionDestroy(EscapeTechnion escapeTechnion);
  * @param escapeTechnion - the system to create the company in
  * @param email - the email of the company to be created
  * @param nameFaculty - the faculty of the company to be created
- * @return MTM_SUCCESS - if the function succeeded
- *         MTM_INVALID_PARAMETER - if one of the parameters was incompatible
- *         MTM_MEMORY_PROBLEM - if the allocations failed
- *         MTM_EMAIL_ALREADY_EXISTS - if the email is already in use
+ * @return ESCAPE_TECHNION_SUCCESS - if the function succeeded
+ *         ESCAPE_TECHNION_INVALID_PARAMETER - if one of the parameters was
+ *         incompatible
+ *         ESCAPE_TECHNION_MEMORY_PROBLEM - if the allocations failed
+ *         ESCAPE_TECHNION_EMAIL_ALREADY_EXISTS - if the email is already in use
  */
 EscapeTechnionErrorCode escapeTechnionAddCompany(EscapeTechnion escapeTechnion,
                                                  TechnionFaculty nameFaculty,
@@ -79,10 +94,13 @@ EscapeTechnionErrorCode escapeTechnionAddCompany(EscapeTechnion escapeTechnion,
  * the system to find a company with a matching email and remove it
  * @param escapeTechnion - the system to iterate through
  * @param company_email - the email to look for
- * @return MTM_SUCCESS - if the function succeeded
- *         MTM_INVALID_PARAMETER - if one of the parameters was incompatible
- *         MTM_RESERVATION_EXISTS - if the company has an active reservation
- *         MTM_COMPANY_EMAIL_DOES_NOT_EXIST - if the company's email wasn't
+ * @return ESCAPE_TECHNION_SUCCESS - if the function succeeded
+ *         ESCAPE_TECHNION_INVALID_PARAMETER - if one of the parameters was
+ *         incompatible
+ *         ESCAPE_TECHNION_RESERVATION_EXISTS - if the company has an active
+ *         reservation
+ *         ESCAPE_TECHNION_COMPANY_EMAIL_DOES_NOT_EXIST - if the company's email
+ *         wasn't
  *         found in the system
  */
 EscapeTechnionErrorCode escapeTechnionRemoveCompany(EscapeTechnion escapeTechnion,
@@ -99,13 +117,16 @@ EscapeTechnionErrorCode escapeTechnionRemoveCompany(EscapeTechnion escapeTechnio
  * @param num_ppl - the recommended number of people for the room
  * @param working_hours - a string representing the working hours of the room
  * @param difficulty - the difficulty level of the room
- * @return MTM_SUCCESS - if the function succeeded
- *         MTM_INVALID_PARAMETER - if one of the parameters was incompatible
- *         MTM_COMPANY_EMAIL_DOES_NOT_EXIST - if the company's email wasn't
+ * @return ESCAPE_TECHNION_SUCCESS - if the function succeeded
+ *         ESCAPE_TECHNION_INVALID_PARAMETER - if one of the parameters was
+ *         incompatible
+ *         ESCAPE_TECHNION_COMPANY_EMAIL_DOES_NOT_EXIST - if the company's email
+ *         wasn't
  *         found in the system
- *         MTM_ID_ALREADY_EXIST - if the room id is already in use in the
+ *         ESCAPE_TECHNION_ID_ALREADY_EXIST - if the room id is already in use
+ *         in the
  *         company
- *         MTM_OUT_OF_MEMORY - if one of the allocations failed
+ *         ESCAPE_TECHNION_OUT_OF_MEMORY - if one of the allocations failed
  */
 EscapeTechnionErrorCode escapeTechnionAddRoom(EscapeTechnion escapeTechnion,
                                    char *company_email, int room_id, int price,
@@ -119,10 +140,13 @@ EscapeTechnionErrorCode escapeTechnionAddRoom(EscapeTechnion escapeTechnion,
  * @param escapeTechnion - the system to iterate through
  * @param room_id - the id to look for
  * @param Faculty - the faculty the room should be listed under
- * @return MTM_SUCCESS - if the function succeeded
- *         MTM_INVALID_PARAMETER - if one of the parameters was incompatible
- *         MTM_RESERVATION_EXISTS - if the company has an active reservation
- *         MTM_ID_DOES_NOT_EXIST - if the room id wasn't found in the system
+ * @return ESCAPE_TECHNION_SUCCESS - if the function succeeded
+ *         ESCAPE_TECHNION_INVALID_PARAMETER - if one of the parameters was
+ *         incompatible
+ *         ESCAPE_TECHNION_RESERVATION_EXISTS - if the company has an active
+ *         reservation
+ *         ESCAPE_TECHNION_ID_DOES_NOT_EXIST - if the room id wasn't found in
+ *         the system
  *         with the specified faculty
  */
 EscapeTechnionErrorCode escapeTechnionRemoveRoom(EscapeTechnion escapeTechnion,
@@ -135,11 +159,13 @@ EscapeTechnionErrorCode escapeTechnionRemoveRoom(EscapeTechnion escapeTechnion,
  * @param email - the email of the escaper to be added
  * @param skill - the skill level of the escaper
  * @param nameFaculty - the faculty of the escaper
- * @return MTM_SUCCESS - if the function succeeded
- *         MTM_INVALID_PARAMETER - if one of the parameters was incompatible
- *         MTM_EMAIL_ALREADY_EXISTS- if the escaper's email is  already in use
+ * @return ESCAPE_TECHNION_SUCCESS - if the function succeeded
+ *         ESCAPE_TECHNION_INVALID_PARAMETER - if one of the parameters was
+ *         incompatible
+ *         ESCAPE_TECHNION_EMAIL_ALREADY_EXISTS- if the escaper's email is
+ *         already in use
  *         in the system
- *         MTM_OUT_OF_MEMORY - if one of the allocations failed
+ *         ESCAPE_TECHNION_OUT_OF_MEMORY - if one of the allocations failed
  */
 EscapeTechnionErrorCode escapeTechnionAddEscaper(EscapeTechnion escapeTechnion,
                                                  char *email, int skill,
@@ -151,10 +177,12 @@ EscapeTechnionErrorCode escapeTechnionAddEscaper(EscapeTechnion escapeTechnion,
  * from the system
  * @param email - the email of the escaper
  * @param escapeTechnion - the system to iterate through
- * @return MTM_SUCCESS - if the function succeeded
- *         MTM_CLIENT_EMAIL_DOES_NOT_EXIST - if the email wasn't found in the
+ * @return ESCAPE_TECHNION_SUCCESS - if the function succeeded
+ *         ESCAPE_TECHNION_CLIENT_EMAIL_DOES_NOT_EXIST - if the email wasn't
+ *         found in the
  *         system
- *         MTM_INVALID_PARAMETER - if one of the parameteres was incorrect
+ *         ESCAPE_TECHNION_INVALID_PARAMETER - if one of the parameteres was
+ *         incorrect
  */
 EscapeTechnionErrorCode escapeTechnionRemoveEscaper(EscapeTechnion escapeTechnion,
                                                     char *email);
@@ -169,14 +197,19 @@ EscapeTechnionErrorCode escapeTechnionRemoveEscaper(EscapeTechnion escapeTechnio
  * @param time - a string containing the day and hour of the reservation
  * @param num_ppl - the number of people in the reservation
  * @param escapeTechnion - the system to iterate through
- * @return MTM_SUCCESS - if the reservation was created successfully
- *         MTM_CLIENT_EMAIL_DOES_NOT_EXIST - if the escaper wasn't found in the
+ * @return ESCAPE_TECHNION_SUCCESS - if the reservation was created successfully
+ *         ESCAPE_TECHNION_CLIENT_EMAIL_DOES_NOT_EXIST - if the escaper wasn't
+ *         found in the
  *         system
- *         MTM_ID_DOES_NOT_EXIST - if the room wasn't found in the system
- *         MTM_CLIENT_IN_ROOM - if the client already has a reservation at the
+ *         ESCAPE_TECHNION_ID_DOES_NOT_EXIST - if the room wasn't found in the
+ *         system
+ *         ESCAPE_TECHNION_CLIENT_IN_ROOM - if the client already has a
+ *         reservation at the
  *         specified time
- *         MTM_INVALID_PARAMETER - if one of the parameters is invalid
- *         MTM_ROOM_NOT_AVAILABLE - if the room is taken or not working in the
+ *         ESCAPE_TECHNION_INVALID_PARAMETER - if one of the parameters is
+ *         invalid
+ *         ESCAPE_TECHNION_ROOM_NOT_AVAILABLE - if the room is taken or not
+ *         working in the
  *         hours of the reservation
  */
 EscapeTechnionErrorCode escapeTechnionReservationReceived(EscapeTechnion
@@ -185,42 +218,44 @@ EscapeTechnionErrorCode escapeTechnionReservationReceived(EscapeTechnion
                                                TechnionFaculty nameFaculty,
                                                char *time, int num_ppl);
 /**
- *
- * @param escaper_email
- * @param num_ppl
- * @param escapeTechnion
- * @return
+ * receives an escapeTechnion system, number of people for a reservation and an
+ * email address of the escaper who made the reservation and makes a reservation
+ * for the most recommended room at the closest available time
+ * @param escaper_email - the email of the escaper who made the reservation
+ * @param num_ppl - the number of people for the reservation
+ * @param escapeTechnion - the system to iterate through
+ * @return ESCAPE_TECHNION_NULL_PARAMETER - if one of the params is NULL
+ *         ESCAPE_TECHNION_INVALID_PARAMETER - if one of the params is invalid
+ *         ESCAPE_TECHNION_CLIENT_EMAIL_DOES_NOT_EXIST - if the email of the
+ *         escaper wasn't found in the system
+ *         ESCAPE_TECHNION_NO_ROOMS_AVAILABLE - if there's no available room
+ *         ESCAPE_TECHNION_SUCCESS - if a reservation was made successfully
  */
 EscapeTechnionErrorCode escapeTechnionRecommendedRoom(EscapeTechnion
                                                       escapeTechnion,int num_ppl,
                                                       char *escaper_email);
 
-
 /**
- *
- * @param company
- * @param escaperFaculty
- * @param P_e
- * @param skill
- * @param result
- * @param faculty_distance
- * @param room_id
- * @return
+ * receives an escapeTechnion system and an output file and prints out the
+ * daily report including all of the daily reservations. removes the irrelevant
+ * reservations, updates earnings and advances the system days count
+ * @param escapeTechnion - the system to iterate through
+ * @param output_channel - standard output / output file
+ * @return ESCAPE_TECHNION_NULL_PARAMETER - if one of the parameters is NULL
+ *         ESCAPE_TECHNION_OUT_OF_MEMORY - if an allocation failed
+ *         ESCAPE_TECHNION_SUCCESS - if the function succeeded
  */
-Room companyMostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
-                                int P_e, int skill, int *result,
-                                int *faculty_distance, int *room_id);
-
-
 EscapeTechnionErrorCode escapeTechnionReportDay(EscapeTechnion escapeTechnion,
                                                 FILE *output_channel);
 
-
 /**
- *
- * @param escapeTechnion
- * @param output_channel
- * @return
+ * receives an escapeTechnion system and an output file and prints out the best
+ * faculties report including all of the current faculties and the top three
+ * faculties by earnings (and the total earnings of the system)
+ * @param escapeTechnion - the system to iterate through
+ * @param output_channel - standard output / output file
+ * @return ESCAPE_TECHNION_NULL_PARAMETER - if one of the params is NULL
+ *         ESCAPE_TECHNION_SUCCESS - if the function succeeded
  */
 EscapeTechnionErrorCode escapeTechnionReportBest(EscapeTechnion escapeTechnion,
                                       FILE *output_channel);

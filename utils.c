@@ -2,6 +2,14 @@
 // Created by Shahak on 06/06/2017.
 //
 
+
+
+/**...........................................................................*/
+/**---------------------------DEFINES-&-INCLUDES------------------------------*/
+/**...........................................................................*/
+
+
+
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -21,9 +29,38 @@
 #define HOURS_STR_LEN 5 //according to the format "HH-HH"
 #define DAY_HOUR_MIN_LEN 3 //according to the format "D-H"
 
+
+
+/**...........................................................................*/
+/**--------------------STATIC-FUNCTIONS-DECLARATIONS--------------------------*/
+/**...........................................................................*/
+
+
+
+/**
+ * receives a string representing reservation time / working hours to make sure
+ * it only contains one hyphen
+ * @param src_str - the string to check
+ * @return true - if contains only one hyphen
+ *         false - if doesn't contain an hyphen or contains more than one
+ */
+static bool isThereHyphen(char *src_str);
+
+/**
+ * receives a string representing reservation time in the format of "D-H" and
+ * checks if it contains a valid reservation time by extracting the day and the
+ * hour from the string
+ * @param src_str - the string to check
+ * @return true - if the reservation time is valid
+ *         false - if the reservation time is invalid
+ */
+static bool isLegalDayHourInput(char *src_str);
+
+
 /**...........................................................................*/
 /**-----------------------FUNCTIONS-IMPLEMENTATIONS---------------------------*/
 /**...........................................................................*/
+
 
 bool isValidPrice(int price) {
     if (price <= 0) {
@@ -142,40 +179,6 @@ bool getHoursFromStr(char *hours_str, int *opening_time, int *closing_time) {
     return true;
 }
 
-static bool isThereHyphen(char *src_str) {
-    int hyphen_counter = 0, i;
-    for (i = 0; src_str[i] != '\0'; ++i) {
-        if (src_str[i] == HYPHEN) {
-            hyphen_counter++;
-        }
-        if (hyphen_counter > 1) {
-            return false;
-        }
-    }
-    if (hyphen_counter == 0) {
-        return false;
-    }
-    if (src_str[i-1] == HYPHEN) {
-        return false;
-    }
-    return true;
-}
-
-static bool isLegalDayHourInput(char *src_str) {
-    for (int i = 0; src_str[i] != '\0'; ++i) {
-        if ((src_str[i] < MIN_NUMBER || src_str[i] > MAX_NUMBER) &&
-            src_str[i] != HYPHEN) {
-            return false;
-        }
-    }
-
-    if (isThereHyphen(src_str) == false) {
-        return false;
-    }
-
-    return true;
-}
-
 bool getDayAndHourFromStr(char* src_str, int *day, int *hour) {
     if (NULL == src_str || strlen(src_str) < DAY_HOUR_MIN_LEN) {
         return false;
@@ -250,3 +253,43 @@ void checkBetterRoom(Escaper escaper, int cur_result, int cur_room_id,
     }
 }
 
+
+/**...........................................................................*/
+/**--------------------------STATIC-FUNCTIONS---------------------------------*/
+/**...........................................................................*/
+
+
+
+static bool isThereHyphen(char *src_str) {
+    int hyphen_counter = 0, i;
+    for (i = 0; src_str[i] != '\0'; ++i) {
+        if (src_str[i] == HYPHEN) {
+            hyphen_counter++;
+        }
+        if (hyphen_counter > 1) {
+            return false;
+        }
+    }
+    if (hyphen_counter == 0) {
+        return false;
+    }
+    if (src_str[i-1] == HYPHEN) {
+        return false;
+    }
+    return true;
+}
+
+static bool isLegalDayHourInput(char *src_str) {
+    for (int i = 0; src_str[i] != '\0'; ++i) {
+        if ((src_str[i] < MIN_NUMBER || src_str[i] > MAX_NUMBER) &&
+            src_str[i] != HYPHEN) {
+            return false;
+        }
+    }
+
+    if (isThereHyphen(src_str) == false) {
+        return false;
+    }
+
+    return true;
+}

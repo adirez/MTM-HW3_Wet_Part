@@ -2,6 +2,14 @@
 // Created by Shahak on 06/06/2017.
 //
 
+
+
+/**...........................................................................*/
+/**---------------------------DEFINES-&-INCLUDES------------------------------*/
+/**...........................................................................*/
+
+
+
 #include "mtm_ex3.h"
 #include "escape_technion.h"
 
@@ -128,7 +136,7 @@ int calcRoomMatch(int room_num_ppl, int reservation_num_ppl,
                   int room_difficulty, int escaper_skill_level);
 
 /**
- * receives params of to rooms, one is the current best match and the other
+ * receives params of two rooms, one is the current best match and the other
  * is the one that being checked if better than the first
  * @param escaper - the escaper that is looking for the best matched room
  * @param cur_result - the current calculated result

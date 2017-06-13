@@ -1,6 +1,13 @@
 //
 // Created by Shahak on 12/06/2017.
 //
+
+
+/**...........................................................................*/
+/**---------------------------DEFINES-&-INCLUDES------------------------------*/
+/**...........................................................................*/
+
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -16,6 +23,12 @@
 #define COMMENT "#"
 #define I_FLAG "-i"
 #define O_FLAG "-o"
+
+
+/**...........................................................................*/
+/**-------------------------FUNCTIONS-DECLARATIONS----------------------------*/
+/**...........................................................................*/
+
 
 /**
  * determines the input method and the output method by the command line input
@@ -44,74 +57,143 @@ static MtmErrorCode accessInputOuputMethod(FILE **input_file,FILE **output_file,
                                            char *input_type, char *output_type);
 
 /**
- *
- * @param escapeTechnion
- * @param input_file
- * @param output_file
- * @return
+ * a while loop determined by EOF to receive commands from the user. translates
+ * the commands into the available functions and redirects accordingly
+ * @param escapeTechnion - the system to perform the actions on
+ * @param input_file - standard input / input file
+ * @param output_file - standard output / output file
+ * @return MTM_SUCCESS - if the function succeeded
+ *         MTM_OUT_OF_MEMORY - if an allocation failed
  */
 static MtmErrorCode getCommands(EscapeTechnion escapeTechnion, FILE *input_file,
                                 FILE *output_file);
 
 /**
- *
- * @param token
- * @param buffer
- * @param delim
- * @return
+ * identifies the relevant command on companies
+ * @param escapeTechnion - the system to perform the actions on
+ * @param token - a string to hold the relevant word of the given command
+ * @param buffer - the original string holding the given command
+ * @param delim - the delimit of the commands (tab,white space etc)
+ * @return MtmErrorCode translated from the relevant EscapeTechnionErrorCode
  */
 static MtmErrorCode getCompanyCommands(EscapeTechnion escapeTechnion,
                                        char *token, char *delim);
 
 /**
- *
- * @param token
- * @param buffer
- * @param delim
- * @return
+ * identifies the relevant command on rooms
+ * @param escapeTechnion - the system to perform the actions on
+ * @param token - a string to hold the relevant word of the given command
+ * @param buffer - the original string holding the given command
+ * @param delim - the delimit of the commands (tab,white space etc)
+ * @return MtmErrorCode translated from the relevant EscapeTechnionErrorCode
  */
 static MtmErrorCode getRoomCommands(EscapeTechnion escapeTechnion, char *token,
                                    char *delim);
 
 /**
- *
- * @param token
- * @param buffer
- * @param delim
- * @return
+ * identifies the relevant command on escapers
+ * @param escapeTechnion - the system to perform the actions on
+ * @param token - a string to hold the relevant word of the given command
+ * @param buffer - the original string holding the given command
+ * @param delim - the delimit of the commands (tab,white space etc)
+ * @return MtmErrorCode translated from the relevant EscapeTechnionErrorCode
  */
 static MtmErrorCode getEscaperCommands(EscapeTechnion escapeTechnion,
                                        char *token, char *delim);
 
 /**
- *
- * @param token
- * @param buffer
- * @param delim
- * @return
+ * identifies the relevant report command
+ * @param escapeTechnion - the system to perform the actions on
+ * @param output_file - standard output / output file
+ * @param token - a string to hold the relevant word of the given command
+ * @param buffer - the original string holding the given command
+ * @param delim - the delimit of the commands (tab,white space etc)
+ * @return MtmErrorCode translated from the relevant EscapeTechnionErrorCode
  */
 static MtmErrorCode getReportCommands(EscapeTechnion escapeTechnion,
                                       FILE *output_file, char *token,
                                       char *delim);
 
+/**
+ * receives arguments for companyAdd and calls the functions
+ * @param escapeTechnion - the system to perform the actions on
+ * @param delim - the delimit of the commands (tab,white space etc)
+ * @return MtmErrorCode translated from the relevant EscapeTechnionErrorCode
+ */
 static MtmErrorCode getCompanyAdd(EscapeTechnion escapeTechnion, char *delim);
 
+/**
+ * receives arguments for companyRemove and calls the functions
+ * @param escapeTechnion - the system to perform the actions on
+ * @param delim - the delimit of the commands (tab,white space etc)
+ * @return MtmErrorCode translated from the relevant EscapeTechnionErrorCode
+ */
 static MtmErrorCode getCompanyRemove(EscapeTechnion escapeTechnion,
                                      char *delim);
 
+/**
+ * receives arguments for roomAdd and calls the functions
+ * @param escapeTechnion - the system to perform the actions on
+ * @param delim - the delimit of the commands (tab,white space etc)
+ * @return MtmErrorCode translated from the relevant EscapeTechnionErrorCode
+ */
 static MtmErrorCode getRoomAdd(EscapeTechnion escapeTechnion, char *delim);
 
+/**
+ * receives arguments for roomRemove and calls the functions
+ * @param escapeTechnion - the system to perform the actions on
+ * @param delim - the delimit of the commands (tab,white space etc)
+ * @return MtmErrorCode translated from the relevant EscapeTechnionErrorCode
+ */
 static MtmErrorCode getRoomRemove(EscapeTechnion escapeTechnion, char *delim);
 
+/**
+ * receives arguments for escaperAdd and calls the functions
+ * @param escapeTechnion - the system to perform the actions on
+ * @param delim - the delimit of the commands (tab,white space etc)
+ * @return MtmErrorCode translated from the relevant EscapeTechnionErrorCode
+ */
 static MtmErrorCode getEscaperAdd(EscapeTechnion escapeTechnion, char *delim);
 
+/**
+ * receives arguments for escaperRemove and calls the functions
+ * @param escapeTechnion - the system to perform the actions on
+ * @param delim - the delimit of the commands (tab,white space etc)
+ * @return MtmErrorCode translated from the relevant EscapeTechnionErrorCode
+ */
 static MtmErrorCode getEscaperRemove(EscapeTechnion escapeTechnion,
                                      char *delim);
 
+/**
+ * receives arguments for escaperOrder and calls the functions
+ * @param escapeTechnion - the system to perform the actions on
+ * @param delim - the delimit of the commands (tab,white space etc)
+ * @return MtmErrorCode translated from the relevant EscapeTechnionErrorCode
+ */
 static MtmErrorCode getEscaperOrder(EscapeTechnion escapeTechnion, char *delim);
 
+/**
+ * receives arguments for escaperRecommend and calls the functions
+ * @param escapeTechnion - the system to perform the actions on
+ * @param delim - the delimit of the commands (tab,white space etc)
+ * @return MtmErrorCode translated from the relevant EscapeTechnionErrorCode
+ */
 static MtmErrorCode getEscaperRecommend(EscapeTechnion escapeTechnion,
+
                                         char *delim);
+/**
+ * receives an EscapeTechnion error code and converts it to the suitable
+ * Mtm error code
+ * @param error - the original EscapeTechnion error code
+ * @return - the output MtmErrorCode
+ */
+static MtmErrorCode convertEscapeTechnionError(EscapeTechnionErrorCode error);
+
+
+/**...........................................................................*/
+/**----------------------------MAIN-FUNCTION----------------------------------*/
+/**...........................................................................*/
+
 
 
 int main(int argc, const char *argv[]) {
@@ -355,15 +437,15 @@ static MtmErrorCode getReportCommands(EscapeTechnion escapeTechnion,
                                       FILE *output_file, char *token,
                                       char *delim) {
     token = strtok(NULL, delim);
-    MtmErrorCode parserError;
+    EscapeTechnionErrorCode errorCode;
     if (strcmp(token, "day") == 0) {
-        parserError = escapeTechnionReportDay(escapeTechnion, output_file);
-        return parserError;
+        errorCode = escapeTechnionReportDay(escapeTechnion, output_file);
+        return convertEscapeTechnionError(errorCode);
     }
 
     if (strcmp(token, "best") == 0) {
-        parserError = escapeTechnionReportBest(escapeTechnion, output_file);
-        return parserError;
+        errorCode = escapeTechnionReportBest(escapeTechnion, output_file);
+        return convertEscapeTechnionError(errorCode);
     }
 
     return MTM_SUCCESS;
@@ -375,15 +457,19 @@ static MtmErrorCode getCompanyAdd(EscapeTechnion escapeTechnion, char *delim) {
     char *company_faculty_str = strtok(NULL, delim);
     int faculty_num = atoi(company_faculty_str);
     TechnionFaculty nameFaculty = (TechnionFaculty)faculty_num;
-
-    return escapeTechnionAddCompany(escapeTechnion, nameFaculty, company_email);
+    EscapeTechnionErrorCode errorCode = escapeTechnionAddCompany(escapeTechnion,
+                                                                 nameFaculty,
+                                                                 company_email);
+    return convertEscapeTechnionError(errorCode);
 }
 
 static MtmErrorCode getCompanyRemove(EscapeTechnion escapeTechnion,
                                      char *delim) {
     char *company_email = strtok(NULL, delim);
 
-    return escapeTechnionRemoveCompany(escapeTechnion, company_email);
+    EscapeTechnionErrorCode errorCode;
+    errorCode = escapeTechnionRemoveCompany(escapeTechnion, company_email);
+    return convertEscapeTechnionError(errorCode);
 }
 
 static MtmErrorCode getRoomAdd(EscapeTechnion escapeTechnion, char *delim) {
@@ -403,8 +489,13 @@ static MtmErrorCode getRoomAdd(EscapeTechnion escapeTechnion, char *delim) {
     char *difficulty_str = strtok(NULL, delim);
     int difficulty = atoi(difficulty_str);
 
-    return escapeTechnionAddRoom(escapeTechnion, company_email, room_id, price,
-                                 num_ppl, working_hrs, difficulty);
+    EscapeTechnionErrorCode errorCode = escapeTechnionAddRoom(escapeTechnion,
+                                                              company_email,
+                                                              room_id, price,
+                                                              num_ppl,
+                                                              working_hrs,
+                                                              difficulty);
+    return convertEscapeTechnionError(errorCode);
 }
 
 static MtmErrorCode getRoomRemove(EscapeTechnion escapeTechnion, char *delim) {
@@ -416,7 +507,10 @@ static MtmErrorCode getRoomRemove(EscapeTechnion escapeTechnion, char *delim) {
     char *room_id_str = strtok(NULL, delim);
     int room_id = atoi(room_id_str);
 
-    return escapeTechnionRemoveRoom(escapeTechnion, room_id, nameFaculty);
+    EscapeTechnionErrorCode errorCode = escapeTechnionRemoveRoom(escapeTechnion,
+                                                                 room_id,
+                                                                 nameFaculty);
+    return convertEscapeTechnionError(errorCode);
 }
 
 static MtmErrorCode getEscaperAdd(EscapeTechnion escapeTechnion, char *delim) {
@@ -430,15 +524,20 @@ static MtmErrorCode getEscaperAdd(EscapeTechnion escapeTechnion, char *delim) {
     char *skill_level_str = strtok(NULL, delim);
     int skill_level = atoi(skill_level_str);
 
-    return escapeTechnionAddEscaper(escapeTechnion, escaper_email, skill_level,
-                                    nameFaculty);
+    EscapeTechnionErrorCode errorCode = escapeTechnionAddEscaper(escapeTechnion,
+                                                                 escaper_email,
+                                                                 skill_level,
+                                                                 nameFaculty);
+    return convertEscapeTechnionError(errorCode);
 }
 
 static MtmErrorCode getEscaperRemove(EscapeTechnion escapeTechnion,
                                      char *delim) {
     char *escaper_email = strtok(NULL, delim);
 
-    return escapeTechnionRemoveEscaper(escapeTechnion, escaper_email);
+    EscapeTechnionErrorCode errorCode;
+    errorCode = escapeTechnionRemoveEscaper(escapeTechnion, escaper_email);
+    return convertEscapeTechnionError(errorCode);
 }
 
 static MtmErrorCode getEscaperOrder(EscapeTechnion escapeTechnion, char *delim) {
@@ -457,9 +556,11 @@ static MtmErrorCode getEscaperOrder(EscapeTechnion escapeTechnion, char *delim) 
     char *num_ppl_str = strtok(NULL, delim);
     int num_ppl = atoi(num_ppl_str);
 
-    return escapeTechnionReservationReceived(escapeTechnion, escaper_email,
-                                             room_id, nameFaculty,
-                                             reservation_time, num_ppl);
+    EscapeTechnionErrorCode errorCode;
+    errorCode = escapeTechnionReservationReceived(escapeTechnion, escaper_email,
+                                                  room_id, nameFaculty,
+                                                  reservation_time, num_ppl);
+    return convertEscapeTechnionError(errorCode);
 }
 
 static MtmErrorCode getEscaperRecommend(EscapeTechnion escapeTechnion,
@@ -469,7 +570,38 @@ static MtmErrorCode getEscaperRecommend(EscapeTechnion escapeTechnion,
     char *num_ppl_str = strtok(NULL, delim);
     int num_ppl = atoi(num_ppl_str);
 
-    return escapeTechnionRecommendedRoom(escaper_email, num_ppl,
-                                         escapeTechnion);
+    EscapeTechnionErrorCode errorCode;
+    errorCode = escapeTechnionRecommendedRoom(escapeTechnion, num_ppl,
+                                              escaper_email);
+    return convertEscapeTechnionError(errorCode);
 }
 
+static MtmErrorCode convertEscapeTechnionError(EscapeTechnionErrorCode error) {
+    if (error == ESCAPE_TECHNION_OUT_OF_MEMORY) {
+        return MTM_OUT_OF_MEMORY;
+    } else if (error == ESCAPE_TECHNION_NULL_PARAMETER) {
+        return MTM_NULL_PARAMETER;
+    } else if (error == ESCAPE_TECHNION_INVALID_PARAMETER) {
+        return MTM_INVALID_PARAMETER;
+    } else if (error == ESCAPE_TECHNION_EMAIL_ALREADY_EXISTS) {
+        return MTM_EMAIL_ALREADY_EXISTS;
+    } else if (error == ESCAPE_TECHNION_COMPANY_EMAIL_DOES_NOT_EXIST) {
+        return MTM_COMPANY_EMAIL_DOES_NOT_EXIST;
+    } else if (error == ESCAPE_TECHNION_CLIENT_EMAIL_DOES_NOT_EXIST) {
+        return MTM_CLIENT_EMAIL_DOES_NOT_EXIST;
+    } else if (error == ESCAPE_TECHNION_ID_ALREADY_EXIST) {
+        return MTM_ID_ALREADY_EXIST;
+    } else if (error == ESCAPE_TECHNION_ID_DOES_NOT_EXIST) {
+        return MTM_ID_DOES_NOT_EXIST;
+    } else if (error == ESCAPE_TECHNION_CLIENT_IN_ROOM) {
+        return MTM_CLIENT_IN_ROOM;
+    } else if (error == ESCAPE_TECHNION_ROOM_NOT_AVAILABLE) {
+        return MTM_ROOM_NOT_AVAILABLE;
+    } else if (error == ESCAPE_TECHNION_RESERVATION_EXISTS) {
+        return MTM_RESERVATION_EXISTS;
+    } else if (error == ESCAPE_TECHNION_NO_ROOMS_AVAILABLE) {
+        return MTM_NO_ROOMS_AVAILABLE;
+    }
+
+    return MTM_SUCCESS;
+}

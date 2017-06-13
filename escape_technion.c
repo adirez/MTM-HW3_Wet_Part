@@ -2,6 +2,14 @@
 // Created by Shahak on 07/06/2017.
 //
 
+
+
+/**...........................................................................*/
+/**---------------------------DEFINES-&-INCLUDES------------------------------*/
+/**...........................................................................*/
+
+
+
 #include <stdlib.h>
 #include <assert.h>
 
@@ -10,6 +18,13 @@
 
 #define INVALID_PARAMETER -1
 
+
+/**...........................................................................*/
+/**-----------------------------STRUCTURE-------------------------------------*/
+/**...........................................................................*/
+
+
+
 struct EscapeTechnion_t {
     Set faculties;
     Set escapers;
@@ -17,6 +32,13 @@ struct EscapeTechnion_t {
 
     int current_day;
 };
+
+
+/**...........................................................................*/
+/**--------------------STATIC-FUNCTIONS-DECLARATIONS--------------------------*/
+/**...........................................................................*/
+
+
 
 /**
  * used at the creation of the escapeTechnion system to create and
@@ -200,18 +222,55 @@ static EscapeTechnionErrorCode findClosestTime(EscapeTechnion escapeTechnion,
                                                Room room, Escaper escaper,
                                                int *day, int *hour);
 
-
+/**
+ * receives details of two faculties and returns the faculty which is considered
+ * better
+ * @param faculty_1 - the first faculty
+ * @param earnings_1 - the earnings of the first faculty
+ * @param faculty_2 - the second faculty
+ * @param earnings_2 - the earnings of the second faculty
+ * @return the faculty which was found better
+ */
 static Faculty getBetterFaculty(Faculty faculty_1, int earnings_1,
                                 Faculty faculty_2, int earnings_2);
 
+/**
+ * receives pointers to the top three faculties and to the top three earnings
+ * accordingly and a pointer for a new faculty to compare and place in the top
+ * three (if suitable)
+ * @param cur_first - the current top faculty
+ * @param first_earnings - earnings of the current top faculty
+ * @param cur_second - the current second faculty
+ * @param second_earnings - earnings of the current second faculty
+ * @param cur_third - the current third faculty
+ * @param third_earnings - earnings of the current third faculty
+ * @param faculty - the faculty to compare to the top three faculties
+ * @param faculty_earnings - the earnings of the faculty to compare
+ */
 static void findBestFaculties(Faculty *cur_first, int *first_earnings,
                               Faculty *cur_second, int *second_earnings,
                               Faculty *cur_third, int *third_earnings,
                               Faculty faculty, int faculty_earnings);
 
+/**
+ * receives an escapeTechnion system and calculates the total earnings up to the
+ * current day
+ * @param escapeTechnion - the system to iterate through
+ * @return the integer sum of the total earnings
+ */
 static int getEscapeTechnionEarnings(EscapeTechnion escapeTechnion);
 
-
+/**
+ * receives an escapeTechnion system and pointers to return the top three
+ * faculties
+ * @param escapeTechnion - the system to iterate through
+ * @param first_faculty  - a pointer to the top faculty
+ * @param first_faculty_earnings - the earnings of the top faculty
+ * @param second_faculty - a pointer to the second faculty
+ * @param second_faculty_earnings - the earnings of the second faculty
+ * @param third_faculty - a pointer to the third faculty
+ * @param third_faculty_earnings - the earnings of the third faculty
+ */
 static void escapeTechnionBestFaculties(EscapeTechnion escapeTechnion,
                                         Faculty *first_faculty,
                                         int *first_faculty_earnings,
@@ -220,8 +279,12 @@ static void escapeTechnionBestFaculties(EscapeTechnion escapeTechnion,
                                         Faculty *third_faculty,
                                         int *third_faculty_earnings);
 
-//TODO add comments to everything
-/**---------------------------------------------------------------------------*/
+
+/**...........................................................................*/
+/**-----------------------FUNCTIONS-IMPLEMENTATIONS---------------------------*/
+/**...........................................................................*/
+
+
 
 
 EscapeTechnion escapeTechnionCreate() {
@@ -559,7 +622,7 @@ EscapeTechnionErrorCode escapeTechnionRecommendedRoom(EscapeTechnion
 EscapeTechnionErrorCode escapeTechnionReportDay(EscapeTechnion escapeTechnion,
                                      FILE *output_channel) {
     if (NULL == escapeTechnion || NULL == output_channel) {
-        return ESCAPE_TECHNION_NULL_PARAMETER; //TODO or MTM_CANNOT_OPEN_FILE?
+        return ESCAPE_TECHNION_NULL_PARAMETER;
     }
     int system_day = escapeTechnion->current_day, num_events;
     List ended_reservations = listFilter(escapeTechnion->reservations,
@@ -612,7 +675,7 @@ EscapeTechnionErrorCode escapeTechnionReportDay(EscapeTechnion escapeTechnion,
 EscapeTechnionErrorCode escapeTechnionReportBest(EscapeTechnion escapeTechnion,
                                                  FILE *output_channel) {
     if (NULL == escapeTechnion || NULL == output_channel) {
-        return ESCAPE_TECHNION_NULL_PARAMETER; //TODO or MTM_CANNOT_OPEN_FILE?
+        return ESCAPE_TECHNION_NULL_PARAMETER;
     }
 
     int num_faculties = (int)UNKNOWN;
