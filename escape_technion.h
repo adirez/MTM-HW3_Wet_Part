@@ -16,6 +16,27 @@
  */
 typedef struct EscapeTechnion_t *EscapeTechnion;
 
+/**
+ * a type to used to return error codes related to escape technion systems
+ */
+typedef enum {
+    ESCAPE_TECHNION_OUT_OF_MEMORY, // You should exit program after this error
+    ESCAPE_TECHNION_INVALID_COMMAND_LINE_PARAMETERS, // You should exit program after this error
+    ESCAPE_TECHNION_CANNOT_OPEN_FILE, // You should exit program after this error
+    ESCAPE_TECHNION_NULL_PARAMETER,
+    ESCAPE_TECHNION_INVALID_PARAMETER,
+    ESCAPE_TECHNION_EMAIL_ALREADY_EXISTS,
+    ESCAPE_TECHNION_COMPANY_EMAIL_DOES_NOT_EXIST,
+    ESCAPE_TECHNION_CLIENT_EMAIL_DOES_NOT_EXIST,
+    ESCAPE_TECHNION_ID_ALREADY_EXIST,
+    ESCAPE_TECHNION_ID_DOES_NOT_EXIST,
+    ESCAPE_TECHNION_CLIENT_IN_ROOM,
+    ESCAPE_TECHNION_ROOM_NOT_AVAILABLE,
+    ESCAPE_TECHNION_RESERVATION_EXISTS,
+    ESCAPE_TECHNION_NO_ROOMS_AVAILABLE,
+    ESCAPE_TECHNION_SUCCESS,
+} EscapeTechnionErrorCode;
+
 /**...........................................................................*/
 /**-------------------------FUNCTIONS-DECLARATIONS----------------------------*/
 /**...........................................................................*/
@@ -49,8 +70,9 @@ void escapeTechnionDestroy(EscapeTechnion escapeTechnion);
  *         MTM_MEMORY_PROBLEM - if the allocations failed
  *         MTM_EMAIL_ALREADY_EXISTS - if the email is already in use
  */
-MtmErrorCode escapeTechnionAddCompany(EscapeTechnion escapeTechnion,
-                                      TechnionFaculty nameFaculty, char *email);
+EscapeTechnionErrorCode escapeTechnionAddCompany(EscapeTechnion escapeTechnion,
+                                                 TechnionFaculty nameFaculty,
+                                                 char *email);
 
 /**
  * receives an escapeTechnion system and a company email and iterates through
@@ -63,8 +85,8 @@ MtmErrorCode escapeTechnionAddCompany(EscapeTechnion escapeTechnion,
  *         MTM_COMPANY_EMAIL_DOES_NOT_EXIST - if the company's email wasn't
  *         found in the system
  */
-MtmErrorCode escapeTechnionRemoveCompany(EscapeTechnion escapeTechnion,
-                                         char *company_email);
+EscapeTechnionErrorCode escapeTechnionRemoveCompany(EscapeTechnion escapeTechnion,
+                                                    char *company_email);
 
 /**
  * receives an escapeTechnion type system and details of a room and a company
@@ -85,7 +107,7 @@ MtmErrorCode escapeTechnionRemoveCompany(EscapeTechnion escapeTechnion,
  *         company
  *         MTM_OUT_OF_MEMORY - if one of the allocations failed
  */
-MtmErrorCode escapeTechnionAddRoom(EscapeTechnion escapeTechnion,
+EscapeTechnionErrorCode escapeTechnionAddRoom(EscapeTechnion escapeTechnion,
                                    char *company_email, int room_id, int price,
                                    int num_ppl, char *working_hours,
                                    int difficulty);
@@ -103,8 +125,8 @@ MtmErrorCode escapeTechnionAddRoom(EscapeTechnion escapeTechnion,
  *         MTM_ID_DOES_NOT_EXIST - if the room id wasn't found in the system
  *         with the specified faculty
  */
-MtmErrorCode escapeTechnionRemoveRoom(EscapeTechnion escapeTechnion,
-                                      int room_id, TechnionFaculty Faculty);
+EscapeTechnionErrorCode escapeTechnionRemoveRoom(EscapeTechnion escapeTechnion,
+                                          int room_id, TechnionFaculty Faculty);
 
 /**
  * receives an escapeTechnion system and escaper's details and adds the escaper
@@ -119,9 +141,9 @@ MtmErrorCode escapeTechnionRemoveRoom(EscapeTechnion escapeTechnion,
  *         in the system
  *         MTM_OUT_OF_MEMORY - if one of the allocations failed
  */
-MtmErrorCode escapeTechnionAddEscaper(EscapeTechnion escapeTechnion,
-                                      char *email, int skill,
-                                      TechnionFaculty nameFaculty);
+EscapeTechnionErrorCode escapeTechnionAddEscaper(EscapeTechnion escapeTechnion,
+                                                 char *email, int skill,
+                                                 TechnionFaculty nameFaculty);
 
 /**
  * receives an escapeTechnion system and an email of an escaper and iterates
@@ -134,8 +156,8 @@ MtmErrorCode escapeTechnionAddEscaper(EscapeTechnion escapeTechnion,
  *         system
  *         MTM_INVALID_PARAMETER - if one of the parameteres was incorrect
  */
-MtmErrorCode escapeTechnionRemoveEscaper(EscapeTechnion escapeTechnion,
-                                         char *email);
+EscapeTechnionErrorCode escapeTechnionRemoveEscaper(EscapeTechnion escapeTechnion,
+                                                    char *email);
 
 /**
  * receives the details of a reservation, checks if the room and escaper are
@@ -157,7 +179,8 @@ MtmErrorCode escapeTechnionRemoveEscaper(EscapeTechnion escapeTechnion,
  *         MTM_ROOM_NOT_AVAILABLE - if the room is taken or not working in the
  *         hours of the reservation
  */
-MtmErrorCode escapeTechnionReservationReceived(EscapeTechnion escapeTechnion,
+EscapeTechnionErrorCode escapeTechnionReservationReceived(EscapeTechnion
+                                                          escapeTechnion,
                                                char *escaper_email, int room_id,
                                                TechnionFaculty nameFaculty,
                                                char *time, int num_ppl);
@@ -168,8 +191,9 @@ MtmErrorCode escapeTechnionReservationReceived(EscapeTechnion escapeTechnion,
  * @param escapeTechnion
  * @return
  */
-MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
-                                           EscapeTechnion escapeTechnion);
+EscapeTechnionErrorCode escapeTechnionRecommendedRoom(EscapeTechnion
+                                                      escapeTechnion,int num_ppl,
+                                                      char *escaper_email);
 
 
 /**
@@ -184,13 +208,12 @@ MtmErrorCode escapeTechnionRecommendedRoom(char *escaper_email, int num_ppl,
  * @return
  */
 Room companyMostRecommendedRoom(Company company, TechnionFaculty escaperFaculty,
-                                int P_e, int skill,
-                                int *result, int *faculty_distance,
-                                int *room_id);
+                                int P_e, int skill, int *result,
+                                int *faculty_distance, int *room_id);
 
 
-MtmErrorCode escapeTechnionReportDay(EscapeTechnion escapeTechnion,
-                                     FILE *output_channel);
+EscapeTechnionErrorCode escapeTechnionReportDay(EscapeTechnion escapeTechnion,
+                                                FILE *output_channel);
 
 
 /**
@@ -209,7 +232,7 @@ Faculty getFacultyByName(EscapeTechnion escapeTechnion,
  * @param output_channel
  * @return
  */
-MtmErrorCode escapeTechnionReportBest(EscapeTechnion escapeTechnion,
+EscapeTechnionErrorCode escapeTechnionReportBest(EscapeTechnion escapeTechnion,
                                       FILE *output_channel);
 
 #endif //HW3_ESCAPETECHNION_H
