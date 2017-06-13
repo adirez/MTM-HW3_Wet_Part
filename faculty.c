@@ -238,6 +238,9 @@ Room facultyMostRecommendedRoom(Faculty faculty, Escaper escaper,
                                 TechnionFaculty escaperFaculty, int P_e,
                                 int skill, int *result, int *faculty_distance,
                                 int *room_id, Company *cur_company) {
+    if (!isValidDifficultyOrSkill(skill) || P_e <= 0){
+        return NULL;
+    }
     int min_result = INVALID_PARAMETER, cur_result = INVALID_PARAMETER,
         min_room_id =INVALID_PARAMETER, min_faculty_distance =INVALID_PARAMETER,
         cur_room_id =INVALID_PARAMETER, cur_faculty_distance =INVALID_PARAMETER;

@@ -212,11 +212,17 @@ bool testFacultyGetRoomByID() {
 
     Company rooms_company;
 
-    ASSERT_TEST(facultyGetRoomByID(NULL, &rooms_company, 3) == NULL);
-    ASSERT_TEST(facultyGetRoomByID(faculty, NULL, 3) == NULL);
+    ASSERT_TEST(facultyGetRoomByID(NULL, &rooms_company, 3, &facultyError)
+                == NULL);
+    ASSERT_TEST(facultyError == FACULTY_NULL_PARAMETER);
+    ASSERT_TEST(facultyGetRoomByID(faculty, NULL, 3, &facultyError) == NULL);
+    ASSERT_TEST(facultyError == FACULTY_NULL_PARAMETER);
+    ASSERT_TEST(facultyGetRoomByID(faculty, &rooms_company, 5, &facultyError)
+                == NULL);
+    ASSERT_TEST(facultyError == FACULTY_ID_DOES_NOT_EXIST);
+    Room room = facultyGetRoomByID(faculty, &rooms_company, 23, &facultyError);
+    ASSERT_TEST(facultyError == FACULTY_SUCCESS);
 
-    ASSERT_TEST(facultyGetRoomByID(faculty, &rooms_company, 5) == NULL);
-    Room room = facultyGetRoomByID(faculty, &rooms_company, 23);
 
     RoomErrorCode roomError;
 
@@ -291,9 +297,9 @@ bool testFacultyMostRecommendedRoom() {
 
     Company rooms_company;
     Room room;
-    room = facultyMostRecommendedRoom(faculty, escaper, PHYSICS, 0, 0, &result,
+    room = facultyMostRecommendedRoom(faculty, escaper, PHYSICS, 1, 1, &result,
                                &faculty_distance, &id, &rooms_company);
-    ASSERT_TEST(result == 5);
+    ASSERT_TEST(result == 1);
     ASSERT_TEST(faculty_distance == 0);
     ASSERT_TEST(id == 141);
     ASSERT_TEST(roomGetPrice(room) == 40);

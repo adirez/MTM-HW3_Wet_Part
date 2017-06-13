@@ -74,15 +74,6 @@ bool testIsValidCompanyParams() {
     return true;
 }
 
-bool testIsValidReservationParams() {
-    ASSERT_TEST(isValidReservationParams(1, 4) == true);
-    ASSERT_TEST(isValidReservationParams(0, 4) == false);
-    ASSERT_TEST(isValidReservationParams(1, 3) == false);
-    ASSERT_TEST(isValidReservationParams(1, -1) == false);
-
-    return true;
-}
-
 bool testGetHoursFromStr() {
     int opening, closing;
     ASSERT_TEST(getHoursFromStr("10-14", &opening, &closing) == true);
@@ -152,15 +143,12 @@ bool testCalcRoomMatch() {
     return true;
 }
 
-//TODO: add tests for the recommended room func
-
 int main(int argv, char **arc) {
     RUN_TEST(testIsEmailValid);
     RUN_TEST(testIsFacultyValid);
     RUN_TEST(testIsValidRoomParams);
     RUN_TEST(testIsValidEscaperParams);
     RUN_TEST(testIsValidCompanyParams);
-    RUN_TEST(testIsValidReservationParams);
     RUN_TEST(testGetHoursFromStr);
     RUN_TEST(testGetDayAndHourFromStr);
     RUN_TEST(testCalcRoomMatch);

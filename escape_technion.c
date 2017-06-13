@@ -321,8 +321,7 @@ EscapeTechnionErrorCode escapeTechnionRemoveCompany(EscapeTechnion escapeTechnio
         return ESCAPE_TECHNION_RESERVATION_EXISTS;
     }
 
-    FacultyErrorCode facultyError = facultyRemoveCompany(company_faculty, company);
-    assert(FACULTY_SUCCESS == facultyError);
+    facultyRemoveCompany(company_faculty, company);
 
     return ESCAPE_TECHNION_SUCCESS;
 }
@@ -398,9 +397,7 @@ EscapeTechnionErrorCode escapeTechnionRemoveRoom(EscapeTechnion escapeTechnion,
         return ESCAPE_TECHNION_RESERVATION_EXISTS;
     }
 
-    CompanyErrorCode companyError = companyRemoveRoom(room_company, room);
-    assert(COMPANY_NULL_PARAMETER != companyError &&
-                   COMPANY_ROOM_DOES_NOT_EXIST != companyError);
+    companyRemoveRoom(room_company, room);
     return ESCAPE_TECHNION_SUCCESS;
 }
 
@@ -878,7 +875,7 @@ static EscapeTechnionErrorCode findClosestTime(EscapeTechnion escapeTechnion,
         return ESCAPE_TECHNION_OUT_OF_MEMORY;
     }
 
-    int tmp_day = 0;
+    int tmp_day = escapeTechnion->current_day;
     bool trigger = true;
     while (trigger) {
         for (int tmp_hour = 0; tmp_hour < 24; tmp_hour++) {

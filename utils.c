@@ -21,29 +21,27 @@
 #define HOURS_STR_LEN 5 //according to the format "HH-HH"
 #define DAY_HOUR_MIN_LEN 3 //according to the format "D-H"
 
-/**
- * receives the price per person of a certain room and makes sure it it's a
- * multiply of 4
- * @param price - the integer to be checked
- * @return true - if it's a multiply of 4
- *         false - if it's not a multiply of 4 or if it's not a positive number
- */
-static bool isValidPrice(int price);
-
-/**
- * receives a difficulty level of a room or a skill level of an escaper and
- * checks if the value is between 1 to 10
- * @param difficulty_or_skill - the input value of the skill / difficulty
- * @return true - if it's between the min level and the max level
- *         false - if it's not in the scale
- */
-static bool isValidDifficultyOrSkill(int difficulty_or_skill);
-
-
-
 /**...........................................................................*/
 /**-----------------------FUNCTIONS-IMPLEMENTATIONS---------------------------*/
 /**...........................................................................*/
+
+bool isValidPrice(int price) {
+    if (price <= 0) {
+        return false;
+    }
+    if (price % 4 == 0) {
+        return true;
+    }
+    return false;
+}
+
+bool isValidDifficultyOrSkill(int difficulty_or_skill) {
+    if (difficulty_or_skill < MIN_DIFFICULTY_OR_SKILL ||
+        difficulty_or_skill > MAX_DIFFICULTY_OR_SKILL) {
+        return false;
+    }
+    return true;
+}
 
 bool isValidEmail(char *email) {
     if (NULL == email) {
@@ -252,24 +250,3 @@ void checkBetterRoom(Escaper escaper, int cur_result, int cur_room_id,
     }
 }
 
-/**...........................................................................*/
-/**--------------------------STATIC-FUNCTIONS---------------------------------*/
-/**...........................................................................*/
-
-static bool isValidPrice(int price) {
-    if (price <= 0) {
-        return false;
-    }
-    if (price % 4 == 0) {
-        return true;
-    }
-    return false;
-}
-
-static bool isValidDifficultyOrSkill(int difficulty_or_skill) {
-    if (difficulty_or_skill < MIN_DIFFICULTY_OR_SKILL ||
-        difficulty_or_skill > MAX_DIFFICULTY_OR_SKILL) {
-        return false;
-    }
-    return true;
-}

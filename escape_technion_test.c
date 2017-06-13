@@ -38,7 +38,6 @@ bool testEscapeTechnionAddCompany() {
     ASSERT_TEST(escapeTechnionAddCompany(escapeTechnion, BIOLOGY, "adi@") ==
                 ESCAPE_TECHNION_EMAIL_ALREADY_EXISTS);
 
-    escapeTechnionRemoveCompany(escapeTechnion, "@");
     escapeTechnionDestroy(escapeTechnion);
     return true;
 }
@@ -129,8 +128,6 @@ bool testEscapeTechnionAddRoom() {
                 2, "11-13", 7) == ESCAPE_TECHNION_ID_ALREADY_EXIST);
 
 
-    escapeTechnionRemoveRoom(escapeTechnion, 123, PHYSICS);
-    escapeTechnionRemoveCompany(escapeTechnion, "adi@gmail");
     escapeTechnionDestroy(escapeTechnion);
     return true;
 }
@@ -172,7 +169,6 @@ bool testEscapeTechnionRemoveRoom() {
     ASSERT_TEST(escapeTechnionRemoveRoom(escapeTechnion, 12345, BIOLOGY) ==
                 ESCAPE_TECHNION_SUCCESS);
 
-    escapeTechnionRemoveCompany(escapeTechnion, "adi@");
     escapeTechnionDestroy(escapeTechnion);
     return true;
 }
@@ -311,12 +307,6 @@ bool testEscapeTechnionReservationReceived() {
     ASSERT_TEST(escapeTechnionReservationReceived(escapeTechnion, "@", 123,
                 PHYSICS, "3-11", 5) == ESCAPE_TECHNION_ROOM_NOT_AVAILABLE);
 
-    escapeTechnionRemoveCompany(escapeTechnion, "company");
-    escapeTechnionRemoveRoom(escapeTechnion, 123, PHYSICS);
-    escapeTechnionRemoveEscaper(escapeTechnion, "adi@gmail");
-    escapeTechnionRemoveEscaper(escapeTechnion, "@");
-    escapeTechnionRemoveEscaper(escapeTechnion, "adi@");
-    escapeTechnionRemoveEscaper(escapeTechnion, "@gmail");
     escapeTechnionDestroy(escapeTechnion);
     return true;
 }
@@ -392,16 +382,59 @@ bool testEscapeTechnionRecommendedRoom() {
     ASSERT_TEST(escapeTechnionReservationReceived(escapeTechnion, "escaper@",
                 9, MATHEMATICS, "2-09", 5) == ESCAPE_TECHNION_CLIENT_IN_ROOM);
 
-    escapeTechnionRemoveEscaper(escapeTechnion, "escaper@");
-    escapeTechnionRemoveCompany(escapeTechnion, "company@1");
-    escapeTechnionRemoveCompany(escapeTechnion, "company@2");
-    escapeTechnionRemoveCompany(escapeTechnion, "company@3");
     escapeTechnionDestroy(escapeTechnion);
     return true;
 }
 
 bool testEscapeTechnionReportDay() {
+    EscapeTechnion escapeTechnion = escapeTechnionCreate();
 
+    escapeTechnionAddEscaper(escapeTechnion, "adi@", 1, BIOLOGY);
+    escapeTechnionAddEscaper(escapeTechnion, "shahak@", 5, MEDICINE);
+    escapeTechnionAddEscaper(escapeTechnion, "cenzor@", 10, MATHEMATICS);
+
+    escapeTechnionAddCompany(escapeTechnion, PHYSICS, "company@1");
+    escapeTechnionAddCompany(escapeTechnion, MATHEMATICS, "company@2");
+    escapeTechnionAddCompany(escapeTechnion, BIOLOGY, "company@3");
+
+    escapeTechnionAddRoom(escapeTechnion, "company@1", 11, 4, 1, "14-16", 10);
+
+    escapeTechnionAddRoom(escapeTechnion, "company@2", 21, 8, 10, "02-08", 6);
+    escapeTechnionAddRoom(escapeTechnion, "company@2", 22, 12, 4, "11-23", 7);
+    escapeTechnionAddRoom(escapeTechnion, "company@2", 23, 4, 5, "00-03", 2);
+    escapeTechnionAddRoom(escapeTechnion, "company@2", 24, 20, 6, "08-10", 1);
+
+    escapeTechnionAddRoom(escapeTechnion, "company@3", 31, 40, 3, "08-11", 9);
+    escapeTechnionAddRoom(escapeTechnion, "company@3", 32, 16, 2, "10-11", 3);
+
+    escapeTechnionReservationReceived(escapeTechnion, "adi@", 11,
+                                      PHYSICS, "0-14", 2);
+
+    escapeTechnionReservationReceived(escapeTechnion, "shahak@", 23,
+                                      MATHEMATICS, "0-2", 5);
+
+    escapeTechnionReservationReceived(escapeTechnion, "shahak@", 31,
+                                      BIOLOGY, "2-10", 2);
+
+    escapeTechnionReservationReceived(escapeTechnion, "adi@", 21,
+                                      MATHEMATICS, "1-2", 6);
+
+    escapeTechnionReportDay(escapeTechnion, stdout);
+
+    escapeTechnionRecommendedRoom(escapeTechnion, 5, "cenzor@");
+
+    escapeTechnionReservationReceived(escapeTechnion, "adi@", 23,
+                                      MATHEMATICS, "0-2", 1);
+
+    escapeTechnionReportDay(escapeTechnion, stdout);
+    escapeTechnionReportDay(escapeTechnion, stdout);
+
+    //TODO: add test for NULL output channel
+    ASSERT_TEST(escapeTechnionReportDay(NULL, stdout) ==
+                        ESCAPE_TECHNION_NULL_PARAMETER);
+
+
+    escapeTechnionDestroy(escapeTechnion);
     return true;
 }
 

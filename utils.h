@@ -11,6 +11,24 @@
 /**...........................................................................*/
 
 /**
+ * receives the price per person of a certain room and makes sure it it's a
+ * multiply of 4
+ * @param price - the integer to be checked
+ * @return true - if it's a multiply of 4
+ *         false - if it's not a multiply of 4 or if it's not a positive number
+ */
+bool isValidPrice(int price);
+
+/**
+ * receives a difficulty level of a room or a skill level of an escaper and
+ * checks if the value is between 1 to 10
+ * @param difficulty_or_skill - the input value of the skill / difficulty
+ * @return true - if it's between the min level and the max level
+ *         false - if it's not in the scale
+ */
+bool isValidDifficultyOrSkill(int difficulty_or_skill);
+
+/**
  * receives an email and checks if it's valid
  * @param email - the email address to be checked
  * @return true - contains only one '@'
@@ -109,20 +127,21 @@ bool getDayAndHourFromStr(char *src_str, int *day, int *hour);
 int calcRoomMatch(int room_num_ppl, int reservation_num_ppl,
                   int room_difficulty, int escaper_skill_level);
 
-//TODO: add comments
 /**
- *
- * @param escaper
- * @param cur_result
- * @param cur_room_id
- * @param cur_faculty_diff
- * @param cur_recommended_room
- * @param min_result
- * @param min_room_id
- * @param min_faculty_diff
- * @param most_recommended_room
- * @param most_recommended_company
- * @param cur_company
+ * receives params of to rooms, one is the current best match and the other
+ * is the one that being checked if better than the first
+ * @param escaper - the escaper that is looking for the best matched room
+ * @param cur_result - the current calculated result
+ * @param cur_room_id - the current room id
+ * @param cur_faculty_diff - the current faculty difference
+ * @param cur_recommended_room - the current most recommended room
+ * @param min_result - ptr to get the min result after calculation
+ * @param min_room_id - ptr to get the min room id
+ * @param min_faculty_diff - ptr to get the min faculty diff after calculation
+ * @param most_recommended_room - ptr to get the most recommended room
+ * @param most_recommended_company - ptr to get the company of the most
+ * recommende room
+ * @param cur_company - the current company
  */
 
 void checkBetterRoom(Escaper escaper, int cur_result, int cur_room_id,
