@@ -94,29 +94,24 @@ static MtmErrorCode getReportCommands(EscapeTechnion escapeTechnion,
                                       FILE *output_file, char *token,
                                       char *delim);
 
-static MtmErrorCode getCompanyAdd(EscapeTechnion escapeTechnion, char *token,
-                                  char *delim);
+static MtmErrorCode getCompanyAdd(EscapeTechnion escapeTechnion, char *delim);
 
-static MtmErrorCode getCompanyRemove(EscapeTechnion escapeTechnion, char *token,
+static MtmErrorCode getCompanyRemove(EscapeTechnion escapeTechnion,
                                      char *delim);
 
-static MtmErrorCode getRoomAdd(EscapeTechnion escapeTechnion, char *token,
-                               char *delim);
+static MtmErrorCode getRoomAdd(EscapeTechnion escapeTechnion, char *delim);
 
-static MtmErrorCode getRoomRemove(EscapeTechnion escapeTechnion, char *token,
-                                  char *delim);
+static MtmErrorCode getRoomRemove(EscapeTechnion escapeTechnion, char *delim);
 
-static MtmErrorCode getEscaperAdd(EscapeTechnion escapeTechnion, char *token,
-                                  char *delim);
+static MtmErrorCode getEscaperAdd(EscapeTechnion escapeTechnion, char *delim);
 
-static MtmErrorCode getEscaperRemove(EscapeTechnion escapeTechnion, char *token,
+static MtmErrorCode getEscaperRemove(EscapeTechnion escapeTechnion,
                                      char *delim);
 
-static MtmErrorCode getEscaperOrder(EscapeTechnion escapeTechnion, char *token,
-                                    char *delim);
+static MtmErrorCode getEscaperOrder(EscapeTechnion escapeTechnion, char *delim);
 
 static MtmErrorCode getEscaperRecommend(EscapeTechnion escapeTechnion,
-                                        char *token, char *delim);
+                                        char *delim);
 
 
 int main(int argc, const char *argv[]) {
@@ -125,6 +120,7 @@ int main(int argc, const char *argv[]) {
     char *output_type = NULL;
     FILE *input_file = stdin;
     FILE *output_file = stdout;
+
     MtmErrorCode errorCode = getInputOutputMethod(&input_type, &output_type,
                                                   argc, argv);
     if (errorCode != MTM_SUCCESS) {
@@ -255,33 +251,37 @@ static MtmErrorCode getCommands(EscapeTechnion escapeTechnion, FILE *input_file,
             continue;
         }
         if (strcmp(token, "company") == 0) {
-            printf("you chose company\n"); //TODO
             parserError = getCompanyCommands(escapeTechnion, token, delim);
-            mtmPrintErrorMessage(stderr, parserError);
-            if (parserError == MTM_OUT_OF_MEMORY) {
-                return MTM_OUT_OF_MEMORY;
+            if (parserError != MTM_SUCCESS) {
+                mtmPrintErrorMessage(stderr, parserError);
+                if (parserError == MTM_OUT_OF_MEMORY){
+                    return MTM_OUT_OF_MEMORY;
+                }
             }
         } else if (strcmp(token, "room") == 0) {
-            printf("you chose room\n"); //TODO
             parserError = getRoomCommands(escapeTechnion, token, delim);
-            mtmPrintErrorMessage(stderr, parserError);
-            if (parserError == MTM_OUT_OF_MEMORY) {
-                return MTM_OUT_OF_MEMORY;
+            if (parserError != MTM_SUCCESS) {
+                mtmPrintErrorMessage(stderr, parserError);
+                if (parserError == MTM_OUT_OF_MEMORY){
+                    return MTM_OUT_OF_MEMORY;
+                }
             }
         } else if (strcmp(token, "escaper") == 0) {
-            printf("you chose escaper\n"); //TODO
             parserError = getEscaperCommands(escapeTechnion, token, delim);
-            mtmPrintErrorMessage(stderr, parserError);
-            if (parserError == MTM_OUT_OF_MEMORY) {
-                return MTM_OUT_OF_MEMORY;
+            if (parserError != MTM_SUCCESS) {
+                mtmPrintErrorMessage(stderr, parserError);
+                if (parserError == MTM_OUT_OF_MEMORY){
+                    return MTM_OUT_OF_MEMORY;
+                }
             }
         } else if (strcmp(token, "report") == 0) {
-            printf("you chose report\n"); //TODO
             parserError = getReportCommands(escapeTechnion, output_file, token,
                                             delim);
-            mtmPrintErrorMessage(stderr, parserError);
-            if (parserError == MTM_OUT_OF_MEMORY) {
-                return MTM_OUT_OF_MEMORY;
+            if (parserError != MTM_SUCCESS) {
+                mtmPrintErrorMessage(stderr, parserError);
+                if (parserError == MTM_OUT_OF_MEMORY){
+                    return MTM_OUT_OF_MEMORY;
+                }
             }
         } else if (strcmp(token, COMMENT) == 0) {
             continue;
@@ -295,14 +295,12 @@ static MtmErrorCode getCompanyCommands(EscapeTechnion escapeTechnion,
     token = strtok(NULL, delim);
     MtmErrorCode parserError;
     if (strcmp(token, "add") == 0) {
-        printf(" you chose add\n"); //TODO
-        parserError = getCompanyAdd(NULL, token, delim);
+        parserError = getCompanyAdd(escapeTechnion, delim);
         return parserError;
     }
 
     if (strcmp(token, "remove") == 0) {
-        printf(" you chose remove\n"); //TODO
-        parserError = getCompanyRemove(escapeTechnion, token, delim);
+        parserError = getCompanyRemove(escapeTechnion, delim);
         return parserError;
     }
 
@@ -314,14 +312,12 @@ static MtmErrorCode getRoomCommands(EscapeTechnion escapeTechnion, char *token,
     token = strtok(NULL, delim);
     MtmErrorCode parserError;
     if (strcmp(token, "add") == 0) {
-        printf(" you chose add\n"); //TODO
-        parserError = getRoomAdd(escapeTechnion, token, delim);
+        parserError = getRoomAdd(escapeTechnion, delim);
         return parserError;
     }
 
     if (strcmp(token, "remove") == 0) {
-        printf(" you chose remove\n"); //TODO
-        parserError = getRoomRemove(escapeTechnion, token, delim);
+        parserError = getRoomRemove(escapeTechnion, delim);
         return parserError;
     }
 
@@ -333,26 +329,22 @@ static MtmErrorCode getEscaperCommands(EscapeTechnion escapeTechnion,
     token = strtok(NULL, delim);
     MtmErrorCode parserError;
     if (strcmp(token, "add") == 0) {
-        printf(" you chose add\n"); //TODO
-        parserError = getEscaperAdd(escapeTechnion, token, delim);
+        parserError = getEscaperAdd(escapeTechnion, delim);
         return parserError;
     }
 
     if (strcmp(token, "remove") == 0) {
-        printf(" you chose remove\n"); //TODO
-        parserError = getEscaperRemove(escapeTechnion, token, delim);
+        parserError = getEscaperRemove(escapeTechnion, delim);
         return parserError;
     }
 
     if (strcmp(token, "order") == 0) {
-        printf(" you chose order\n"); //TODO
-        parserError = getEscaperOrder(escapeTechnion, token, delim);
+        parserError = getEscaperOrder(escapeTechnion, delim);
         return parserError;
     }
 
     if (strcmp(token, "recommend") == 0) {
-        printf(" you chose recommend\n"); //TODO
-        parserError = getEscaperRecommend(escapeTechnion, token, delim);
+        parserError = getEscaperRecommend(escapeTechnion, delim);
         return parserError;
     }
 
@@ -365,13 +357,11 @@ static MtmErrorCode getReportCommands(EscapeTechnion escapeTechnion,
     token = strtok(NULL, delim);
     MtmErrorCode parserError;
     if (strcmp(token, "day") == 0) {
-        printf(" you chose day\n"); //TODO
         parserError = escapeTechnionReportDay(escapeTechnion, output_file);
         return parserError;
     }
 
     if (strcmp(token, "best") == 0) {
-        printf(" you chose best\n"); //TODO
         parserError = escapeTechnionReportBest(escapeTechnion, output_file);
         return parserError;
     }
@@ -379,9 +369,8 @@ static MtmErrorCode getReportCommands(EscapeTechnion escapeTechnion,
     return MTM_SUCCESS;
 }
 
-static MtmErrorCode getCompanyAdd(EscapeTechnion escapeTechnion, char *token,
-                                  char *delim) {
-    char *company_email = strtok(NULL, delim);
+static MtmErrorCode getCompanyAdd(EscapeTechnion escapeTechnion, char *delim) {
+     char *company_email = strtok(NULL, delim);
 
     char *company_faculty_str = strtok(NULL, delim);
     int faculty_num = atoi(company_faculty_str);
@@ -390,15 +379,14 @@ static MtmErrorCode getCompanyAdd(EscapeTechnion escapeTechnion, char *token,
     return escapeTechnionAddCompany(escapeTechnion, nameFaculty, company_email);
 }
 
-static MtmErrorCode getCompanyRemove(EscapeTechnion escapeTechnion, char *token,
+static MtmErrorCode getCompanyRemove(EscapeTechnion escapeTechnion,
                                      char *delim) {
     char *company_email = strtok(NULL, delim);
 
     return escapeTechnionRemoveCompany(escapeTechnion, company_email);
 }
 
-static MtmErrorCode getRoomAdd(EscapeTechnion escapeTechnion, char *token,
-                               char *delim) {
+static MtmErrorCode getRoomAdd(EscapeTechnion escapeTechnion, char *delim) {
     char *company_email = strtok(NULL, delim);
 
     char *room_id_str = strtok(NULL, delim);
@@ -419,8 +407,8 @@ static MtmErrorCode getRoomAdd(EscapeTechnion escapeTechnion, char *token,
                                  num_ppl, working_hrs, difficulty);
 }
 
-static MtmErrorCode getRoomRemove(EscapeTechnion escapeTechnion, char *token,
-                                  char *delim) {
+static MtmErrorCode getRoomRemove(EscapeTechnion escapeTechnion, char *delim) {
+
     char *faculty_str = strtok(NULL, delim);
     int faculty_num = atoi(faculty_str);
     TechnionFaculty nameFaculty = (TechnionFaculty)faculty_num;
@@ -431,8 +419,8 @@ static MtmErrorCode getRoomRemove(EscapeTechnion escapeTechnion, char *token,
     return escapeTechnionRemoveRoom(escapeTechnion, room_id, nameFaculty);
 }
 
-static MtmErrorCode getEscaperAdd(EscapeTechnion escapeTechnion, char *token,
-                                  char *delim) {
+static MtmErrorCode getEscaperAdd(EscapeTechnion escapeTechnion, char *delim) {
+
     char *escaper_email = strtok(NULL, delim);
 
     char *escaper_faculty_str = strtok(NULL, delim);
@@ -446,15 +434,15 @@ static MtmErrorCode getEscaperAdd(EscapeTechnion escapeTechnion, char *token,
                                     nameFaculty);
 }
 
-static MtmErrorCode getEscaperRemove(EscapeTechnion escapeTechnion, char *token,
+static MtmErrorCode getEscaperRemove(EscapeTechnion escapeTechnion,
                                      char *delim) {
     char *escaper_email = strtok(NULL, delim);
 
     return escapeTechnionRemoveEscaper(escapeTechnion, escaper_email);
 }
 
-static MtmErrorCode getEscaperOrder(EscapeTechnion escapeTechnion, char *token,
-                                    char *delim) {
+static MtmErrorCode getEscaperOrder(EscapeTechnion escapeTechnion, char *delim) {
+
     char *escaper_email = strtok(NULL, delim);
 
     char *room_faculty_str = strtok(NULL, delim);
@@ -475,7 +463,7 @@ static MtmErrorCode getEscaperOrder(EscapeTechnion escapeTechnion, char *token,
 }
 
 static MtmErrorCode getEscaperRecommend(EscapeTechnion escapeTechnion,
-                                        char *token, char *delim){
+                                        char *delim){
     char *escaper_email = strtok(NULL, delim);
 
     char *num_ppl_str = strtok(NULL, delim);
@@ -484,3 +472,4 @@ static MtmErrorCode getEscaperRecommend(EscapeTechnion escapeTechnion,
     return escapeTechnionRecommendedRoom(escaper_email, num_ppl,
                                          escapeTechnion);
 }
+
