@@ -86,8 +86,7 @@ void escapeTechnionDestroy(EscapeTechnion escapeTechnion);
  *         ESCAPE_TECHNION_EMAIL_ALREADY_EXISTS - if the email is already in use
  */
 EscapeTechnionErrorCode escapeTechnionAddCompany(EscapeTechnion escapeTechnion,
-                                                 TechnionFaculty nameFaculty,
-                                                 char *email);
+                                     char *email, TechnionFaculty nameFaculty);
 
 /**
  * receives an escapeTechnion system and a company email and iterates through
@@ -150,7 +149,7 @@ EscapeTechnionErrorCode escapeTechnionAddRoom(EscapeTechnion escapeTechnion,
  *         with the specified faculty
  */
 EscapeTechnionErrorCode escapeTechnionRemoveRoom(EscapeTechnion escapeTechnion,
-                                          int room_id, TechnionFaculty Faculty);
+                                         TechnionFaculty Faculty, int room_id);
 
 /**
  * receives an escapeTechnion system and escaper's details and adds the escaper
@@ -168,8 +167,7 @@ EscapeTechnionErrorCode escapeTechnionRemoveRoom(EscapeTechnion escapeTechnion,
  *         ESCAPE_TECHNION_OUT_OF_MEMORY - if one of the allocations failed
  */
 EscapeTechnionErrorCode escapeTechnionAddEscaper(EscapeTechnion escapeTechnion,
-                                                 char *email, int skill,
-                                                 TechnionFaculty nameFaculty);
+                           char *email, TechnionFaculty nameFaculty, int skill);
 
 /**
  * receives an escapeTechnion system and an email of an escaper and iterates
@@ -214,9 +212,10 @@ EscapeTechnionErrorCode escapeTechnionRemoveEscaper(EscapeTechnion escapeTechnio
  */
 EscapeTechnionErrorCode escapeTechnionReservationReceived(EscapeTechnion
                                                           escapeTechnion,
-                                               char *escaper_email, int room_id,
-                                               TechnionFaculty nameFaculty,
-                                               char *time, int num_ppl);
+                                                   char *escaper_email,
+                                                   TechnionFaculty nameFaculty,
+                                                   int room_id, char *time,
+                                                   int num_ppl);
 /**
  * receives an escapeTechnion system, number of people for a reservation and an
  * email address of the escaper who made the reservation and makes a reservation
@@ -232,8 +231,8 @@ EscapeTechnionErrorCode escapeTechnionReservationReceived(EscapeTechnion
  *         ESCAPE_TECHNION_SUCCESS - if a reservation was made successfully
  */
 EscapeTechnionErrorCode escapeTechnionRecommendedRoom(EscapeTechnion
-                                                      escapeTechnion,int num_ppl,
-                                                      char *escaper_email);
+                                                      escapeTechnion,
+                                              char *escaper_email, int num_ppl);
 
 /**
  * receives an escapeTechnion system and an output file and prints out the

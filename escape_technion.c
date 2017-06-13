@@ -225,14 +225,14 @@ static EscapeTechnionErrorCode findClosestTime(EscapeTechnion escapeTechnion,
 /**
  * receives details of two faculties and returns the faculty which is considered
  * better
- * @param faculty_1 - the first faculty
- * @param earnings_1 - the earnings of the first faculty
- * @param faculty_2 - the second faculty
- * @param earnings_2 - the earnings of the second faculty
+ * @param faculty1 - the first faculty
+ * @param earnings1 - the earnings of the first faculty
+ * @param faculty2 - the second faculty
+ * @param earnings2 - the earnings of the second faculty
  * @return the faculty which was found better
  */
-static Faculty getBetterFaculty(Faculty faculty_1, int earnings_1,
-                                Faculty faculty_2, int earnings_2);
+static Faculty getBetterFaculty(Faculty faculty1, int earnings1,
+                                Faculty faculty2, int earnings2);
 
 /**
  * receives pointers to the top three faculties and to the top three earnings
@@ -337,8 +337,8 @@ void escapeTechnionDestroy(EscapeTechnion escapeTechnion) {
 }
 
 EscapeTechnionErrorCode escapeTechnionAddCompany(EscapeTechnion escapeTechnion,
-                                                 TechnionFaculty nameFaculty,
-                                                 char *email) {
+                                                 char *email,
+                                                 TechnionFaculty nameFaculty) {
     if (NULL == escapeTechnion || NULL == email) {
         return ESCAPE_TECHNION_NULL_PARAMETER;
     }
@@ -434,8 +434,8 @@ EscapeTechnionErrorCode escapeTechnionAddRoom(EscapeTechnion escapeTechnion,
 }
 
 EscapeTechnionErrorCode escapeTechnionRemoveRoom(EscapeTechnion escapeTechnion,
-                                                 int room_id,
-                                                 TechnionFaculty nameFaculty) {
+                                                 TechnionFaculty nameFaculty,
+                                                 int room_id) {
     if (NULL == escapeTechnion){
         return ESCAPE_TECHNION_NULL_PARAMETER;
     }
@@ -464,9 +464,9 @@ EscapeTechnionErrorCode escapeTechnionRemoveRoom(EscapeTechnion escapeTechnion,
     return ESCAPE_TECHNION_SUCCESS;
 }
 
-EscapeTechnionErrorCode escapeTechnionAddEscaper(EscapeTechnion escapeTechnion,
-                                                  char *email, int skill,
-                                                  TechnionFaculty nameFaculty) {
+EscapeTechnionErrorCode
+escapeTechnionAddEscaper(EscapeTechnion escapeTechnion, char *email,
+                         TechnionFaculty nameFaculty, int skill) {
     if (NULL == escapeTechnion || NULL == email){
         return ESCAPE_TECHNION_NULL_PARAMETER;
     }
@@ -516,10 +516,11 @@ EscapeTechnionErrorCode escapeTechnionRemoveEscaper(EscapeTechnion escapeTechnio
 }
 
 EscapeTechnionErrorCode escapeTechnionReservationReceived(EscapeTechnion
-                                               escapeTechnion,
-                                               char *escaper_email, int room_id,
-                                               TechnionFaculty nameFaculty,
-                                               char *time, int num_ppl) {
+                                                          escapeTechnion,
+                                                    char *escaper_email,
+                                                    TechnionFaculty nameFaculty,
+                                                    int room_id, char *time,
+                                                    int num_ppl) {
 
     if (NULL == escaper_email || NULL == time || NULL == escapeTechnion){
         return ESCAPE_TECHNION_NULL_PARAMETER;
@@ -566,8 +567,9 @@ EscapeTechnionErrorCode escapeTechnionReservationReceived(EscapeTechnion
 }
 
 EscapeTechnionErrorCode escapeTechnionRecommendedRoom(EscapeTechnion
-                                                    escapeTechnion, int num_ppl,
-                                                    char *escaper_email) {
+                                                      escapeTechnion,
+                                                      char *escaper_email,
+                                                      int num_ppl) {
     if (NULL == escaper_email || NULL == escapeTechnion){
         return ESCAPE_TECHNION_NULL_PARAMETER;
     }
@@ -1104,30 +1106,31 @@ static void findBestFaculties(Faculty *cur_first, int *first_earnings,
     return;
 }
 
-static Faculty getBetterFaculty(Faculty faculty_1, int earnings_1,
-                                 Faculty faculty_2, int earnings_2) {
-    assert(NULL != faculty_1 && NULL != faculty_2);
+static Faculty getBetterFaculty(Faculty faculty1, int earnings1,
+                                 Faculty faculty2, int earnings2) {
+    //TODO: check the assert
+//    assert(NULL != faculty1 && NULL != faculty2);
 
-    if (NULL == faculty_1) {
-        return faculty_2;
-    } else if (NULL == faculty_2) {
-        return faculty_1;
+    if (NULL == faculty1) {
+        return faculty2;
+    } else if (NULL == faculty2) {
+        return faculty1;
     }
 
-    if (earnings_1 > earnings_2) {
-        return faculty_1;
-    } else if (earnings_1 < earnings_2) {
-        return faculty_2;
+    if (earnings1 > earnings2) {
+        return faculty1;
+    } else if (earnings1 < earnings2) {
+        return faculty2;
     }
 
-    TechnionFaculty nameFaculty1 = facultyGetName(faculty_1);
-    TechnionFaculty nameFaculty2 = facultyGetName(faculty_2);
+    TechnionFaculty nameFaculty1 = facultyGetName(faculty1);
+    TechnionFaculty nameFaculty2 = facultyGetName(faculty2);
 
     if ((int)nameFaculty1 < (int)nameFaculty2) {
-        return faculty_1;
+        return faculty1;
     }
 
-    return faculty_2;
+    return faculty2;
 }
 
 static int getEscapeTechnionEarnings(EscapeTechnion escapeTechnion) {
